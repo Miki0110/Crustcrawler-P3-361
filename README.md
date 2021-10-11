@@ -13,6 +13,7 @@ This code recuire:
 * ex. Windows 10
 * Arduino IDE
 * Crustcrawler Robot
+* NOT A MAC
 
 ### Installing
 
@@ -48,7 +49,7 @@ Glenn Gadensgaard Svendsen
 Simon Haaning Andersen
   san20@student.aau.dk
 
-  Asbjørn Lauritsen}
+  Asbjørn Lauritsen
 alau20@student.aau.dk
  
 
