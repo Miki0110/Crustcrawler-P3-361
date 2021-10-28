@@ -12,11 +12,34 @@ void setup()
   //Should be added to setup of arduino program calling this function
   Serial1.begin(115200);//Start serial port for recieving message from XBee
   while (!Serial1) {}   //Wait for serial port to be active
+   Serial.begin(115200);//Start serial port for recieving message from XBee
+  while (!Serial) {}   //Wait for serial port to be active
+}
+
+//Averaging of signal adjust numReadings and readings index to alter smoothness level and responsiveness
+int numReadings = 50;
+int readIndex = 0;
+long total = 0;
+int readings[50];
+
+long smooth() {
+  long average;
+  total = total - readings[readIndex];
+  readings[readIndex] = sEMGFetchedData[4];
+  total = total + readings[readIndex];
+  readIndex ++;
+  if(readIndex >= numReadings) {
+    readIndex = 0;
+  }
+  average = total/numReadings;
+  return average;
 }
 
 void loop() 
 {
   
+  fetchDataFromsEMG (100);
+  Serial.println(smooth());
 }
 
 //Call function to fetch data from sEMG
