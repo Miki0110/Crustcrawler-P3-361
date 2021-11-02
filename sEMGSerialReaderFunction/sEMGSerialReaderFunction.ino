@@ -44,9 +44,9 @@ void loop()
   sEMGch2.addValue(sEMGFetchedData[4]);
 
   //Print to serial plotter/monitor
-  Serial.print(sEMGFetchedData[3], 0);
+  Serial.print(sEMGFetchedData[3]);
   Serial.print(", ");
-  Serial.print(sEMGFetchedData[4], 0);
+  Serial.print(sEMGFetchedData[4]);
   Serial.print(", ");
   Serial.print(sEMGch1.getAverage(), 0);
   Serial.print(", ");
