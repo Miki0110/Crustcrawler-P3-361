@@ -16,30 +16,10 @@ void setup()
   while (!Serial) {}   //Wait for serial port to be active
 }
 
-//Averaging of signal adjust numReadings and readings index to alter smoothness level and responsiveness
-int numReadings = 50;
-int readIndex = 0;
-long total = 0;
-int readings[50];
-
-long smooth() {
-  long average;
-  total = total - readings[readIndex];
-  readings[readIndex] = sEMGFetchedData[4];
-  total = total + readings[readIndex];
-  readIndex ++;
-  if(readIndex >= numReadings) {
-    readIndex = 0;
-  }
-  average = total/numReadings;
-  return average;
-}
-
 void loop() 
 {
-  
-  fetchDataFromsEMG (100);
-  Serial.println(smooth());
+  fetchDataFromsEMG(100);
+  Serial.println(smooth(4));
 }
 
 //Call function to fetch data from sEMG
@@ -75,4 +55,26 @@ bool fetchDataFromsEMG(int timeOutAfter)
       return true;//Recieved message
     }
   }
+}
+
+//Averaging of signal adjust numReadings and readings index to alter smoothness level and responsiveness
+int numReadings = 50;
+int readIndex = 0;
+long total = 0;
+int readings[50];
+
+//Rolling average function (slows signal change but stabilises changes
+long smooth(int dataIndex) 
+{
+  long average;
+  total = total - readings[readIndex];
+  readings[readIndex] = sEMGFetchedData[dataIndex];
+  total = total + readings[readIndex];
+  readIndex ++;
+  if(readIndex >= numReadings) 
+  {
+    readIndex = 0;
+  }
+  average = total/numReadings;
+  return average;
 }
