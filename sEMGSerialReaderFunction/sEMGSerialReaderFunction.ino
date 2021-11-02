@@ -7,6 +7,13 @@
  */
 int sEMGFetchedData[5]; //Array for storing newest data fetched from sEMG
 
+//Running average library by Rob Tillaart
+#include <RunningAverage.h>
+
+//Define rolling averages and sample amounts (keep sample amounts low (<50))
+RunningAverage sEMGch1(25);
+RunningAverage sEMGch2(25);
+
 void setup() 
 {
   //Should be added to setup of arduino program calling this function
@@ -14,12 +21,25 @@ void setup()
   while (!Serial1) {}   //Wait for serial port to be active
    Serial.begin(115200);//Start serial port for recieving message from XBee
   while (!Serial) {}   //Wait for serial port to be active
+
+  //Ensure clean slate for all rolling averages
+  sEMGch1.clear();
+  sEMGch2.clear();
 }
 
 void loop() 
 {
+  //Fetch data
   fetchDataFromsEMG(100);
-  Serial.println(smooth(4));
+
+  //Add data to rolling averages
+  sEMGch1.addValue(sEMGFetchedData[3]);
+  sEMGch2.addValue(sEMGFetchedData[4]);
+
+  //Print to serial plotter/monitor
+  Serial.print(sEMGch1.getAverage(), 0);
+  Serial.print(", ");
+  Serial.println(sEMGch2.getAverage(), 0);
 }
 
 //Call function to fetch data from sEMG
@@ -55,26 +75,4 @@ bool fetchDataFromsEMG(int timeOutAfter)
       return true;//Recieved message
     }
   }
-}
-
-//Averaging of signal adjust numReadings and readings index to alter smoothness level and responsiveness
-int numReadings = 50;
-int readIndex = 0;
-long total = 0;
-int readings[50];
-
-//Rolling average function (slows signal change but stabilises changes
-long smooth(int dataIndex) 
-{
-  long average;
-  total = total - readings[readIndex];
-  readings[readIndex] = sEMGFetchedData[dataIndex];
-  total = total + readings[readIndex];
-  readIndex ++;
-  if(readIndex >= numReadings) 
-  {
-    readIndex = 0;
-  }
-  average = total/numReadings;
-  return average;
 }
