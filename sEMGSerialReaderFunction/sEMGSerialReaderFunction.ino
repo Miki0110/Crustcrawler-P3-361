@@ -7,6 +7,9 @@
  */
 int sEMGFetchedData[5]; //Array for storing newest data fetched from sEMG
 
+int triggerPointch1 = 800;  //Trigger point for sEMG channel 1
+int triggerPointch2 = 800;  //Trigger point for sEMG channel 2
+
 //Running average library by Rob Tillaart
 #include <RunningAverage.h>
 
@@ -21,6 +24,10 @@ void setup()
   while (!Serial1) {}   //Wait for serial port to be active
    Serial.begin(115200);//Start serial port for recieving message from XBee
   while (!Serial) {}   //Wait for serial port to be active
+
+  //Testing
+  pinMode(52, OUTPUT);
+  pinMode(53, OUTPUT);
 
   //Ensure clean slate for all rolling averages
   sEMGch1.clear();
@@ -37,9 +44,20 @@ void loop()
   sEMGch2.addValue(sEMGFetchedData[4]);
 
   //Print to serial plotter/monitor
+  Serial.print(sEMGFetchedData[3], 0);
+  Serial.print(", ");
+  Serial.print(sEMGFetchedData[4], 0);
+  Serial.print(", ");
   Serial.print(sEMGch1.getAverage(), 0);
   Serial.print(", ");
   Serial.println(sEMGch2.getAverage(), 0);
+  
+
+  //Testing set pins to high when threshold is met
+  if(     sEMGch1.getAverage() >= triggerPointch1) digitalWrite(52, HIGH);
+  else if(sEMGch1.getAverage() <  triggerPointch1) digitalWrite(52,  LOW);
+  if(     sEMGch2.getAverage() >= triggerPointch2) digitalWrite(52, HIGH);
+  else if(sEMGch2.getAverage() <  triggerPointch2) digitalWrite(52,  LOW);
 }
 
 //Call function to fetch data from sEMG
