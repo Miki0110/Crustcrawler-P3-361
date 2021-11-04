@@ -57,30 +57,27 @@ void setup() {
   Serial1.begin(57600);
   while(!Serial1); //Wait for serial port to be available
 
-  //Orient arm
-  startupPosition(DXL_ID[2]);
-  startupPosition(DXL_ID[3]);
-  dxl.setGoalPosition(DXL_ID[2], 90, UNIT_DEGREE);
-  dxl.setGoalPosition(DXL_ID[3], 180, UNIT_DEGREE);
-  
   //Initialise motor control modes
   //startupCurrent(DXL_ID[1]);
-  //startupCurrent(DXL_ID[2]);
-  //startupCurrent(DXL_ID[3]);
+  startupCurrentPosition(DXL_ID[2]);
+  startupCurrentPosition(DXL_ID[3]);
   //startupPosition(DXL_ID[4]);
   //startupPosition(DXL_ID[5]);
+  
+  //Orient arm
+  dxl.setGoalPosition(DXL_ID[2], 90, UNIT_DEGREE);
+  dxl.setGoalPosition(DXL_ID[3], 180, UNIT_DEGREE);
 }
 
-float desiredCurrent  = 0; //Unit 3.36mA
-float desiredVelocity = 0; //Unit 0.229rpm
-float desiredPosition = 0; //Unit 0.088deg
+float desiredTor = 0.8;//N*m
+float desiredVel = 0;  //deg/s
+float desiredPos = 90; //deg
 
 const int millisBetweenDataSend = 10;
 unsigned long currentDataSendMillis = 0;
 
 void loop() {
   //Information to debug arduino
-
   if(millis() >= currentDataSendMillis + millisBetweenDataSend) {
     int cur = (int)(dxl.getPresentCurrent(DXL_ID[2]) * 100);
     int vel = dxl.getPresentVelocity(DXL_ID[2]);
@@ -97,6 +94,6 @@ void loop() {
   }
 
   //control loop for motor
-  
+
   
 }
