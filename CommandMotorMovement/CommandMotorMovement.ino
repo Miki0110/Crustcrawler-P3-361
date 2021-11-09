@@ -1,5 +1,7 @@
 #include <DynamixelShield.h>
 #include <SoftwareSerial.h>
+#include <BasicLinearAlgebra.h>
+#include <math.h>
 
 SoftwareSerial soft_serial(7, 8); // DYNAMIXELShield UART RX/TX
 #define DEBUG_SERIAL soft_serial
