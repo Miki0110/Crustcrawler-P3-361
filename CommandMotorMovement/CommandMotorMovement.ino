@@ -25,30 +25,6 @@ float getMotorVelocity(uint8_t id) {
   return (1/60) * 2*PI * dxl.getPresentVelocity(id, UNIT_RPM);
 }
 
-//Sets current from torque
-boolean setMotorTorque(uint8_t id, float torque) {
-  float current;
-  switch(id){
-    case 1: //MX-64
-    case 3:
-      float MX64Kt = 1.8189; //Torque constant for MX-64 motors
-      current = (torque / MX64Kt) / 1000; //Calculate current from torque (in milliamperes)
-      dxl.setGoalCurrent(id, current, UNIT_MILLI_AMPERE);
-      return 1;
-    
-    case 2: //MX-106
-      float MX106Kt = 2.5465; //Torque constant for MX-106 motors
-      current = (torque / MX106Kt) / 1000; //Calculate current from torque (in milliamperes)
-      dxl.setGoalCurrent(id, current, UNIT_MILLI_AMPERE);
-      return 1;
-      
-    default:
-      //Error wrong id
-      return 0;
-  }
-  
-}
-
 void setup() {
   // Set Port baudrate to 57600bps. This has to match with DYNAMIXEL baudrate.
   dxl.begin(57600);
@@ -60,14 +36,19 @@ void setup() {
   while(!Serial1); //Wait for serial port to be available
 
   //Initialise motor control modes
-  //startupCurrent(DXL_ID[1]);
+  startupCurrentPosition(DXL_ID[1]);
   startupCurrentPosition(DXL_ID[2]);
   startupCurrentPosition(DXL_ID[3]);
   //startupPosition(DXL_ID[4]);
   //startupPosition(DXL_ID[5]);
-  
+
+  //Set start torques
+  dxl.writeControlTableItem(GOAL_CURRENT, DXL_ID[1], 0);
+  dxl.writeControlTableItem(GOAL_CURRENT, DXL_ID[2], 0);
+  //dxl.writeControlTableItem(GOAL_CURRENT, DXL_ID[3], 0);
+
   //Orient arm
-  dxl.setGoalPosition(DXL_ID[2], 90, UNIT_DEGREE);
+  //dxl.setGoalPosition(DXL_ID[2], 180, UNIT_DEGREE);
   dxl.setGoalPosition(DXL_ID[3], 180, UNIT_DEGREE);
 }
 
