@@ -36,25 +36,21 @@ void setup() {
   while(!Serial1); //Wait for serial port to be available
 
   //Initialise motor control modes
-  startupCurrentPosition(DXL_ID[1]);
-  startupCurrentPosition(DXL_ID[2]);
-  startupCurrentPosition(DXL_ID[3]);
-  //startupPosition(DXL_ID[4]);
-  //startupPosition(DXL_ID[5]);
+  startupCurrent(DXL_ID[1]);
+  startupCurrent(DXL_ID[2]);
+  startupCurrent(DXL_ID[3]);
+  startupPosition(DXL_ID[4]);
+  startupPosition(DXL_ID[5]);
 
   //Set start torques
   dxl.writeControlTableItem(GOAL_CURRENT, DXL_ID[1], 0);
   dxl.writeControlTableItem(GOAL_CURRENT, DXL_ID[2], 0);
-  //dxl.writeControlTableItem(GOAL_CURRENT, DXL_ID[3], 0);
+  dxl.writeControlTableItem(GOAL_CURRENT, DXL_ID[3], 0);
 
   //Orient arm
   //dxl.setGoalPosition(DXL_ID[2], 180, UNIT_DEGREE);
-  dxl.setGoalPosition(DXL_ID[3], 180, UNIT_DEGREE);
+  //dxl.setGoalPosition(DXL_ID[3], 180, UNIT_DEGREE);
 }
-
-float desiredTor = 0.8;//N*m
-float desiredVel = 0;  //deg/s
-float desiredPos = 90; //deg
 
 const int millisBetweenDataSend = 10;
 unsigned long currentDataSendMillis = 0;
@@ -76,7 +72,10 @@ void loop() {
     currentDataSendMillis = millis();
   }
 
-  //control loop for motor
-
-  
+  //Control through torque
+  //                id      torque
+  //setMotorTorque(DXL_ID[3], 1.420);
+  //delay(1000);
+  //setMotorTorque(DXL_ID[2], -1.420);
+  //delay(1000);
 }
