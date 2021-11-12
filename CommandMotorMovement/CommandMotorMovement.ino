@@ -56,22 +56,6 @@ const int millisBetweenDataSend = 10;
 unsigned long currentDataSendMillis = 0;
 
 void loop() {
-  //Information to debug arduino
-  if(millis() >= currentDataSendMillis + millisBetweenDataSend) {
-    int cur = (int)(dxl.getPresentCurrent(DXL_ID[2]) * 100);
-    int vel = dxl.getPresentVelocity(DXL_ID[2]);
-    int pos = dxl.getPresentPosition(DXL_ID[2]);
-    
-    Serial1.write(0x7E);
-    Serial1.write(highByte(cur));
-    Serial1.write(lowByte(cur));
-    Serial1.write(highByte(vel));
-    Serial1.write(lowByte(vel));
-    Serial1.write(highByte(pos));
-    Serial1.write(lowByte(pos));
-    currentDataSendMillis = millis();
-  }
-
   //Control through torque
   //                id      torque
   //setMotorTorque(DXL_ID[3], 1.420);
