@@ -1,5 +1,10 @@
 #include <DynamixelShield.h>
 #include <SoftwareSerial.h>
+#include <BasicLinearAlgebra.h>
+#include <math.h>
+
+SoftwareSerial soft_serial(7, 8); // DYNAMIXELShield UART RX/TX
+#define DEBUG_SERIAL soft_serial
 
 //Motor IDs
 const uint8_t DXL_ID[6] = {0, 1, 2, 3, 4, 5};
@@ -10,38 +15,51 @@ DynamixelShield dxl;
 //Namespace for motor control table entries
 using namespace ControlTableItem;
 
-void setup() {
-  // put your setup code here, to run once:
+//Returns joint angle as radiants
+float getMotorPosition(uint8_t id) {
+  return PI/180 * dxl.getPresentPosition(id, UNIT_DEGREE);
+}
 
+//Returns joint velocity in radiants/s
+float getMotorVelocity(uint8_t id) {
+  return (1/60) * 2*PI * dxl.getPresentVelocity(id, UNIT_RPM);
+}
+
+void setup() {
   // Set Port baudrate to 57600bps. This has to match with DYNAMIXEL baudrate.
   dxl.begin(57600);
   // Set Port Protocol Version. This has to match with DYNAMIXEL protocol version.
   dxl.setPortProtocolVersion(DXL_PROTOCOL_VERSION);
 
-  //Set maximum torque (percentage)
-  setTorqueLimit(DXL_ID[1], 0);
-  setTorqueLimit(DXL_ID[2], 100);
-  setTorqueLimit(DXL_ID[3], 0);
-  setTorqueLimit(DXL_ID[4], 0);
-  setTorqueLimit(DXL_ID[5], 0);
+  //Begins serial for debug and testing
+  Serial1.begin(57600);
+  while(!Serial1); //Wait for serial port to be available
+
+  //Initialise motor control modes
+  startupCurrent(DXL_ID[1]);
+  startupCurrent(DXL_ID[2]);
+  startupCurrent(DXL_ID[3]);
+  startupPosition(DXL_ID[4]);
+  startupPosition(DXL_ID[5]);
+
+  //Set start torques
+  dxl.writeControlTableItem(GOAL_CURRENT, DXL_ID[1], 0);
+  dxl.writeControlTableItem(GOAL_CURRENT, DXL_ID[2], 0);
+  dxl.writeControlTableItem(GOAL_CURRENT, DXL_ID[3], 0);
 
   //Orient arm
-  startupPosition(DXL_ID[2]);
-  startupPosition(DXL_ID[3]);
-  dxl.setGoalPosition(DXL_ID[2], 4095/2);
-  //dxl.setGoalPosition(DXL_ID[3], 4095/2);
-
-  //delay(1000);
-  
-  //Initialise motor control modes
-  //startupCurrent(DXL_ID[1]);
-  //startupCurrent(DXL_ID[2]);
-  //startupCurrent(DXL_ID[3]);
-  //startupPosition(DXL_ID[4]);
-  //startupPosition(DXL_ID[5]);
+  //dxl.setGoalPosition(DXL_ID[2], 180, UNIT_DEGREE);
+  //dxl.setGoalPosition(DXL_ID[3], 180, UNIT_DEGREE);
 }
 
-void loop() {
-  // put your main code here, to run repeatedly:
+const int millisBetweenDataSend = 10;
+unsigned long currentDataSendMillis = 0;
 
+void loop() {
+  //Control through torque
+  //                id      torque
+  //setMotorTorque(DXL_ID[3], 1.420);
+  //delay(1000);
+  //setMotorTorque(DXL_ID[2], -1.420);
+  //delay(1000);
 }
