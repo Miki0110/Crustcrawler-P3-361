@@ -3,10 +3,18 @@
 #include <BasicLinearAlgebra.h>
 #include <math.h>
 
+/*
+MOTOR MAX/MIN Values
+BLA::Matrix<2,5> MotorMaxMin = {1800, 2500, //Motor1
+                                750, 3320,//Motor2
+                                740, 3320,//Motor3
+                                750, 2450,//Motor4
+                                700, 2450};//Motor5
+*/
+
 SoftwareSerial soft_serial(7, 8); // DYNAMIXELShield UART RX/TX
 #define DEBUG_SERIAL soft_serial
 
-boolean Gripperpos=true;
 
 //Motor IDs
 const uint8_t DXL_ID[6] = {0, 1, 2, 3, 4, 5};
@@ -36,22 +44,27 @@ void setup() {
   //Begins serial for debug and testing
   Serial1.begin(57600);
   while(!Serial1); //Wait for serial port to be available
+/*
+startupCurrent : You cannot yse SetGoallPosition
+startupPosition : If you want to sent/SetGoalPosition
+*/
 
   //Initialise motor control modes
-  startupCurrent(DXL_ID[1]);  //Base
-  startupCurrent(DXL_ID[2]);  //"Shoulder"
-  startupCurrent(DXL_ID[3]);  //"Elbow"
+  startupPosition(DXL_ID[1]);  //Base
+  startupPosition(DXL_ID[2]);  //"Shoulder"
+  startupPosition(DXL_ID[3]);  //"Elbow"
   startupPosition(DXL_ID[4]); //"Left gripper"
   startupPosition(DXL_ID[5]); //"Right gripper"
 
   //Set start torques
-  dxl.writeControlTableItem(GOAL_CURRENT, DXL_ID[1], 0);
-  dxl.writeControlTableItem(GOAL_CURRENT, DXL_ID[2], 0);
-  dxl.writeControlTableItem(GOAL_CURRENT, DXL_ID[3], 0);
+  //dxl.writeControlTableItem(GOAL_CURRENT, DXL_ID[1], 0);
+  //dxl.writeControlTableItem(GOAL_CURRENT, DXL_ID[2], 0);
+  //dxl.writeControlTableItem(GOAL_CURRENT, DXL_ID[3], 0);
 
   //Orient arm
-  //dxl.setGoalPosition(DXL_ID[2], 180, UNIT_DEGREE);
+//  dxl.setGoalPosition(DXL_ID[2], 180, UNIT_DEGREE);
   //dxl.setGoalPosition(DXL_ID[3], 180, UNIT_DEGREE);
+  GoToStartPos();
 }
 
 const int millisBetweenDataSend = 10;
@@ -66,9 +79,10 @@ void loop() {
   //delay(1000);
 
   //Test of gripper
-  Gripper(Gripperpos); //move the gripper (Open close)
-  Gripperpos=!Gripperpos; //Change next movement
+//dxl.setGoalPosition(DXL_ID[1], 2100, UNIT_RAW);
+//dxl.setGoalPosition(DXL_ID[2], 2600, UNIT_RAW);
+//dxl.setGoalPosition(DXL_ID[3], 3000, UNIT_RAW);
+  ActivateGripper(); //Function to activation of gripper
   Serial.println();
-  Serial.println(Gripperpos);
-  delay(2000);
+  delay(5000);
 }

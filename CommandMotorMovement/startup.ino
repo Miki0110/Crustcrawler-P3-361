@@ -32,3 +32,16 @@ boolean startupCurrentPosition(uint8_t id){
   dxl.writeControlTableItem(OPERATING_MODE, id, 5);
   dxl.torqueOn(id);
 }
+
+
+void GoToStartPos(){
+const int Startpos[5] = {2171, 2500, 3000, 1954, 1954}; //Startpos for the motors
+
+  for(int i=1; i<=3; i++){
+dxl.setGoalPosition(DXL_ID[i], Startpos[i-1], UNIT_RAW);
+delay(1000);
+  }
+  
+dxl.setGoalPosition(DXL_ID[4], Startpos[4-1], UNIT_RAW);
+dxl.setGoalPosition(DXL_ID[5], Startpos[5-1], UNIT_RAW);
+  }
