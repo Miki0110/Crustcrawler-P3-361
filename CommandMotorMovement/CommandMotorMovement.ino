@@ -25,6 +25,7 @@ float getMotorVelocity(uint8_t id) {
   return (1/60) * 2*PI * dxl.getPresentVelocity(id, UNIT_RPM);
 }
 
+
 void setup() {
   // Set Port baudrate to 57600bps. This has to match with DYNAMIXEL baudrate.
   dxl.begin(57600);
@@ -56,10 +57,23 @@ const int millisBetweenDataSend = 10;
 unsigned long currentDataSendMillis = 0;
 
 void loop() {
+  //calculate torques
+  //                              id       theta1  theta2   theta3
+  double tau1=computeStaticTorque(1.0,    0.0,    0.0,    0.0);
+  double tau2=computeStaticTorque(2.0,    0.0,    0.0,    0.0);
+  double tau3=computeStaticTorque(3.0,    0.0,    0.0,    0.0);
   //Control through torque
   //                id      torque
-  //setMotorTorque(DXL_ID[3], 1.420);
-  //delay(1000);
-  //setMotorTorque(DXL_ID[2], -1.420);
-  //delay(1000);
+  setMotorTorque(DXL_ID[1], tau1);
+  Serial.print("tau1: ");
+  Serial.println(tau1);
+  delay(10);
+  setMotorTorque(DXL_ID[2], tau2);
+  Serial.print("tau2: ");
+  Serial.println(tau2);
+  delay(10);
+  setMotorTorque(DXL_ID[3], tau3);
+  Serial.print("tau2: ");
+  Serial.println(tau3);
+  delay(1000);
 }
