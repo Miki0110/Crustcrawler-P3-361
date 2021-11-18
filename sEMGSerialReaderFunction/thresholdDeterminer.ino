@@ -4,9 +4,6 @@ int Threshold2 = 120; //Frontalis 75%
 boolean sEMGfinal1 = 0;
 boolean sEMGfinal2 = 0;
 
-bool FinalValues[20];
-
-
 
 
 
@@ -20,13 +17,13 @@ else{sEMGfinal1=0;}
 
 if(sEMGch2.getAverage() >= Threshold2){sEMGfinal2=1;}// This used to cumper with the thresholdes
 else{sEMGfinal2=0;}
-}
 //Here the booleans should be added to the array
 
+int FinalValues[2]={sEMGfinal1, sEMGfinal2};
 
-//sEMGfinal1,sEMGfinal2};
-//Serial.println(FinalValues)
+//FinalValues=sEMGfinal1,sEMGfinal2};
+//Serial.println(FinalValues[2]);
 
-
-return true;
+//delay (1000);
+return FinalValues;
 }
