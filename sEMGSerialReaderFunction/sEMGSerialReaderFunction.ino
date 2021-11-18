@@ -5,13 +5,32 @@
  * Function requires sEMGFetchedData integer array of 5 elements to be defined before calling function
  * Data will be stored in array 
  */
+
+
+int Threshold1 = 135; //Orbiclaris oculi 75%
+int Threshold2 = 120; //Frontalis 75%
+
+boolean sEMGfinal1 = 0;
+boolean sEMGfinal2 = 0;
+
+int FinalValues[2]; //Array for boolean data for thresholds
+
+ 
 int sEMGFetchedData[5]; //Array for storing newest data fetched from sEMG
 
 int triggerPointch1 = 800;  //Trigger point for sEMG channel 1
 int triggerPointch2 = 800;  //Trigger point for sEMG channel 2
 
+
+
+
+
+
+
+
 //Running average library by Rob Tillaart
 #include <RunningAverage.h>
+
 
 //Define rolling averages and sample amounts (keep sample amounts low (<50))
 RunningAverage sEMGch1(25);
@@ -48,17 +67,31 @@ void loop()
   //Serial.print(", ");
   //Serial.print(sEMGFetchedData[4]);
   //Serial.print(", ");
-  Serial.print(sEMGch1.getAverage(), 0);
-  Serial.print(", ");
-  Serial.println(sEMGch2.getAverage(), 0);
-  
+  //Serial.print(sEMGch1.getAverage(), 0);
+  //Serial.print(", ");
+  //Serial.println(sEMGch2.getAverage(), 0);
+
+  void thresHold(boolean getAverage);
+
+for(int i = 0; i < 2; i++)
+{
+
+
+Serial.println(FinalValues[i]);
+}
+
+
 
   //Testing set pins to high when threshold is met
   if(     sEMGch1.getAverage() >= triggerPointch1) digitalWrite(52, HIGH);
   else if(sEMGch1.getAverage() <  triggerPointch1) digitalWrite(52,  LOW);
   if(     sEMGch2.getAverage() >= triggerPointch2) digitalWrite(52, HIGH);
   else if(sEMGch2.getAverage() <  triggerPointch2) digitalWrite(52,  LOW);
+  
+ 
+  
 }
+
 
 //Call function to fetch data from sEMG
 //Alters the content of the sEMGFetchedData array
