@@ -1,16 +1,20 @@
-/* Function for comparing the fathced sEMG arrays with a designated threshold
- * and detimine if the signal is a blink/hold.
- *  
- * This function requires sEMGch1.getAverage() and sEMGch2.getAverage()  
- * to be running and thir data declared in an array
- */
+int Threshold1 = 135; //Orbiclaris oculi 75%
+int Threshold2 = 120; //Frontalis 75%
 
-void setup() {
-  // put your setup code here, to run once:
+boolean sEMGfinal1 = 0;
+boolean sEMGfinal2 = 0;
 
+int getValue [2](){
+if(sEMGch1.getAverage() >= Threshold1){sEMGfinal1=1;} // This used to cumper with the thresholdes
+else{sEMGfinl1=0;}
+
+
+
+if(sEMGch2.getAverage() >= Threshold2){sEMGfinal2=1;}// This used to cumper with the thresholdes
+else{sEMGfinal2=0;}
 }
 
-void loop() {
-  // put your main code here, to run repeatedly:
+int FinalValues [2]={sEMGfinal1,sEMGfinal2};
 
+return FinalValues;
 }
