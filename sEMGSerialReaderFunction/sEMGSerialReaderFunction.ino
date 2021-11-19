@@ -7,13 +7,13 @@
  */
 
 
-int Threshold1 = 500; //Orbiclaris oculi 75% = 135
-int Threshold2 = 500; //Frontalis 75% = 120
+int Threshold1 = 135; //Orbiclaris oculi 75% = 135
+int Threshold2 = 120; //Frontalis 75% = 120
 
-int sEMGfinal1 = 0; //Global for when threshold reached for channel one
-int sEMGfinal2 = 0; //Global for when threshold reached for channel two
+bool sEMGfinal1 = 0; //Global for when threshold reached for channel one
+bool sEMGfinal2 = 0; //Global for when threshold reached for channel two
 
-int FinalValues[2]; //Array for boolean data for thresholds
+bool FinalValues[2]; //Array for boolean data for thresholds
  
 int sEMGFetchedData[5]; //Array for storing newest data fetched from sEMG
 
