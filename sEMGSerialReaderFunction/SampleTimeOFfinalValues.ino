@@ -1,34 +1,20 @@
 
-#include <RunningAverage.h>
-int Fvloop[]={0,0,0,1,0,0,0,1,0,0,0,1,1,1,1,1,1,0,0,0,0,0,1,1,0,0,0,0,0,1,1,1,0,0,0}; //simalter
-int change = 0; //simalter
-int FinalValues[2] = {0,0}; //simalter
-int OldFinalValues[10];
-int impuls1 = 0;
-int impuls2 = 0;
-int var;
-//long period = 4;
-/*---------------------Timer-----------------------------*/
+
+/*---------------------Timer-----------------------------
 RunningAverage totalAverage(2); //add data here
 int sampleTime = 1*1000; //add seconds here
 int totalAverageCounter = 1;
 unsigned long currentMillis;
 /*---------------------Timer-----------------------------*/
 
-void setup() {
-Serial.begin(9600);//Start serial port for recieving message from XBee
-  while (!Serial) {}   //Wait for serial port to be active
-   //Serial.begin(9600);//Start serial port for recieving message from XBee
-  //while (!Serial) {}   //Wait for serial port to be active
-}
-
-void loop(){
+void sampleTimeVal(){
 
  if(millis() >= currentMillis+sampleTime){   
 
 for(int k = 1; k <= 2; k++){
 FinalValues[k-1] = Fvloop[change];}
 change++;
+
 if (change > ((sizeof(Fvloop) / sizeof(Fvloop[0])))){change = 0;
   } //simlater
   
@@ -58,6 +44,7 @@ if (change > ((sizeof(Fvloop) / sizeof(Fvloop[0])))){change = 0;
 }
   //sEMG1 = 0,2,4,6,8
   //sEMG2 = 1,3,5,7,9
+  
 if (OldFinalValues [0]==0 && OldFinalValues [2]==0 && OldFinalValues [4]==0 && OldFinalValues [6]==1 && OldFinalValues[8]==0 ){ impuls1=1;  Serial.println("impuls1");}
 
    if (OldFinalValues [1]==0 && OldFinalValues [3]==0 && OldFinalValues [5]==0 && OldFinalValues [7]==1 && OldFinalValues[9]==0 ){ impuls2=1; Serial.println("impuls2");}

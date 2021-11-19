@@ -5,8 +5,14 @@
  * Function requires sEMGFetchedData integer array of 5 elements to be defined before calling function
  * Data will be stored in array 
  */
-
-
+//Wellats globals------------------------------------------------------------------------------------------------------------------------------------
+int Fvloop[]={0,0,0,1,0,0,0,1,0,0,0,1,1,1,1,1,1,0,0,0,0,0,1,1,0,0,0,0,0,1,1,1,0,0,0}; //simalter
+int change = 0; //simalter
+int OldFinalValues[10];
+int impuls1 = 0;
+int impuls2 = 0;
+int var;
+ //-----------------------------------------------------------------------------------------------------------------------------------------------
 int Threshold1 = 135; //Orbiclaris oculi 75% = 135
 int Threshold2 = 120; //Frontalis 75% = 120
 
@@ -29,7 +35,14 @@ int triggerPointch2 = 800;  //Trigger point for sEMG channel 2
 RunningAverage sEMGch1(25);
 RunningAverage sEMGch2(25);
 
-
+//Wellats timer
+/*---------------------Timer-----------------------------*/
+RunningAverage totalAverage(2); //add data here
+int sampleTime = 1*1000; //add seconds here
+int totalAverageCounter = 1;
+unsigned long currentMillis;
+/*---------------------Timer------------------------------------------------------------------------------------------------------------------*/
+//
 void setup() 
 {
   //Should be added to setup of arduino program calling this function
@@ -61,23 +74,27 @@ void loop()
   //Serial.print(", ");
   //Serial.print(sEMGFetchedData[4]);
   //Serial.print(", ");
-  Serial.print(sEMGch1.getAverage(), 0);
-  Serial.print(", ");
-  Serial.println(sEMGch2.getAverage(), 0);
+  //Serial.print(sEMGch1.getAverage(), 0);
+  //Serial.print(", ");
+  //Serial.println(sEMGch2.getAverage(), 0);
 
   //Calling BthresholdDetminer which gives FinalValues[2] 1 if signal is over threshold.
   thresHold();
 
-  //Print FinalValues array to serial monitor - only for debugging
-  //Serial.println(FinalValues[1]);
-  //Serial.println(FinalValues[2]);
+    //Print FinalValues array to serial monitor - only for debugging
+    //Serial.println(FinalValues[1]);
+    //Serial.println(FinalValues[2]);
 
-  //Testing set pins to high when threshold is met
+
+  sampleTimeVal();
+
+/*
+  //Testing set pins to high when threshold is met - Can we delete this?
   if(     sEMGch1.getAverage() >= triggerPointch1) digitalWrite(52, HIGH);
   else if(sEMGch1.getAverage() <  triggerPointch1) digitalWrite(52,  LOW);
   if(     sEMGch2.getAverage() >= triggerPointch2) digitalWrite(52, HIGH);
   else if(sEMGch2.getAverage() <  triggerPointch2) digitalWrite(52,  LOW);
-  
+  */
 }
 
 //Call function to fetch data from sEMG
