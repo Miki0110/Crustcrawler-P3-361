@@ -10,11 +10,10 @@
 int Threshold1 = 135; //Orbiclaris oculi 75%
 int Threshold2 = 120; //Frontalis 75%
 
-boolean sEMGfinal1 = 0;
-boolean sEMGfinal2 = 0;
+int sEMGfinal1 = 0; //Global for threshold
+int sEMGfinal2 = 0; //  -||-
 
 int FinalValues[2]; //Array for boolean data for thresholds
-
  
 int sEMGFetchedData[5]; //Array for storing newest data fetched from sEMG
 
@@ -71,8 +70,9 @@ void loop()
   //Serial.print(", ");
   //Serial.println(sEMGch2.getAverage(), 0);
 
-  void thresHold(boolean getAverage);
-
+  thresHold();
+    
+//This printfunction is for debugging
 for(int i = 0; i < 2; i++)
 {
 

@@ -8,8 +8,7 @@ boolean sEMGfinal2 = 0;
 */
 
 
-void thresHold(boolean getAverage){
-  
+int thresHold(){
 //int getValue [2](){
 if(sEMGch1.getAverage() >= Threshold1){sEMGfinal1=1;} // This used to cumper with the thresholdes
 else{sEMGfinal1=0;}
@@ -20,18 +19,22 @@ if(sEMGch2.getAverage() >= Threshold2){sEMGfinal2=1;}// This used to cumper with
 else{sEMGfinal2=0;}
 //Here the booleans should be added to the array
 
-int FinalValues[2]={sEMGfinal1, sEMGfinal2};
+ FinalValues[1]={sEMGfinal1};
+ FinalValues[2]={sEMGfinal2};
 
 //FinalValues=sEMGfinal1,sEMGfinal2};
 
+
+/*
 for(int i = 0; i < 2; i++)
 {
 
 
-Serial.println(FinalValues[i]);
+  Serial.println(FinalValues[i]);
 }
-
+*/
 return FinalValues;
+
 
 
 }
