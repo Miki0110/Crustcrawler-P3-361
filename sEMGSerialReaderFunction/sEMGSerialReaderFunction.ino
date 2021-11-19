@@ -7,11 +7,11 @@
  */
 
 
-int Threshold1 = 135; //Orbiclaris oculi 75%
-int Threshold2 = 120; //Frontalis 75%
+int Threshold1 = 500; //Orbiclaris oculi 75% = 135
+int Threshold2 = 500; //Frontalis 75% = 120
 
-int sEMGfinal1 = 0; //Global for threshold
-int sEMGfinal2 = 0; //  -||-
+int sEMGfinal1 = 0; //Global for when threshold reached for channel one
+int sEMGfinal2 = 0; //Global for when threshold reached for channel two
 
 int FinalValues[2]; //Array for boolean data for thresholds
  
@@ -21,12 +21,6 @@ int triggerPointch1 = 800;  //Trigger point for sEMG channel 1
 int triggerPointch2 = 800;  //Trigger point for sEMG channel 2
 
 
-
-
-
-
-
-
 //Running average library by Rob Tillaart
 #include <RunningAverage.h>
 
@@ -34,6 +28,7 @@ int triggerPointch2 = 800;  //Trigger point for sEMG channel 2
 //Define rolling averages and sample amounts (keep sample amounts low (<50))
 RunningAverage sEMGch1(25);
 RunningAverage sEMGch2(25);
+
 
 void setup() 
 {
@@ -66,21 +61,16 @@ void loop()
   //Serial.print(", ");
   //Serial.print(sEMGFetchedData[4]);
   //Serial.print(", ");
-  //Serial.print(sEMGch1.getAverage(), 0);
-  //Serial.print(", ");
-  //Serial.println(sEMGch2.getAverage(), 0);
+  Serial.print(sEMGch1.getAverage(), 0);
+  Serial.print(", ");
+  Serial.println(sEMGch2.getAverage(), 0);
 
+  //Calling BthresholdDetminer which gives FinalValues[2] 1 if signal is over threshold.
   thresHold();
-    
-//This printfunction is for debugging
-for(int i = 0; i < 2; i++)
-{
 
-
-Serial.println(FinalValues[i]);
-}
-
-
+  //Print FinalValues array to serial monitor - only for debugging
+  //Serial.println(FinalValues[1]);
+  //Serial.println(FinalValues[2]);
 
   //Testing set pins to high when threshold is met
   if(     sEMGch1.getAverage() >= triggerPointch1) digitalWrite(52, HIGH);
@@ -88,10 +78,7 @@ Serial.println(FinalValues[i]);
   if(     sEMGch2.getAverage() >= triggerPointch2) digitalWrite(52, HIGH);
   else if(sEMGch2.getAverage() <  triggerPointch2) digitalWrite(52,  LOW);
   
- 
-  
 }
-
 
 //Call function to fetch data from sEMG
 //Alters the content of the sEMGFetchedData array
