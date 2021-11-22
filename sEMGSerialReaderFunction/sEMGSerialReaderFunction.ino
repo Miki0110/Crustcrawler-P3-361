@@ -29,7 +29,6 @@ unsigned int timeForHold = 200; //Time for impulse to be hold, unit is sEMGInter
 bool sEMGch1NewMessege;
 bool sEMGch2NewMessege;
 
-unsigned char signalArray[2];
 
 //Running average library by Rob Tillaart
 #include <RunningAverage.h>
