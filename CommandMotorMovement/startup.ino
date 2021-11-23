@@ -35,17 +35,14 @@ boolean startupCurrentPosition(uint8_t id) {
 
 
 void GoToStartPos() {
-  const int Startpos[] = {2171, 2500, 3000, 1954, 1954}; //Startpos for the motors
+  const int Startpos[] = {190, 180, 270}; //Startpos for the motors (DEGREE)
 
-  for (int i = 1; i <= 3; i++) {
-    dxl.setGoalPosition(DXL_ID[i], Startpos[i - 1], UNIT_RAW);
-    delay(1000);
-  }
+  dxl.setGoalPosition(DXL_ID[1], Startpos[0], UNIT_DEGREE);
+  dxl.setGoalPosition(DXL_ID[2], Startpos[1], UNIT_DEGREE);
+  dxl.setGoalPosition(DXL_ID[3], Startpos[2], UNIT_DEGREE);
+  //GoTo3D(270,140,200);
 
-  dxl.setGoalPosition(DXL_ID[4], Startpos[4 - 1], UNIT_RAW);
-  dxl.setGoalPosition(DXL_ID[5], Startpos[5 - 1], UNIT_RAW);
+  Gripper(1);
+
   delay(1000);
-
-  //while(d){}
-
 }

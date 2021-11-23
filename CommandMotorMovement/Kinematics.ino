@@ -1,14 +1,14 @@
 //Link lengths (in mm)
 const double Lrx = -124.70;//X coordinate reference to joint 1 motor (base)
 const double Lry = 143.70;//Y coordinate reference to joint 1 motor (base)
-const double Lrz = 147.30 + 134-50; //Z coordinate reference to joint 1 motor (base)
-const double Lra = 45.00;//Base tilt angle compared to reference (in deg)
+const double Lrz = 254; //Z coordinate reference to joint 1 motor (base)
+const double Lra = 50;//Base tilt angle compared to reference (in deg)
 
 const double Lb =  60.80; //Base link (motor 2)
 const double L1 = 219.80; //Link 1
-const double L2 = 147.30 + 145.14; //Link 2 + gripper distance
+const double L2 = 147.30 + 126; //Link 2 + gripper distance
 //const double Lg = 145.14; //From gripper joints to grip point
-const double BasicValue1 = 190.7; //In degree values
+const double BasicValue1 = 191.6; //In degree values
 const double BasicValue2 = 180; //In degree values
 const double BasicValue3 = 180; //In degree values
 
@@ -18,20 +18,17 @@ double theta2;
 double theta3;
 
 //4x4 Homogenous transformation matricies from crustcrawler
-BLA::Matrix<4, 4> CalcTRB() {
-
-  return { cos(Lra*PI / 180), 0, sin(Lra*PI / 180),  Lrx,
-           0, 1,               0,  Lry,
-           -sin(Lra*PI / 180), 0, cos(Lra*PI / 180),  Lrz,
-           0, 0,               0,  1
-         };
+BLA::Matrix<4, 4> TRB = {
+  cos(Lra*PI / 180), 0, sin(Lra*PI / 180),  Lrx,
+  0, 1,               0,  Lry,
+  -sin(Lra*PI / 180), 0, cos(Lra*PI / 180),  Lrz,
+  0, 0,               0,  1
 };
-BLA::Matrix<4, 4> CalcTB0() {
-  return {1, 0, 0, 0,
-          0, 1, 0, 0,
-          0, 0, 1, Lb,
-          0, 0, 0, 1
-         };
+BLA::Matrix<4, 4> TB0 = {
+  1, 0, 0, 0,
+  0, 1, 0, 0,
+  0, 0, 1, Lb,
+  0, 0, 0, 1
 };
 BLA::Matrix<4, 4> CalcT01(double theta1ins) {
   return {cos(theta1ins), -sin(theta1ins), 0, 0,
@@ -54,23 +51,37 @@ BLA::Matrix<4, 4> CalcT23(double theta3ins) {
           0,            0, 0, 1
          };
 };
-BLA::Matrix<4, 4> CalcT3E() {
-  return {1, 0, 0, L2,
-          0, 1, 0, 0,
-          0, 0, 1, 0,
-          0, 0, 0, 1
-         };
-};
+BLA::Matrix<4, 4> T3E = {1, 0, 0, L2,
+                         0, 1, 0, 0,
+                         0, 0, 1, 0,
+                         0, 0, 0, 1
+                        };
 
-//Total matrix for forward kinematics
-//BLA::Matrix<4, 4> TBE = CalcTRB() * CalcTB0() * T01 * T12 * T23 * T3E;
 
-BLA::Matrix<4, 4> TRB0 = CalcTRB() * CalcTB0();
+BLA::Matrix<4, 4> TRB0 = TRB * TB0;
 BLA::Matrix<4, 4> TB0_inv = TRB0; //making a matrix for inverse
 bool is_nonsingular = Invert(TB0_inv); //taking the inverse
 
+
+
+//Function to find the current position from angles
+BLA::Matrix<4, 4> GetCurrentPos() { //________________________________________ //________________________________________
+  //Total matrix for forward kinematics
+  BLA::Matrix<4, 4> TBE = TRB *
+                          TB0 *
+                          CalcT01(dxl.getPresentPosition(DXL_ID[1], UNIT_DEGREE)) *
+                          CalcT12(dxl.getPresentPosition(DXL_ID[2], UNIT_DEGREE)) *
+                          //CalcT23(dxl.getPresentPosition(DXL_ID[3], UNIT_DEGREE)) *
+                          CalcT23(100) *
+                          T3E;
+
+  return TBE;
+
+};
+
+
 //Function to find neccesary angles to reach desired position
-BLA::Matrix<1, 3> setCartesianPosition(double X, double Y, double Z) {
+BLA::Matrix<1, 3> setCartesianPosition(double X, double Y, double Z) { //________________________________________
   BLA::Matrix<4, 4> Td = {1, 0, 0, X,
                           0, 1, 0, Y,
                           0, 0, 1, Z,
@@ -109,9 +120,9 @@ BLA::Matrix<1, 3> setCartesianPosition(double X, double Y, double Z) {
 
 
 
-  theta1 = theta1 + (BasicValue1 * (PI / 180));
-  theta2 = theta2 + (BasicValue2 * (PI / 180));
-  theta3 = theta3 + (BasicValue3 * (PI / 180));
+  theta1 = (theta1 * (180 / PI)) + (BasicValue1 );
+  theta2 = (theta2 * (180 / PI)) + (BasicValue2 );
+  theta3 = (theta3 * (180 / PI)) + (BasicValue3 );
   Serial.println();
   Serial.print("theta1: ");
   Serial.println(theta1);

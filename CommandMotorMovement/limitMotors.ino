@@ -1,5 +1,5 @@
 //Cannot be applied in current control mode
-boolean setSpeedLimit(float speedPct,double unit, uint8_t id) {
+boolean setSpeedLimit(float speedPct, double unit, uint8_t id) {
   int VELOCITY_LIMIT = 1023;
   double VELOCITY_UNIT = unit; // rpm
   double maxSpeed = VELOCITY_LIMIT * VELOCITY_UNIT;
@@ -9,7 +9,7 @@ boolean setSpeedLimit(float speedPct,double unit, uint8_t id) {
 }
 
 //Cannot be applied in current control mode
-boolean setAccelerationLimit(float speedPCT,double unit, uint8_t id) {
+boolean setAccelerationLimit(float speedPCT, double unit, uint8_t id) {
   int VELOCITY_LIMIT = 1023;
   double VELOCITY_UNIT = unit; // rpm
   double maxSpeed = VELOCITY_LIMIT * VELOCITY_UNIT;
