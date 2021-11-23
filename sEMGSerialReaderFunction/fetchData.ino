@@ -1,8 +1,3 @@
-
-
-
-
-
 //Call function to fetch data from sEMG
 //Alters the content of the sEMGFetchedData array
 //Returns true if data was fetched successfully, otherwise returns false
