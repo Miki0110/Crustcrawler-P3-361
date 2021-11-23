@@ -14,7 +14,7 @@ bool sEMGfinal2 = 0; //Global for when threshold reached for channel two
 
 int sEMGFetchedData[5]; //Array for storing newest data fetched from sEMG
 
-int sEMGInterpreterSampleTime = 10; //Time between interpreter mesurements in miliseconds
+int sEMGInterpreterSampleTime = 10; //Time between interpreter mesurements in miliseconds (minimum should be 10)
 unsigned long sEMGInterpreterTime;  //Counter to keep track of milliseconds between the interpreiter sample collection
 
 unsigned int timeForHold = 100; //Time for impulse to be held, unit is sEMGInterpreterSampleTime in ms
@@ -54,11 +54,11 @@ void loop()
   sEMGch1.addValue(sEMGFetchedData[3]);
   sEMGch2.addValue(sEMGFetchedData[4]);
 
+  //Run signal interpreiter
   if (millis() >= sEMGInterpreterTime + sEMGInterpreterSampleTime) {
-    sEMGInterpreterHoldTracker();
+    sEMGInterpreter();
     sEMGInterpreterTime = millis();
   }
-  sEMGInterpreter();
   
   //Debug
   /*
