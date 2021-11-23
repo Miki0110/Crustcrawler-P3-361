@@ -5,44 +5,24 @@
  * Function requires sEMGFetchedData integer array of 5 elements to be defined before calling function
  * Data will be stored in array 
  */
-//Wellats globals------------------------------------------------------------------------------------------------------------------------------------
-int Fvloop[]={0,0,0,1,0,0,0,1,0,0,0,1,1,1,1,1,1,0,0,0,0,0,1,1,0,0,0,0,0,1,1,1,0,0,0}; //simalter
-int change = 0; //simalter
-int OldFinalValues[10];
-int impuls1 = 0;
-int impuls2 = 0;
-int var;
- //-----------------------------------------------------------------------------------------------------------------------------------------------
-int Threshold1 = 135; //Orbiclaris oculi 75% = 135
-int Threshold2 = 120; //Frontalis 75% = 120
-
-bool sEMGfinal1 = 0; //Global for when threshold reached for channel one
-bool sEMGfinal2 = 0; //Global for when threshold reached for channel two
-
-bool FinalValues[2]; //Array for boolean data for thresholds
- 
 int sEMGFetchedData[5]; //Array for storing newest data fetched from sEMG
 
 int triggerPointch1 = 800;  //Trigger point for sEMG channel 1
 int triggerPointch2 = 800;  //Trigger point for sEMG channel 2
 
-
 //Running average library by Rob Tillaart
 #include <RunningAverage.h>
-
 
 //Define rolling averages and sample amounts (keep sample amounts low (<50))
 RunningAverage sEMGch1(25);
 RunningAverage sEMGch2(25);
-
-//Wellats timer
 /*---------------------Timer-----------------------------*/
-RunningAverage totalAverage(2); //add data here
-int sampleTime = 1*1000; //add seconds here
+RunningAverage totalAverage(1000); //add data here
+int sampleTime = 10; //add seconds here
 int totalAverageCounter = 1;
 unsigned long currentMillis;
-/*---------------------Timer------------------------------------------------------------------------------------------------------------------*/
-//
+/*---------------------Timer-----------------------------*/
+
 void setup() 
 {
   //Should be added to setup of arduino program calling this function
@@ -58,6 +38,11 @@ void setup()
   //Ensure clean slate for all rolling averages
   sEMGch1.clear();
   sEMGch2.clear();
+/*---------------------Timer-----------------------------*/
+  totalAverage.clear();
+
+  unsigned long currentMillis = millis();
+/*---------------------Timer-----------------------------*/
 }
 
 void loop() 
@@ -73,29 +58,32 @@ void loop()
   //Serial.print(sEMGFetchedData[3]);
   //Serial.print(", ");
   //Serial.print(sEMGFetchedData[4]);
-  //Serial.print(", ");
-  //Serial.print(sEMGch1.getAverage(), 0);
-  //Serial.print(", ");
-  //Serial.println(sEMGch2.getAverage(), 0);
+  /*----------use this for data sEMG 1 and sEMG2 ----------*/
+  /*
+  Serial.print(", ");
+  Serial.print(sEMGch1.getAverage(), 0);
+  Serial.print(", ");
+  Serial.println(sEMGch2.getAverage(), 0);
+  /*----------use this for data sEMG 1 and sEMG2 ----------*/
 
-  //Calling BthresholdDetminer which gives FinalValues[2] 1 if signal is over threshold.
-  thresHold();
-
-    //Print FinalValues array to serial monitor - only for debugging
-    //Serial.println(FinalValues[1]);
-    //Serial.println(FinalValues[2]);
-
-
-  sampleTimeVal();
-
-/*
-  //Testing set pins to high when threshold is met - Can we delete this?
+  //Testing set pins to high when threshold is met
   if(     sEMGch1.getAverage() >= triggerPointch1) digitalWrite(52, HIGH);
   else if(sEMGch1.getAverage() <  triggerPointch1) digitalWrite(52,  LOW);
   if(     sEMGch2.getAverage() >= triggerPointch2) digitalWrite(52, HIGH);
   else if(sEMGch2.getAverage() <  triggerPointch2) digitalWrite(52,  LOW);
-  */
+/*---------------------Timer-----------------------------*/
+  if(millis() >= currentMillis+sampleTime){
+    totalAverage.addValue(sEMGch1.getAverage());
+    totalAverageCounter ++;
+    currentMillis = millis();  
+    }
+  if(totalAverageCounter == 1000){
+    Serial.println(totalAverage.getAverage(), 0);
+    totalAverage.clear();
+    totalAverageCounter = 1;
+    } 
 }
+
 
 //Call function to fetch data from sEMG
 //Alters the content of the sEMGFetchedData array
