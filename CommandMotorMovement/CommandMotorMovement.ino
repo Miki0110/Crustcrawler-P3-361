@@ -86,7 +86,7 @@ void loop() {
   receivedInputsFromSerial();
   
   if (millis() >= lastCalcTime + calculationInterval) {
-    GoTo3D(desiredXPos, desiredYPos, desiredZPos);
+    GoTo(desiredXPos, desiredYPos, desiredZPos);
 
     //Record calculation time
     lastCalcTime = millis();
