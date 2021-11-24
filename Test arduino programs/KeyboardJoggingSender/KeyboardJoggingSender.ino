@@ -31,7 +31,6 @@ void loop() {
 
 void keyInputReader() {
   char keyInput = Serial.read();
-  Serial.println(keyInput);
 
   for (int i = 0; i <= 3; i++) {
     dataArray[i] = 0;
@@ -40,22 +39,23 @@ void keyInputReader() {
   switch (keyInput) {
     case 'z':
       //Cycle axis
-      dataArray[0] = 255;
+      dataArray[0] = 1;
       break;
     case 'x':
       //Axis +
-      dataArray[1] = 255;
+      dataArray[1] = 1;
       break;
     case 'c':
       //Axis -
-      dataArray[2] = 255;
+      dataArray[2] = 1;
       break;
     case 'v':
       //Gripper toggle
-      dataArray[3] = 255;
+      dataArray[3] = 1;
       break;
     default:
       //Invalid input
+      break;
   }
 }
 
