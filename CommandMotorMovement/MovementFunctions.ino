@@ -55,10 +55,6 @@ void Move(int xChange, int yChange, int zChange) {
 
 
 
-void GoTo2D(int xCoordinate, int yCoordinate) { //GoTo for 2 axis(Normal when playing chess and move around the board)
-  GoTo3D(xCoordinate, yCoordinate, 20);
-};
-
 void GoTo3D(int xCoordinate, int yCoordinate, int zCoordinate) { //GoTo for 3 axis(Z included)
   MoveablePos = {xCoordinate, yCoordinate, zCoordinate};
   //BLA::Matrix<1, 3> MoveablePos = CheckMovementCoordinate(xCoordinate, yCoordinate, zCoordinate); //Checks if the Coordinate positions are reachable
