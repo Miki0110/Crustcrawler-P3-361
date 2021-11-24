@@ -77,39 +77,38 @@ const int millisBetweenDataSend = 10;
 unsigned long currentDataSendMillis = 0;
 
 void loop() {
-    KeyInput();
-  
-      //ActivateGripper(); //Function to activation of gripper
-      //delay(2000);
-  /*
-    //Control through torque
-    //                id      torque
-    //setMotorTorque(DXL_ID[3], 1.420);
-    //delay(1000);
-    //setMotorTorque(DXL_ID[2], -1.420);
-    //delay(1000);
+  //KeyInput();
+  //GraspingTest();
+  //ActivateGripper(); //Function to activation of gripper
+  //delay(2000);
 
-    //Test of gripper
-    //dxl.setGoalPosition(DXL_ID[1], 2100, UNIT_RAW);
-    //dxl.setGoalPosition(DXL_ID[2], 2600, UNIT_RAW);
-    //dxl.setGoalPosition(DXL_ID[3], 3000, UNIT_RAW);
-      ActivateGripper(); //Function to activation of gripper
-    Gripper(0);
-    Serial.println();
-    for(int i=160; i<=260; i=i+3){
-    GoTo2D(i,130);
-    delay(10);
-    }
-    for(int i=130; i<=265; i=i+3){
-    GoTo2D(260,i);
-    delay(10);
-    }
-    for(int i=260; i>=160; i=i-3){
-    GoTo2D(i,265);
-    delay(10);
-    }
-    for(int i=265; i>=130; i=i-3){
-    GoTo2D(160,i);
-    delay(10);
-    }*/
+  //Control through torque
+  //                id      torque
+  //setMotorTorque(DXL_ID[3], 1.420);
+  //delay(1000);
+  //setMotorTorque(DXL_ID[2], -1.420);
+  //delay(1000);
+
+  //Test of gripper
+  //dxl.setGoalPosition(DXL_ID[1], 2100, UNIT_RAW);
+  //dxl.setGoalPosition(DXL_ID[2], 2600, UNIT_RAW);
+  //dxl.setGoalPosition(DXL_ID[3], 3000, UNIT_RAW);
+  ActivateGripper(); //Function to activation of gripper
+  Serial.println();
+  for (int i = 160; i <= 260; i = i + 3) {
+    GoTo(i, 130,20);
+    delay(1);
+  }
+  for (int i = 130; i <= 265; i = i + 3) {
+    GoTo(260, i,20);
+    delay(1);
+  }
+  for (int i = 260; i >= 160; i = i - 3) {
+    GoTo(i, 265,20);
+    delay(1);
+  }
+  for (int i = 265; i >= 130; i = i - 3) {
+    GoTo(160, i,20);
+    delay(1);
+  }
 }

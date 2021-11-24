@@ -40,7 +40,7 @@ void GoToStartPos() {
   dxl.setGoalPosition(DXL_ID[1], Startpos[0], UNIT_DEGREE);
   dxl.setGoalPosition(DXL_ID[2], Startpos[1], UNIT_DEGREE);
   dxl.setGoalPosition(DXL_ID[3], Startpos[2], UNIT_DEGREE);
-  //GoTo3D(270,140,200);
+  //GoTo(Startpos);
 
   Gripper(1);
 
