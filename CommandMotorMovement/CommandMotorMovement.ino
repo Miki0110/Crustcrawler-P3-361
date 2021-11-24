@@ -105,6 +105,14 @@ void setup() {
   setSpeedLimit(0.4, 0.114, DXL_ID[3]);
   GoToStartPos();
 
+  //Ensure clean slate for all rolling averages
+  sEMGch1.clear();
+  sEMGch2.clear();
+
+  //Prepare interpreiter timer for use
+  sEMGInterpreterTime = millis();
+
+  //Prepare calculator timer for use
   lastCalcTime = millis();
 }
 
