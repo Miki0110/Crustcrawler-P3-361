@@ -1,51 +1,21 @@
-/*
-  Motor:
-  1=2100
-  2=2600
-  3=3000
+boolean gripperPosition = false;
 
-
-
-*/
-
-
-/*
-  0 = 2048
-  closed pos ~2020
-  open pos ~ 1954
-
-
-*/
-int Open = 1954;
-int Closed = 2020;
-boolean Gripperposition = false;
-
-void ActivateGripper() {
-  Gripper(Gripperposition);
-  Gripperposition = !Gripperposition;
+void toggleGripper() {
+  positionGripper(gripperPosition);
+  gripperPosition = !gripperPosition;
 }
 
-
-//Orient arm
-void Gripper(boolean position) {
-
-  if (position == 0) { //Closed
-    dxl.setGoalPosition(DXL_ID[4], Closed, UNIT_RAW);
-    dxl.setGoalPosition(DXL_ID[5], Closed, UNIT_RAW);
+void positionGripper(boolean pos) {
+  const int gripperOpen = 1954;
+  const int gripperClosed = 2020;
+  
+  if (pos == 0) { //Closed
+    dxl.setGoalPosition(DXL_ID[4], gripperClosed, UNIT_RAW);
+    dxl.setGoalPosition(DXL_ID[5], gripperClosed, UNIT_RAW);
   }
   else { //Opened
-    dxl.setGoalPosition(DXL_ID[4], Open, UNIT_RAW);
-    dxl.setGoalPosition(DXL_ID[5], Open, UNIT_RAW);
-
+    dxl.setGoalPosition(DXL_ID[4], gripperOpen, UNIT_RAW);
+    dxl.setGoalPosition(DXL_ID[5], gripperOpen, UNIT_RAW);
   }
-  Gripperposition = position;
+  gripperPosition = pos;
 }
-
-
-/*
-  void GraspPiece(){
-  GoTo3D(0,0,0);
-  ActivateGripper();
-  GoTo3D(0,0,0);
-
-  }*/

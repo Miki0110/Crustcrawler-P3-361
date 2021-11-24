@@ -2,7 +2,6 @@
 #include <SoftwareSerial.h>
 #include <BasicLinearAlgebra.h>
 #include <math.h>
-#include <Wire.h>
 
 /*
   MOTOR MAX/MIN Values (UNIT_RAW)
@@ -16,7 +15,6 @@
 SoftwareSerial soft_serial(7, 8); // DYNAMIXELShield UART RX/TX
 #define DEBUG_SERIAL soft_serial
 
-
 //Motor IDs
 const uint8_t DXL_ID[6] = {0, 1, 2, 3, 4, 5};
 
@@ -25,6 +23,17 @@ DynamixelShield dxl;
 
 //Namespace for motor control table entries
 using namespace ControlTableItem;
+
+//Desired cartesian positions
+double desiredXPos = 140;
+double desiredYPos = 140;
+double desiredZPos = 140;
+
+double movementStep = 10; //How much to increment the value of an axis each time a command is received
+
+int calculationInterval = 100; //ms between movement calculations
+unsigned long lastCalcTime;
+
 
 //Returns joint angle as radiants
 float getMotorPosition(uint8_t id) {
@@ -41,8 +50,6 @@ void setup() {
   dxl.begin(57600);
   // Set Port Protocol Version. This has to match with DYNAMIXEL protocol version.
   dxl.setPortProtocolVersion(DXL_PROTOCOL_VERSION);
-
-
 
   //Begins serial for debug and testing
   Serial1.begin(57600);
@@ -71,16 +78,20 @@ void setup() {
   setSpeedLimit(0.4, 0.229, DXL_ID[2]);
   setSpeedLimit(0.4, 0.114, DXL_ID[3]);
   GoToStartPos();
+
+  lastCalcTime = millis();
 }
 
-const int millisBetweenDataSend = 10;
-unsigned long currentDataSendMillis = 0;
-
 void loop() {
-    KeyInput();
+  receivedInputsFromSerial();
   
-      //ActivateGripper(); //Function to activation of gripper
-      //delay(2000);
+  if (millis() >= lastCalcTime + calculationInterval) {
+    GoTo3D(desiredXPos, desiredYPos, desiredZPos);
+
+    //Record calculation time
+    lastCalcTime = millis();
+  }
+
   /*
     //Control through torque
     //                id      torque

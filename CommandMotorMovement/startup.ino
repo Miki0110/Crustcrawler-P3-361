@@ -42,7 +42,7 @@ void GoToStartPos() {
   dxl.setGoalPosition(DXL_ID[3], Startpos[2], UNIT_DEGREE);
   //GoTo3D(270,140,200);
 
-  Gripper(1);
+  positionGripper(1);
 
   delay(1000);
 }
