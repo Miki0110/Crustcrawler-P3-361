@@ -8,7 +8,7 @@ SoftwareSerial soft_serial(12, 13); // RX/TX
 byte startByte = 0x7A;
 byte dataArray[4] = {0, 0, 0, 0}; //Cycle axis, Axis +, Axis -, Gripper toggle
 
-unsigned int lastMillis;
+unsigned long lastMillis;
 int sampleTime = 10; //Time between keyboard samples and data packet send (in ms)
 
 void setup() {
@@ -22,19 +22,17 @@ void setup() {
   lastMillis = millis();
 }
 
-void loop() {
+void loop() {  
+  keyInputReader();
   if (millis() >= lastMillis + sampleTime) {
-    keyInputReader();
     keyInputSender();
+
+    lastMillis = millis();
   }
 }
 
 void keyInputReader() {
   char keyInput = Serial.read();
-
-  for (int i = 0; i <= 3; i++) {
-    dataArray[i] = 0;
-  }
 
   switch (keyInput) {
     case 'z':
@@ -66,5 +64,8 @@ void keyInputSender() {
   //Write data bytes
   for (int i = 0; i <= 3; i++) {
     soft_serial.write(dataArray[i]);
+    //Serial.print("Writing...");
+    //Serial.println(dataArray[i]);
+    dataArray[i] = 0;
   }
 }

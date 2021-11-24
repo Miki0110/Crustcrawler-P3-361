@@ -44,6 +44,7 @@ void receivedInputs() {
     Serial.println("Axis cycled");
     Serial.print("New axis: ");
     Serial.println(currentAxis);
+    dataArray[0] = 0;
   }
 
   //Axis +
@@ -62,12 +63,12 @@ void receivedInputs() {
       Serial.print("Axis 3 value: ");
       Serial.println(desiredZPos);
     }
-    
-    Serial.println(currentAxis);
+    dataArray[1] = 0;
   }
   
   //Axis -
   if (dataArray[2] == 1) {
+    Serial.println("Axis -");
     if (currentAxis == 1) {
       desiredXPos -= movementStep; //Decrement X axis 1 movement step
       Serial.print("Axis 1 value: ");
@@ -81,6 +82,7 @@ void receivedInputs() {
       Serial.print("Axis 3 value: ");
       Serial.println(desiredZPos);
     }
+    dataArray[2] = 0;
   }
 
   //Gripper toggle
@@ -92,5 +94,6 @@ void receivedInputs() {
       gripperState = 0;
     }
     Serial.println("Gripper Toggled");
+    dataArray[3] = 0;
   }
 }

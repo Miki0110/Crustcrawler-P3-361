@@ -21,6 +21,7 @@ void receivedInputsFromSerial() {
     else {
       currentAxis ++;
     }
+    dataArray[0] = 0;
   }
 
   //Axis +
@@ -32,6 +33,7 @@ void receivedInputsFromSerial() {
     } else {
       desiredZPos += movementStep; //Increment Z axis 1 movement step
     }
+    dataArray[1] = 0;
   }
   
   //Axis -
@@ -43,10 +45,12 @@ void receivedInputsFromSerial() {
     } else {
       desiredZPos -= movementStep; //Decrement Z axis 1 movement step
     }
+    dataArray[2] = 0;
   }
 
   //Gripper toggle
   if (dataArray[3] == 1) {
     toggleGripper();
+    dataArray[3] = 0;
   }
 }
