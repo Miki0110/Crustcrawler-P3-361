@@ -3,6 +3,13 @@
 #include <BasicLinearAlgebra.h>
 #include <math.h>
 
+//Running average library by Rob Tillaart
+#include <RunningAverage.h>
+
+//Define rolling averages and sample amounts (keep sample amounts low (<50))
+RunningAverage sEMGch1(25);
+RunningAverage sEMGch2(25);
+
 /*
   MOTOR MAX/MIN Values (UNIT_RAW)
   BLA::Matrix<2,5> MotorMaxMin = {1800, 2500, //Motor1
@@ -24,16 +31,31 @@ DynamixelShield dxl;
 //Namespace for motor control table entries
 using namespace ControlTableItem;
 
-//Desired cartesian positions
+//Threshholds for signals from sEMG channels to be counted as active
+const int sEMGch1Threshold = 535; //Orbiclaris oculi 75% = 135
+const int sEMGch2Threshold = 520; //Frontalis 75% = 120
+
+//Time threshold for an sEMG channel signal to be counted as a held signal
+const int timeForHold = 100; //unit is sEMGInterpreterSampleTime in ms
+
+//Desired cartesian positions alter these to pick a starting position (units are mm)
 double desiredXPos = 140;
 double desiredYPos = 140;
 double desiredZPos = 140;
 
-double movementStep = 10; //How much to increment the value of an axis each time a command is received
+//How much to increment the value of an axis each time a command is received
+double movementStep = 10; //Steps are in mm
 
-int calculationInterval = 100; //ms between movement calculations
+//----Timings----
+const int calculationInterval = 100; //ms between movement calculations
 unsigned long lastCalcTime;
 
+const int sEMGInterpreterSampleTime = 10; //Time between interpreter mesurements in miliseconds (minimum should be 10)
+unsigned long sEMGInterpreterTime;  //Counter to keep track of milliseconds between the interpreiter sample collection
+
+
+//Array for data from sEMG
+int sEMGFetchedData[5]; //Array for storing newest data fetched from sEMG
 
 //Returns joint angle as radiants
 float getMotorPosition(uint8_t id) {
@@ -50,6 +72,10 @@ void setup() {
   dxl.begin(57600);
   // Set Port Protocol Version. This has to match with DYNAMIXEL protocol version.
   dxl.setPortProtocolVersion(DXL_PROTOCOL_VERSION);
+
+  //Begins serial port for sEMG XBee connection
+  Serial3.begin(115200);
+  while (!Serial3); //Wait for serial port to be available
 
   //Begins serial for debug and testing
   Serial1.begin(57600);
@@ -83,10 +109,23 @@ void setup() {
 }
 
 void loop() {
+  //Fetch data from sEMG
+  fetchDataFromsEMG(100);
+
+  //Add sEMG data to rolling averages
+  sEMGch1.addValue(sEMGFetchedData[3]);
+  sEMGch2.addValue(sEMGFetchedData[4]);
+
+  //Run sEMG signal interpreiter
+  if (millis() >= sEMGInterpreterTime + sEMGInterpreterSampleTime) {
+    sEMGInterpreter();
+    sEMGInterpreterTime = millis();
+  }
+  
   receivedInputsFromSerial();
   
   if (millis() >= lastCalcTime + calculationInterval) {
-    GoTo3D(desiredXPos, desiredYPos, desiredZPos);
+    GoTo(desiredXPos, desiredYPos, desiredZPos);
 
     //Record calculation time
     lastCalcTime = millis();
