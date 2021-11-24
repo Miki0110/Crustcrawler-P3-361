@@ -1,29 +1,9 @@
-
-BLA::Matrix<1, 3> TrajectoryGeneration(int newx, int newy, int newz) {
-  //Initialicing variables and numbers
-  int NewPosCartesian[] = {newx, newy, newz};
-  BLA::Matrix<1, 3> NewPosAngels[] = {setCartesianPosition(newx, newy, newz)};
-  int OldPosAngels[] = {dxl.getPresentPosition(DXL_ID[1], UNIT_DEGREE), dxl.getPresentPosition(DXL_ID[2], UNIT_DEGREE), dxl.getPresentPosition(DXL_ID[3], UNIT_DEGREE)};
-  BLA::Matrix<4, 4> OldPosCartesianMatrix = GetCurrentPos();
-  int OldPosCartesian[] = {OldPosCartesianMatrix(0, 3), OldPosCartesianMatrix(1, 3), OldPosCartesianMatrix(2, 3)};
-
-  BLA::Matrix<1, 3> GeneratedTrajectory = {}; //The return matrix
-
-  for (int i = 1; i <= 3; i++) {
-    //Missing centerpart.
-    //Something to calculate the Trajectory by using Varibles above
+double speed_mod = 0.03;
+double max_vel = (0.114 * 1023) * 6 * speed_mod;
+double a = 8.583 * 254 * (speed_mod / 5); //max acceleration for the MX-64
 
 
-    GeneratedTrajectory(0, i - 1) = 0;
-  }
-
-
-
-  return GeneratedTrajectory;
-} //End of TrajectoryGeneration (Function)
-
-
-BLA::Matrix<1, 3> cubicPoly(double t, double theta0, double thetaf, double max_vel, double tf) { //function for the cubic polynomial (All)
+BLA::Matrix<1, 3> cubicPolyAll(double t, double theta0, double thetaf, double max_vel, double tf) { //function for the cubic polynomial (All)
   double a0 = theta0;
   double a1 = 0;
   double a2 = 3 / (tf * tf) * (thetaf - theta0);
@@ -35,6 +15,30 @@ BLA::Matrix<1, 3> cubicPoly(double t, double theta0, double thetaf, double max_v
 
   return ReturnAll;
 }
+
+BLA::Matrix<1, 3> TrajectoryGeneration(int newx, int newy, int newz) {
+  //Initialicing variables and numbers
+  int NewPosCartesian[] = {newx, newy, newz};
+  BLA::Matrix<1, 3> NewPosAngels = {setCartesianPosition(newx, newy, newz)};
+  int OldPosAngels[] = {dxl.getPresentPosition(DXL_ID[1], UNIT_DEGREE), dxl.getPresentPosition(DXL_ID[2], UNIT_DEGREE), dxl.getPresentPosition(DXL_ID[3], UNIT_DEGREE)};
+  BLA::Matrix<4, 4> OldPosCartesianMatrix = GetCurrentPos();
+  int OldPosCartesian[] = {OldPosCartesianMatrix(0, 3), OldPosCartesianMatrix(1, 3), OldPosCartesianMatrix(2, 3)};
+  double tf = sqrt(pow((OldPosAngels[0] - NewPosAngels(0, 0)), 2) + pow((OldPosAngels[1] - NewPosAngels(0, 1)), 2) + pow((OldPosAngels[2] - NewPosAngels(0, 2)), 2)) / (max_vel);
+
+  BLA::Matrix<1, 3> GeneratedTrajectory = {}; //The return matrix
+
+  for (int i = 1; i <= 3; i++) {
+    BLA::Matrix<1, 3> Calculated = cubicPolyAll(10, OldPosAngels[i - 1], NewPosAngels(0, i - 1), max_vel, tf);
+
+
+    GeneratedTrajectory(0, i - 1) = Calculated(0, i - 1);
+  }
+
+
+
+  return GeneratedTrajectory;
+} //End of TrajectoryGeneration (Function)
+
 
 double cubicPolyPos(double t, double theta0, double thetaf, double max_vel, double tf) { //function for the cubic polynomial (Position)
   double a0 = theta0;
@@ -62,28 +66,3 @@ double cubicPolyAcc(double t, double theta0, double thetaf, double max_vel, doub
 
   return 2 * a2 + 6 * a3 * t;
 }
-
-double paraBlend(double t, double theta0, double thetaf, double max_vel, double a, double tf) { //function for the parabolic blend
-  double tb, theta0b, thetabt, thetatf = 0.0;
-  tb = tf / 2 - sqrt((a * a) * (tf * tf) - 4 * a * (thetaf - theta0)) / (2 * a);
-  if (theta0 < thetaf) {
-    double thetab = 0.5 * a * tb * tb + theta0;
-    theta0b = theta0 + 0.5 * a * (t * t);
-    thetabt = thetab + a * tb * (t - tb);
-    thetatf = thetaf - 0.5 * a * pow((tf - t), 2);
-  } else {
-    double thetab = theta0 - 0.5 * a * tb * tb;
-    theta0b = theta0 - 0.5 * a * (t * t);
-    thetabt = thetab - a * tb * (t - tb);
-    thetatf = thetaf + 0.5 * a * pow((tf - t), 2);
-  }
-  if (t < tb) {
-    return theta0b;
-  }
-  else if (t < tf - tb) {
-    return thetabt;
-  }
-  else if (tf - tb < !t < tf) {
-    return thetatf;
-  }
-} //End of ParaBlend (Function)
