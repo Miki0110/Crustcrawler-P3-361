@@ -1,47 +1,21 @@
+boolean gripperPosition = false;
 
-int Open = 170;   //170 degree
-int Closed = 178; //178 degree
-boolean Gripperposition = false;
-int LeanedAngle = 0;
-
-void ActivateGripper() {
-  Gripper(Gripperposition);
-  Gripperposition = !Gripperposition;
+void toggleGripper() {
+  positionGripper(gripperPosition);
+  gripperPosition = !gripperPosition;
 }
 
-
-//Orient arm
-void Gripper(boolean position) {
-
-  if (position == 0) { //Closed
-    dxl.setGoalPosition(DXL_ID[4], Closed - LeanedAngle, UNIT_DEGREE);
-    dxl.setGoalPosition(DXL_ID[5], Closed + LeanedAngle, UNIT_DEGREE);
+void positionGripper(boolean pos) {
+  const int gripperOpen = 1954;
+  const int gripperClosed = 2020;
+  
+  if (pos == 0) { //Closed
+    dxl.setGoalPosition(DXL_ID[4], gripperClosed, UNIT_RAW);
+    dxl.setGoalPosition(DXL_ID[5], gripperClosed, UNIT_RAW);
   }
   else { //Opened
-    dxl.setGoalPosition(DXL_ID[4], Open - LeanedAngle, UNIT_DEGREE);
-    dxl.setGoalPosition(DXL_ID[5], Open + LeanedAngle, UNIT_DEGREE);
-
+    dxl.setGoalPosition(DXL_ID[4], gripperOpen, UNIT_RAW);
+    dxl.setGoalPosition(DXL_ID[5], gripperOpen, UNIT_RAW);
   }
-  Gripperposition = position;
-}
-
-void UpdateGripper() {
-  if (Gripperposition  == 0) { //Closed
-    dxl.setGoalPosition(DXL_ID[4], Closed - LeanedAngle, UNIT_DEGREE);
-    dxl.setGoalPosition(DXL_ID[5], Closed + LeanedAngle, UNIT_DEGREE);
-  }
-  else { //Opened
-    dxl.setGoalPosition(DXL_ID[4], Open - LeanedAngle, UNIT_DEGREE);
-    dxl.setGoalPosition(DXL_ID[5], Open + LeanedAngle, UNIT_DEGREE);
-
-  }
-}
-
-
-
-void GraspPiece() {
-  Move(0, 0, -20);
-  ActivateGripper();
-  Move(0, 0, 20);
-
+  gripperPosition = pos;
 }
