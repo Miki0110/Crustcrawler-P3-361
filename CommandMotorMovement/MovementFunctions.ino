@@ -40,13 +40,5 @@ void GoTo(int xCoordinate, int yCoordinate, int zCoordinate) { //GoTo for 3 axis
   //while (dxl.getPresentPosition(DXL_ID[1], UNIT_DEGREE) > ((MoveablePosvinkel(0, 0)) + AngleDiff) || dxl.getPresentPosition(DXL_ID[1], UNIT_DEGREE) < ((MoveablePosvinkel(0, 0)) - AngleDiff)) {Serial.println("Moving Theta1");}; //As long as not near pos, move the robot
   //while (dxl.getPresentPosition(DXL_ID[2], UNIT_DEGREE) > ((MoveablePosvinkel(0, 1)) + AngleDiff) || dxl.getPresentPosition(DXL_ID[2], UNIT_DEGREE) < ((MoveablePosvinkel(0, 1)) - AngleDiff)) {Serial.println("Moving Theta2");}; //As long as not near pos, move the robot
   //while (dxl.getPresentPosition(DXL_ID[3], UNIT_DEGREE) > ((MoveablePosvinkel(0, 2)) + AngleDiff) || dxl.getPresentPosition(DXL_ID[3], UNIT_DEGREE) < ((MoveablePosvinkel(0, 2)) - AngleDiff)) {Serial.println("Moving Theta3");}; //As long as not near pos, move the robot
-EndEffector();
+LeanedAngle = (190-dxl.getPresentPosition(DXL_ID[1],UNIT_DEGREE))/4; //Used to give the Wiggle/Swap for the endEffector
 };
-
-
-
-
-void EndEffector(){
-  LeanedAngle = (190-dxl.getPresentPosition(DXL_ID[1],UNIT_DEGREE))/4;
-  UpdateGripper();
-  }
