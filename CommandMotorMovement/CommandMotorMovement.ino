@@ -43,8 +43,6 @@ void setup() {
   dxl.setPortProtocolVersion(DXL_PROTOCOL_VERSION);
 
 
-  Wire.begin(8);                // join i2c bus with address #8
-  Wire.onReceive(KeyInput); // register event
 
   //Begins serial for debug and testing
   Serial1.begin(57600);
@@ -79,10 +77,10 @@ const int millisBetweenDataSend = 10;
 unsigned long currentDataSendMillis = 0;
 
 void loop() {
-  //  KeyInput();
+    KeyInput();
   
-      ActivateGripper(); //Function to activation of gripper
-      delay(2000);
+      //ActivateGripper(); //Function to activation of gripper
+      //delay(2000);
   /*
     //Control through torque
     //                id      torque

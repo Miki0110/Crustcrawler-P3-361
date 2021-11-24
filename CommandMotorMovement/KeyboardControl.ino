@@ -2,18 +2,30 @@
 int xChange = 0;
 int yChange = 0;
 int zChange = 0;
+byte  ReadedArray[4];
 
 
 
 void KeyInput() {
-
-  while (1 < Wire.available()) { // loop through all but the last
-    char c = Wire.read(); // receive byte as a character
-    Serial.print(c);         // print the character
+  if (Serial1.read() == 254) {
+    Serial1.readBytes(ReadedArray, 4);
+  }
+  int NewMovement[3];
+  for (int i = 1; i <= 3; i++) {
+    if (ReadedArray[i - 1] == 1) {
+      NewMovement[i - 1] = -1;
+    }
+    else if (ReadedArray[i - 1] == 2) {
+      NewMovement[i - 1] = 1;
+    }
+    else if (ReadedArray[i - 1] == 0) {
+      NewMovement[i - 1] = 0;
+    }
   };
-  int x = Wire.read();    // receive byte as an integer
-  Serial.println(x);         // print the integer
-};
+
+  Move((int) NewMovement[0], (int) NewMovement[1], (int) NewMovement[2]);
+  Gripper(ReadedArray[3]);
+}
 
 /*
   if (Serial.available() > 0) {
@@ -53,4 +65,4 @@ void KeyInput() {
   }
 
   Move(xChange, yChange, zChange);
-}*/
+  }*/

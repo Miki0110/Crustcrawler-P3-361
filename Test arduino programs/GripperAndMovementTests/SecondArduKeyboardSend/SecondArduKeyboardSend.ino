@@ -1,5 +1,9 @@
 
-#include <Wire.h>
+#include <SoftwareSerial.h>
+
+
+SoftwareSerial soft_serial(12, 13);
+
 
 int xChange = 0;
 int yChange = 0;
@@ -9,9 +13,8 @@ int gripperChange = 0;
 void setup() {
 
 
-
-  Wire.begin();
-  Serial.begin(57600);
+  soft_serial.begin(9600);
+  Serial.begin(9600);
   while (!Serial); //Wait for serial port to be available
 
 }
@@ -27,40 +30,40 @@ void loop() {
     Serial.println(incomingchar);
     switch (incomingchar) {
       case 'a':
-        xChange = -1;
-        break;
-      case 'd':
         xChange = 1;
         break;
+      case 'd':
+        xChange = 2;
+        break;
       case 'w':
-        yChange = 1;
+        yChange = 2;
         break;
       case 's':
-        yChange = -1;
+        yChange = 1;
         break;
       case 'r':
-        zChange = 1;
+        zChange = 2;
         break;
       case 'f':
-        zChange = -1;
+        zChange = 1;
         break;
       case '1':
-        gripperChange = !gripperChange;
+        gripperChange = 1;
         break;
-      case '0':
+      case '2':
+        gripperChange = 0;
+        break;
+      default :
         xChange = 0; yChange = 0; zChange = 0;
         break;
     }
 
   }
-  Wire.beginTransmission(8); // transmit to device #8
-  Wire.write('x');
-  Wire.write(xChange);              // sends one byte
-  Wire.write('y');
-  Wire.write(yChange);              // sends one byte
-  Wire.write('z');
-  Wire.write(zChange);              // sends one byte
-  Wire.write('g');
-  Wire.write(gripperChange);              // sends one byte
-  Wire.endTransmission();    // stop transmitting
+  //0=0, 1=negativ,2=positiv
+  soft_serial.write(254);
+  soft_serial.write(xChange);
+  soft_serial.write(yChange);
+  soft_serial.write(zChange);
+  soft_serial.write(gripperChange);
+
 }
