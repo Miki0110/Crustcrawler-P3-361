@@ -83,10 +83,11 @@ void setup() {
 }
 
 void loop() {
-  receivedInputsFromSerial();
+  //receivedInputsFromSerial();
   
   if (millis() >= lastCalcTime + calculationInterval) {
     GoTo(desiredXPos, desiredYPos, desiredZPos);
+    TrajectoryGeneration(desiredXPos, desiredYPos, desiredZPos);
 
     //Record calculation time
     lastCalcTime = millis();

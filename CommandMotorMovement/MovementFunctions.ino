@@ -23,7 +23,6 @@ void GoTo(int xCoordinate, int yCoordinate, int zCoordinate) { //GoTo for 3 axis
   //setCartesianPosition((double) xCoordinate, (double) yCoordinate, (double) zCoordinate);
   //CheckMovementAngleDEGREE
 
-  BLA::Matrix<1, 3> Posvinkel = setCartesianPosition((double) MoveablePos(0, 0), (double) MoveablePos(0, 1), (double) MoveablePos(0, 2));
   BLA::Matrix<1, 3> MoveablePosvinkel = setCartesianPosition((double) MoveablePos(0, 0), (double) MoveablePos(0, 1), (double) MoveablePos(0, 2));
   //BLA::Matrix<1, 3> MoveablePosvinkel = CheckMovementAngleDEGREE(Posvinkel(0,0),Posvinkel(0,1),Posvinkel(0,2)); //Checks if the positions are reachable
 
@@ -32,6 +31,7 @@ void GoTo(int xCoordinate, int yCoordinate, int zCoordinate) { //GoTo for 3 axis
   dxl.setGoalPosition(DXL_ID[2], MoveablePosvinkel(0, 1), UNIT_DEGREE);
   dxl.setGoalPosition(DXL_ID[3], MoveablePosvinkel(0, 2) , UNIT_DEGREE);
 
+  Serial.print("Angles: ");
   Serial.print(theta1);
   Serial.print(" , ");
   Serial.print(theta2);

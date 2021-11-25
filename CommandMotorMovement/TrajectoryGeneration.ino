@@ -12,11 +12,10 @@ BLA::Matrix<1, 3> cubicPolyAll(double t, double theta0, double thetaf, double ma
                                  a1 + 2 * a2 * t + 3 * a3 * t * t, //Vel
                                  2 * a2 + 6 * a3 * t //Acc
                                 }; //Pos, Vel, Acc
-
   return ReturnAll;
 }
 
-BLA::Matrix<1, 3> TrajectoryGeneration(int newx, int newy, int newz) {
+BLA::Matrix<3, 3> TrajectoryGeneration(int newx, int newy, int newz) {
   //Initialicing variables and numbers
   int NewPosCartesian[] = {newx, newy, newz};
   BLA::Matrix<1, 3> NewPosAngels = {setCartesianPosition(newx, newy, newz)};
@@ -25,15 +24,20 @@ BLA::Matrix<1, 3> TrajectoryGeneration(int newx, int newy, int newz) {
   int OldPosCartesian[] = {OldPosCartesianMatrix(0, 3), OldPosCartesianMatrix(1, 3), OldPosCartesianMatrix(2, 3)};
   double tf = sqrt(pow((OldPosAngels[0] - NewPosAngels(0, 0)), 2) + pow((OldPosAngels[1] - NewPosAngels(0, 1)), 2) + pow((OldPosAngels[2] - NewPosAngels(0, 2)), 2)) / (max_vel);
 
-  BLA::Matrix<1, 3> GeneratedTrajectory = {}; //The return matrix
-
+  BLA::Matrix<3, 3> GeneratedTrajectory = {}; //The return matrix
+  Serial.println("The GeneratedTrajectory for Pos is :");
   for (int i = 1; i <= 3; i++) {
     BLA::Matrix<1, 3> Calculated = cubicPolyAll(10, OldPosAngels[i - 1], NewPosAngels(0, i - 1), max_vel, tf);
+    GeneratedTrajectory(i - 1, 0) = Calculated(0, 0); //Taking the Pos
+    GeneratedTrajectory(i - 1, 1) = Calculated(0, 1); //Taking the Vel
+    GeneratedTrajectory(i - 1, 2) = Calculated(0, 2); //Taking the Acc
 
-
-    GeneratedTrajectory(0, i - 1) = Calculated(0, i - 1);
+    for (int j = 1; j <= 3; j++) {
+      Serial.print(GeneratedTrajectory(i, j - 1));
+      Serial.print("   ");
+    }
+    Serial.println();
   }
-
 
 
   return GeneratedTrajectory;
