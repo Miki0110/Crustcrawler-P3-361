@@ -27,6 +27,8 @@ void GoTo(int xCoordinate, int yCoordinate, int zCoordinate) { //GoTo for 3 axis
   dxl.setGoalPosition(DXL_ID[2], MoveablePosvinkel(0, 1), UNIT_DEGREE);
   dxl.setGoalPosition(DXL_ID[3], MoveablePosvinkel(0, 2) , UNIT_DEGREE);
 
+
+  Serial.println();
   Serial.print("Angles: ");
   Serial.print(theta1);
   Serial.print(" , ");
