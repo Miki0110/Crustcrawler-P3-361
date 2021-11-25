@@ -3,6 +3,11 @@
 #include <BasicLinearAlgebra.h>
 #include <math.h>
 BLA::Matrix<3, 3> TrajectoryGeneration(double newx, double newy, double newz); //DO NOT REMOVE!! IS NEEDED TO USE THE FUNCTION TrajectoryGeneration
+//LCD
+#include <LiquidCrystal_I2C.h>
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+//LCD uses SDA (Serial data) and SCL (Serial Clock) pins! (Uno = A4,A5)(Mega = pin 20, pin 21)
+
 
 /*
   MOTOR MAX/MIN Values (UNIT_RAW)
@@ -47,6 +52,9 @@ float getMotorVelocity(uint8_t id) {
 }
 
 void setup() {
+  lcd.begin(); //16 columns and 2 rows on the LCD
+  lcd.backlight(); //activate the baacklight for the LCD
+  
   // Set Port baudrate to 57600bps. This has to match with DYNAMIXEL baudrate.
   dxl.begin(57600);
   // Set Port Protocol Version. This has to match with DYNAMIXEL protocol version.
@@ -124,4 +132,5 @@ void loop() {
     GoTo2D(160,i);
     delay(10);
     }*/
+    LCDPrint();
 }
