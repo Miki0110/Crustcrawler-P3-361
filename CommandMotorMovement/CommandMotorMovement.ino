@@ -2,6 +2,7 @@
 #include <SoftwareSerial.h>
 #include <BasicLinearAlgebra.h>
 #include <math.h>
+BLA::Matrix<3, 3> TrajectoryGeneration(double newx, double newy, double newz); //DO NOT REMOVE!! IS NEEDED TO USE THE FUNCTION TrajectoryGeneration
 
 /*
   MOTOR MAX/MIN Values (UNIT_RAW)
@@ -83,12 +84,11 @@ void setup() {
 }
 
 void loop() {
-  //receivedInputsFromSerial();
-  
+  receivedInputsFromSerial();
+
   if (millis() >= lastCalcTime + calculationInterval) {
     GoTo(desiredXPos, desiredYPos, desiredZPos);
-    TrajectoryGeneration(desiredXPos, desiredYPos, desiredZPos);
-
+    BLA::Matrix<3, 3> Final = TrajectoryGeneration(desiredXPos, desiredYPos, desiredZPos);
     //Record calculation time
     lastCalcTime = millis();
   }
