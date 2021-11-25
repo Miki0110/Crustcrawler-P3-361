@@ -6,7 +6,7 @@ SoftwareSerial soft_serial(12, 13); // RX/TX
 
 //Bytes to send in message
 byte startByte = 0x7A;
-byte dataArray[4] = {0, 0, 0, 0}; //Cycle axis, Axis +, Axis -, Gripper toggle
+byte commandData = 0; //1 = Cycle axis, 2 = Axis +, 3 = Axis -, 4 = Gripper toggle
 
 unsigned long lastMillis;
 int sampleTime = 10; //Time between keyboard samples and data packet send (in ms)
@@ -37,19 +37,19 @@ void keyInputReader() {
   switch (keyInput) {
     case 'z':
       //Cycle axis
-      dataArray[0] = 1;
+      commandData = 1;
       break;
     case 'x':
       //Axis +
-      dataArray[1] = 1;
+      commandData = 2;
       break;
     case 'c':
       //Axis -
-      dataArray[2] = 1;
+      commandData = 3;
       break;
     case 'v':
       //Gripper toggle
-      dataArray[3] = 1;
+      commandData = 4;
       break;
     default:
       //Invalid input
@@ -61,11 +61,7 @@ void keyInputSender() {
   //Write first byte
   soft_serial.write(startByte);
 
-  //Write data bytes
-  for (int i = 0; i <= 3; i++) {
-    soft_serial.write(dataArray[i]);
-    //Serial.print("Writing...");
-    //Serial.println(dataArray[i]);
-    dataArray[i] = 0;
-  }
+  //Write data byte
+  soft_serial.write(commandData);
+  commandData = 0;
 }

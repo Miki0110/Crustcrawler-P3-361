@@ -41,7 +41,7 @@ const int timeForHold = 100; //unit is sEMGInterpreterSampleTime in ms
 //Desired cartesian positions alter these to pick a starting position (units are mm)
 double desiredXPos = 140;
 double desiredYPos = 140;
-double desiredZPos = 140;
+double desiredZPos = 70;
 
 //How much to increment the value of an axis each time a command is received
 double movementStep = 10; //Steps are in mm
@@ -54,8 +54,9 @@ const int sEMGInterpreterSampleTime = 10; //Time between interpreter mesurements
 unsigned long sEMGInterpreterTime;  //Counter to keep track of milliseconds between the interpreiter sample collection
 
 
-//Array for data from sEMG
-int sEMGFetchedData[5]; //Array for storing newest data fetched from sEMG
+//----Data saving----
+int sEMGFetchedData[5];      //Array for storing newest data fetched from sEMG
+byte interpretedCommand = 0; //Variable for storing the data interpreted command recieved from sEMG
 
 //Returns joint angle as radiants
 float getMotorPosition(uint8_t id) {
@@ -129,8 +130,10 @@ void loop() {
     sEMGInterpreter();
     sEMGInterpreterTime = millis();
   }
-  
-  receivedInputsFromSerial();
+
+  //Act according to the recieved input command
+  actOnReceivedInputs(interpretedCommand);
+  interpretedCommand = 0; //Reset command
   
   if (millis() >= lastCalcTime + calculationInterval) {
     GoTo(desiredXPos, desiredYPos, desiredZPos);

@@ -109,7 +109,7 @@ void sEMGInterpreter() {
   //From both channel signals determine what command was sent
   if (sEMGch1CommandSignal == 1) {
     //Cycle Axis
-    Serial.println("Cycle Axis");
+    interpretedCommand = 1;
   }
   //else if (sEMGch2CommandSignal == 1) {
   //Emergency axis
@@ -117,15 +117,15 @@ void sEMGInterpreter() {
   //}
   else if (sEMGch1CommandSignal == 2 && sEMGch2CommandSignal == 0) {
     //Axis+
-    Serial.println("Axis +");
+    interpretedCommand = 2;
   }
   else if (sEMGch1CommandSignal == 0 && sEMGch2CommandSignal == 2) {
     //Axis-
-    Serial.println("Axis -");
+    interpretedCommand = 3;
   }
   else if (sEMGch1CommandSignal == 2 && sEMGch2CommandSignal == 2) {
     //Gripper Toggle
-    Serial.println("Gripper Toggle");
+    interpretedCommand = 4;
     blockGripperToggle = true;
   }
 }
