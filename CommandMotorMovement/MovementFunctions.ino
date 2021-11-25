@@ -32,11 +32,11 @@ void GoTo(int xCoordinate, int yCoordinate, int zCoordinate) { //GoTo for 3 axis
   dxl.setGoalPosition(DXL_ID[2], MoveablePosvinkel(0, 1), UNIT_DEGREE);
   dxl.setGoalPosition(DXL_ID[3], MoveablePosvinkel(0, 2) , UNIT_DEGREE);
 
-  Serial.print(theta1);
-  Serial.print(" , ");
-  Serial.print(theta2);
-  Serial.print(" , ");
-  Serial.println(theta3);
+  //Serial.print(theta1);
+  //Serial.print(" , ");
+  //Serial.print(theta2);
+  //Serial.print(" , ");
+  //Serial.println(theta3);
   //while (dxl.getPresentPosition(DXL_ID[1], UNIT_DEGREE) > ((MoveablePosvinkel(0, 0)) + AngleDiff) || dxl.getPresentPosition(DXL_ID[1], UNIT_DEGREE) < ((MoveablePosvinkel(0, 0)) - AngleDiff)) {Serial.println("Moving Theta1");}; //As long as not near pos, move the robot
   //while (dxl.getPresentPosition(DXL_ID[2], UNIT_DEGREE) > ((MoveablePosvinkel(0, 1)) + AngleDiff) || dxl.getPresentPosition(DXL_ID[2], UNIT_DEGREE) < ((MoveablePosvinkel(0, 1)) - AngleDiff)) {Serial.println("Moving Theta2");}; //As long as not near pos, move the robot
   //while (dxl.getPresentPosition(DXL_ID[3], UNIT_DEGREE) > ((MoveablePosvinkel(0, 2)) + AngleDiff) || dxl.getPresentPosition(DXL_ID[3], UNIT_DEGREE) < ((MoveablePosvinkel(0, 2)) - AngleDiff)) {Serial.println("Moving Theta3");}; //As long as not near pos, move the robot

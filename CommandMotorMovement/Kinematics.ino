@@ -97,12 +97,12 @@ BLA::Matrix<1, 3> setCartesianPosition(double X, double Y, double Z) { //_______
   BLA::Matrix<4, 4> T01_inv = CalcT01(theta1); //making a matrix for inverse
   bool is_nonsingular = Invert(T01_inv); //taking the inverse
 
-  Serial.print("theta1: ");
-  Serial.println(theta1);
+  //Serial.print("theta1: ");
+  //Serial.println(theta1);
 
   BLA::Matrix<4, 4> T1E = T01_inv * T0E;
 
-  Serial.print("T01: ");
+  //Serial.print("T01: ");
   //  Serial << CalcT01();
 
   //Length between joint 1 and end effector grip point
@@ -123,21 +123,21 @@ BLA::Matrix<1, 3> setCartesianPosition(double X, double Y, double Z) { //_______
   theta1 = (theta1 * (180 / PI)) + (BasicValue1 );
   theta2 = (theta2 * (180 / PI)) + (BasicValue2 );
   theta3 = (theta3 * (180 / PI)) + (BasicValue3 );
-  Serial.println();
-  Serial.print("theta1: ");
-  Serial.println(theta1);
-  Serial.print("theta2: ");
-  Serial.println(theta2);
-  Serial.print("theta3: ");
-  Serial.println(theta3);
-  Serial.print("phi1:  ");
-  Serial.println(phi1);
-  Serial.print("phi2:  ");
-  Serial.println(phi2);
-  Serial.print("phi3:  ");
-  Serial.println(phi3);
-  Serial.print("L1E:  ");
-  Serial.println(L1E);
+  //Serial.println();
+  //Serial.print("theta1: ");
+  //Serial.println(theta1);
+  //Serial.print("theta2: ");
+  //Serial.println(theta2);
+  //Serial.print("theta3: ");
+  //Serial.println(theta3);
+  //Serial.print("phi1:  ");
+  //Serial.println(phi1);
+  //Serial.print("phi2:  ");
+  //Serial.println(phi2);
+  //Serial.print("phi3:  ");
+  //Serial.println(phi3);
+  //Serial.print("L1E:  ");
+  //Serial.println(L1E);
 
   BLA::Matrix<1, 3> returnvec = {theta1, theta2, theta3};
   return returnvec;
