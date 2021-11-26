@@ -1,6 +1,12 @@
+/*/////////////////////////////////////////////////////////////////////////////////////////////////
+                    Holy shit guys don't put delays in this
+/////////////////////////////////////////////////////////////////////////////////////////////////*/
+
+
+
+
 BLA::Matrix<3,3> computeH(float theta[3]){
 //Function for calculating the mass matrix
-
 
 //defining thetas
 float theta1=(theta[0]-190)*PI/180, theta2=(theta[1]-180)*PI/180, theta3=(theta[2]-180)*PI/180;
@@ -58,13 +64,6 @@ return {-G1,
         -G3};
 }
 
-float errH(float H1, float H2, float H3, float ddtheta[3]){
-  //acceleration
-float ddtheta1=ddtheta[0]*PI/180,ddtheta2=ddtheta[1]*PI/180,ddtheta3=ddtheta[2]*PI/180;
-
-  return H1*ddtheta1+H2*ddtheta2+H3*ddtheta3;
-  }
-
 
 
 float errorFunc(float measured, float desired){ //error function
@@ -82,50 +81,50 @@ float getvelocity(const uint8_t id){
 void updateRef(){ //Function for updating the references (should be set up with trajectory later)
   }
 
-void control(const uint8_t id, float Thetaref, float dThetaref, float ddThetaref) {
-  Thetaref=Thetaref+180;
-  
-  float kp = 144;
-  float kd = 24;
- 
-  float curAngle = getangle(id);
-  float curAngle2 = getangle(id+1);
-  float curAngle3 = getangle(id-1);
-  Serial.print("Current angle2: ");
-  Serial.println(curAngle);
-  Serial.print("Current angle3: ");
-  Serial.println(curAngle2);
-  Serial.print("Current angle1: ");
-  Serial.println(curAngle3);
-  float curVel = getvelocity(id);
- 
-  float curTheta[3] = {190.0,curAngle,180.0};
-  float curDTheta[3] = {0,curVel,0};
 
-  float errTheta = errorFunc(curAngle, Thetaref);
-  float errVel = errorFunc(curVel, dThetaref);
+
+float errH(float H1, float H2, float H3, float ddtheta[3]){
+  //acceleration
+  float ddtheta1=ddtheta[0]*PI/180,ddtheta2=ddtheta[1]*PI/180,ddtheta3=ddtheta[2]*PI/180;
+
+  return H1*ddtheta1+H2*ddtheta2+H3*ddtheta3;
+  }
+
+void control(float Thetaref[3], float dThetaref[3], float ddThetaref[3]) {
   
+  //due to the difference between the used 0 values and the motors values an offset is input
+  Thetaref[0]=Thetaref[0]+191.6, Thetaref[1]=Thetaref[1]+180, Thetaref[2]=Thetaref[2]+180;
+  
+  //initializing variables
+  float curTheta[3], curDTheta[3], errTheta[3], errDTheta[3], errDDTheta[3];
+
+  //float kp[3] = {16, 25, 36}; //tested kp values
+  //float kd[3] = {8,  10, 12}; //tested kd values
+
+  float kp[3] = {4, 16, 5}; //tested kp values
+  float kd[3] = {4, 8, 4.4};
+  
+  //Finding the angles and velocities
+  for(int i=0; i<3;i++){
+    curTheta[i]=getangle(DXL_ID[i+1]);
+    curDTheta[i]=getvelocity(DXL_ID[i+1]);
+  
+  errTheta[i] = errorFunc(curTheta[i], Thetaref[i]);
+  errDTheta[i] = errorFunc(curDTheta[i], dThetaref[i]);
+  errDDTheta[i] = ddThetaref[i] + (kp[i] * errTheta[i]) + (kd[i] * errDTheta[i]);
+    }
+  
+  //computing the dynamics
   BLA::Matrix<3,3> H = computeH(curTheta);
   BLA::Matrix<1,3> C = computeC(curTheta,curDTheta);
   BLA::Matrix<1,3> G = computeG(curTheta);
-  
-  Serial.print("Current errTheta: ");
-  Serial.println(errTheta);
-  float errDDTheta = ddThetaref + (kp * errTheta) + (kd * errVel);
-  
-  float ddTheta[3]= {0,errDDTheta,0};
 
-  float H2 = errH(H(1,0), H(1,1), H(1,2), ddTheta);
-  //Serial.print("Current H2: ");
-  //Serial.println(H2);
-  
-  float Q = H2+C(0,1)+G(0,1);
-  //Serial.print("Current torque: ");
-  //Serial.println(Q);
+ for(int i =0; i<3;i++){
+  //finding the H with control system
+  float Hi = errH(H(i,0), H(i,1), H(i,2), errDDTheta); //H(currTheta)*(ddThetaref + kp*E + kd*dE)
 
-  //setMotorTorque(DXL_ID[1], -torque(0,0));
-  setPWM(id, Q);
-  //setMotorTorque(DXL_ID[3], -torque(0,2));
-  
- // delay(500);
+  float Qi = Hi+C(0,i)+G(0,i);
+  setPWM(DXL_ID[i+1], Qi);
+ }
+
 }

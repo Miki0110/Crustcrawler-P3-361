@@ -14,6 +14,9 @@ const uint8_t DXL_ID[6] = {0, 1, 2, 3, 4, 5};
 const float DXL_PROTOCOL_VERSION = 2.0;
 DynamixelShield dxl(Serial3);
 
+//PWM-Limit value
+float PWMlimit = 855.0;
+
 //Namespace for motor control table entries
 using namespace ControlTableItem;
 
@@ -53,44 +56,28 @@ void setup() {
   Serial.begin(57600);
   while(!Serial); //Wait for serial port to be available
   //Initialise motor control modes
-  startupPosition(DXL_ID[1]);
-  delay(100);
+  startupPWM(DXL_ID[1]);
   startupPWM(DXL_ID[2]);
-  delay(100);
-  startupPosition(DXL_ID[3]);
-  delay(100);
+  startupPWM(DXL_ID[3]);
   //startupPosition(DXL_ID[4]);
-  //delay(100);
   //startupPosition(DXL_ID[5]);
 
-  //Set start torques
-  //dxl.writeControlTableItem(GOAL_PWM, DXL_ID[1], 0);
+  //Set start PWM
+  dxl.writeControlTableItem(GOAL_PWM, DXL_ID[1], 0);
   dxl.writeControlTableItem(GOAL_PWM, DXL_ID[2], 0);
-  //dxl.writeControlTableItem(GOAL_PWM, DXL_ID[3], 0);
+  dxl.writeControlTableItem(GOAL_PWM, DXL_ID[3], 0);
 
   //Orient arm
-  dxl.setGoalPosition(DXL_ID[1], 190, UNIT_DEGREE);
+  //dxl.setGoalPosition(DXL_ID[1], 190, UNIT_DEGREE);
   //dxl.setGoalPosition(DXL_ID[2], 180, UNIT_DEGREE);
-  dxl.setGoalPosition(DXL_ID[3], 180, UNIT_DEGREE);
+  //dxl.setGoalPosition(DXL_ID[3], 180, UNIT_DEGREE);
   starttime = millis();
 }
 
 void loop() {
-   float Thetaref = 0;                                                              
-   float dThetaref = 0;                                                             
-   float ddThetaref= 0;  
-  control(DXL_ID[2], Thetaref,  dThetaref, ddThetaref);
-  //Simulate time for trajectory planning
-  
-  //calculate torques
-  //                        id      theta  dtheta   ddtheta
- 
-  //Control through torque
-  //                id      torque
-  //setMotorTorque(DXL_ID[1], tau1);
- // delay(10);
-  //setMotorTorque(DXL_ID[2], tau2);
- // delay(10);
-  //setMotorTorque(DXL_ID[3], tau3);
-  //delay(1000);
+   float Thetaref[3] = {0,0,0};                                                              
+   float dThetaref[3] = {0,0,0};                                                             
+   float ddThetaref[3]= {0,0,0};  
+  control(Thetaref,  dThetaref, ddThetaref);
+
 }

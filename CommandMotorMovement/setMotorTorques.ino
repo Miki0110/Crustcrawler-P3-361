@@ -25,13 +25,13 @@ boolean setMotorTorque(uint8_t id, float torque) {
   }
 }
 
-void setPWM(uint8_t id, float torque){
+void setPWM(uint8_t id, float torque){ //PWM control function
   float c1;
   float c2;
   float velocity = getvelocity(id);
   
- switch(id){
-  case 2:
+ switch(id){ //there are different c values for each motor, plus the values change depending on the direction
+  case 2:                     // For the MX-106 motor
     if(velocity > 0){
     c1=138.81;
     c2=220.69;
@@ -43,7 +43,7 @@ void setPWM(uint8_t id, float torque){
     c2=220.69;
       }
   break;
-  default:
+  default:                  // For the MX-64 motor
     if(velocity > 0){
     c1=253.75;
     c2=173.97;
@@ -56,9 +56,17 @@ void setPWM(uint8_t id, float torque){
       }
   break;
  }
-  
-  float PWM=torque*c1+velocity*c2;
-  Serial.print("HELP HERE: ");
+ 
+ float PWM=torque*c1+velocity*c2; //PWM=tau*c1+omega*c2
+ 
+  if(PWM > PWMlimit){ //A check so we don't set too high values
+    PWM=PWMlimit;
+    }else if(PWM < -PWMlimit){
+      PWM=-PWMlimit;
+      }
+      
+  Serial.print("Current PWM: ");
   Serial.println(PWM);
-  dxl.writeControlTableItem(GOAL_PWM, id, PWM);
+  
+  dxl.writeControlTableItem(GOAL_PWM, id, PWM); //send values to the motor
 }
