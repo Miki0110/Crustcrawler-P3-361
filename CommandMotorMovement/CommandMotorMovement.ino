@@ -26,7 +26,7 @@ SoftwareSerial soft_serial(7, 8); // DYNAMIXELShield UART RX/TX
 const uint8_t DXL_ID[6] = {0, 1, 2, 3, 4, 5};
 
 const float DXL_PROTOCOL_VERSION = 2.0;
-DynamixelShield dxl;
+DynamixelShield dxl(Serial3);
 
 //Namespace for motor control table entries
 using namespace ControlTableItem;
@@ -44,7 +44,7 @@ double desiredYPos = 140;
 double desiredZPos = 70;
 
 //How much to increment the value of an axis each time a command is received
-double movementStep = 10; //Steps are in mm
+double movementStep = 0.1; //Steps are in mm
 
 //----Timings----
 const int calculationInterval = 100; //ms between movement calculations
@@ -74,18 +74,12 @@ void setup() {
   // Set Port Protocol Version. This has to match with DYNAMIXEL protocol version.
   dxl.setPortProtocolVersion(DXL_PROTOCOL_VERSION);
 
+  Serial.begin(57600);
+
   //Begins serial port for sEMG XBee connection
-  Serial3.begin(115200);
-  while (!Serial3); //Wait for serial port to be available
-
-  //Begins serial for debug and testing
-  Serial1.begin(57600);
+  Serial1.begin(115200);
   while (!Serial1); //Wait for serial port to be available
-  /*
-    startupCurrent : You cannot use SetGoallPosition
-    startupPosition : If you want to sent/SetGoalPosition
-  */
-
+  
   //Initialise motor control modes
   startupPosition(DXL_ID[1]);  //Base
   startupPosition(DXL_ID[2]);  //"Shoulder"
@@ -104,7 +98,7 @@ void setup() {
   setSpeedLimit(0.4, 0.114, DXL_ID[1]);
   setSpeedLimit(0.4, 0.229, DXL_ID[2]);
   setSpeedLimit(0.4, 0.114, DXL_ID[3]);
-  GoToStartPos();
+  //GoToStartPos();
 
   //Ensure clean slate for all rolling averages
   sEMGch1.clear();
@@ -125,15 +119,19 @@ void loop() {
   sEMGch1.addValue(sEMGFetchedData[3]);
   sEMGch2.addValue(sEMGFetchedData[4]);
 
+  Serial.print(sEMGch1.getAverage());
+  Serial.print(" ");
+  Serial.println(sEMGch2.getAverage());
+
   //Run sEMG signal interpreiter
   if (millis() >= sEMGInterpreterTime + sEMGInterpreterSampleTime) {
     sEMGInterpreter();
     sEMGInterpreterTime = millis();
-  }
 
-  //Act according to the recieved input command
-  actOnReceivedInputs(interpretedCommand);
-  interpretedCommand = 0; //Reset command
+    //Act according to the recieved input command
+    //actOnReceivedInputs(interpretedCommand);
+    interpretedCommand = 0; //Reset command
+  }
   
   if (millis() >= lastCalcTime + calculationInterval) {
     GoTo(desiredXPos, desiredYPos, desiredZPos);

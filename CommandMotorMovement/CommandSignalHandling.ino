@@ -19,27 +19,43 @@ void actOnReceivedInputs(byte commandData) { //Set to 0 if debugging with serial
       else {
         currentAxis ++;
       }
+      Serial.println("Axis cycled");
+      Serial.print("New axis: ");
+      Serial.println(currentAxis);
       break;
     case 2: //Axis +
       if (currentAxis == 1) {
         desiredXPos += movementStep; //Increment X axis 1 movement step
+        Serial.print("Axis 1 value: ");
+        Serial.println(desiredXPos);
       } else if (currentAxis == 2) {
         desiredYPos += movementStep; //Increment Y axis 1 movement step
+        Serial.print("Axis 2 value: ");
+        Serial.println(desiredYPos);
       } else {
         desiredZPos += movementStep; //Increment Z axis 1 movement step
+        Serial.print("Axis 3 value: ");
+        Serial.println(desiredZPos);
       }
       break;
     case 3: //Axis -
       if (currentAxis == 1) {
         desiredXPos -= movementStep; //Decrement X axis 1 movement step
+        Serial.print("Axis 1 value: ");
+        Serial.println(desiredXPos);
       } else if (currentAxis == 2) {
         desiredYPos -= movementStep; //Decrement Y axis 1 movement step
+        Serial.print("Axis 2 value: ");
+        Serial.println(desiredYPos);
       } else {
         desiredZPos -= movementStep; //Decrement Z axis 1 movement step
+        Serial.print("Axis 3 value: ");
+        Serial.println(desiredZPos);
       }
       break;
     case 4: //Gripper toggle
       toggleGripper();
+      Serial.println("Gripper Toggled");
       break;
     default:
       break;
