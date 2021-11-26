@@ -20,21 +20,8 @@ float PWMlimit = 855.0;
 //Namespace for motor control table entries
 using namespace ControlTableItem;
 
-//Returns joint angle as radiants
-float getMotorPosition(uint8_t id) {
-  return PI/180 * dxl.getPresentPosition(id, UNIT_DEGREE);
-}
-
-//Returns joint velocity in radiants/s
-float getMotorVelocity(uint8_t id) {
-  return (1/60) * 2*PI * dxl.getPresentVelocity(id, UNIT_RPM);
-}
-
-BLA::Matrix<1,3> theta0 = {0,0,-90}; //start position
-BLA::Matrix<1,3> thetaf = {60,80,-50}; //end position
-
-const int millisBetweenDataSend = 10;
-unsigned long currentDataSendMillis = 0;
+//const int millisBetweenDataSend = 10;
+//unsigned long currentDataSendMillis = 0;
 double starttime;
 double theta[3];
 double dtheta[3];
@@ -49,7 +36,7 @@ void setup() {
 
   //Begins serial for debug and testing
   Serial.begin(57600);
-  while(!Serial); //Wait for serial port to be available
+  while (!Serial); //Wait for serial port to be available
   //Initialise motor control modes
   startupPWM(DXL_ID[1]);
   startupPWM(DXL_ID[2]);
@@ -70,9 +57,11 @@ void setup() {
 }
 
 void loop() {
-   float Thetaref[3] = {0,0,0};                                                              
-   float dThetaref[3] = {0,0,0};                                                             
-   float ddThetaref[3]= {0,0,0};  
-  control(Thetaref,  dThetaref, ddThetaref);
+  //all angles must be in rawdata!!!
+  //Angles = 0.088 deg || Velocity = 0.114 rpm
+  int Thetaref[3] = {0, 0, 0} / 0.088;
+  int dThetaref[3] = {0, 0, 0} / 0.114;
+  int ddThetaref[3] = {0, 0, 0} / 0.144;
 
+  callPWM(Thetaref,  dThetaref, ddThetaref);
 }
