@@ -33,11 +33,6 @@ float getMotorVelocity(uint8_t id) {
 BLA::Matrix<1,3> theta0 = {0,0,-90}; //start position
 BLA::Matrix<1,3> thetaf = {60,80,-50}; //end position
 
-double speed_mod=0.03;
-double max_vel=(0.114*1023)*6*speed_mod;
-double tf = sqrt(pow((theta0(0,0)-thetaf(0,0)),2)+pow((theta0(0,1)-thetaf(0,1)),2)+pow((theta0(0,2)-thetaf(0,2)),2))/(max_vel);
-double a=8.583*254*(speed_mod/5); //max acceleration for the MX-64
-
 const int millisBetweenDataSend = 10;
 unsigned long currentDataSendMillis = 0;
 double starttime;
