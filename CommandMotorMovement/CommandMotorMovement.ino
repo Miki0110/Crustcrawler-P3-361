@@ -115,21 +115,13 @@ void loop() {
   //Fetch data from sEMG
   fetchDataFromsEMG(100);
 
-  //Add sEMG data to rolling averages
-  sEMGch1.addValue(sEMGFetchedData[3]);
-  sEMGch2.addValue(sEMGFetchedData[4]);
-
-  Serial.print(sEMGch1.getAverage());
-  Serial.print(" ");
-  Serial.println(sEMGch2.getAverage());
-
   //Run sEMG signal interpreiter
   if (millis() >= sEMGInterpreterTime + sEMGInterpreterSampleTime) {
     sEMGInterpreter();
     sEMGInterpreterTime = millis();
 
     //Act according to the recieved input command
-    //actOnReceivedInputs(interpretedCommand);
+    actOnReceivedInputs(interpretedCommand);
     interpretedCommand = 0; //Reset command
   }
   

@@ -2,8 +2,7 @@
   Alters the content of the sEMGFetchedData array
   Returns true if data was fetched successfully, otherwise returns false
 */
-bool fetchDataFromsEMG(int timeOutAfter)
-{
+bool fetchDataFromsEMG(int timeOutAfter) {
   byte fullMessageFromsEMG[24]; //Byte array for storing full wrapped message
   long currentMillis = millis();
 
@@ -27,16 +26,53 @@ bool fetchDataFromsEMG(int timeOutAfter)
       //Add start bit to message
       fullMessageFromsEMG[0] = 0x7E;
 
-      //Write data to sEMGFetchedData
-      for (int i = 22; i >= 14; i -= 2) {
-        //Combine msb and lsb into single variable
-        sEMGFetchedData[(i - 14) / 2] = fullMessageFromsEMG[i] + (fullMessageFromsEMG[i - 1] << 8);
+      //Print message for debug
+      //for (int i = 0; i <= 23; i++) {
+      //  Serial.print(fullMessageFromsEMG[i], HEX);
+      //  Serial.print(" ");
+      //}
+      //Serial.println();
+
+      //Calculate checksum (All bytes added together exclusive first 3)
+      byte checksum = 0;
+      for (int i = 3; i <= 23; i++) {
+        checksum += fullMessageFromsEMG[i];
       }
+      
+      //Print checksum for debug
+      //Serial.print("Checksum: ");
+      //Serial.println(checksum, HEX);
+
+      //If message is intact add sEMG data to rolling average
+      if (checksum == 0xFF) {
+        //Get data from array by combining msb and lsb into single variable
+        int ch1 = fullMessageFromsEMG[20] + (fullMessageFromsEMG[19] << 8);
+        int ch2 = fullMessageFromsEMG[22] + (fullMessageFromsEMG[21] << 8);
+
+        //Print channel data for debug
+        //Serial.print(ch1);
+        //Serial.print(" ");
+        //Serial.println(ch2);
+
+        //Add sEMG data to rolling averages
+        sEMGch1.addValue(ch1);
+        sEMGch2.addValue(ch2);
+
+        //Print channel average for debug
+        //Serial.print(sEMGch1.getAverage());
+        //Serial.print(" ");
+        //Serial.println(sEMGch2.getAverage());
+      }
+
       //Recieved message
       return true;
     }
   }
 }
+
+//Add sEMG data to rolling averages
+//sEMGch1.addValue(sEMGFetchedData[3]);
+//sEMGch2.addValue(sEMGFetchedData[4]);
 
 /*Following function interpreits a given command from sEMG channels
   Thresholds are set in main document as global variables for easier tuning
