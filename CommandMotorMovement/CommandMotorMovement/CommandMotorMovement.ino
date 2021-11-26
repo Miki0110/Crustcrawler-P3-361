@@ -1,4 +1,3 @@
-
 #include <DynamixelShield.h>
 #include <SoftwareSerial.h>
 #include <BasicLinearAlgebra.h>
@@ -12,7 +11,7 @@ SoftwareSerial soft_serial(7, 8); // DYNAMIXELShield UART RX/TX
 const uint8_t DXL_ID[6] = {0, 1, 2, 3, 4, 5};
 
 const float DXL_PROTOCOL_VERSION = 2.0;
-DynamixelShield dxl(Serial3);
+DynamixelShield dxl;
 
 //Namespace for motor control table entries
 using namespace ControlTableItem;
@@ -53,44 +52,66 @@ void setup() {
   Serial.begin(57600);
   while(!Serial); //Wait for serial port to be available
   //Initialise motor control modes
-  startupPosition(DXL_ID[1]);
+  startupCurrent(DXL_ID[1]);
   delay(100);
-  startupPWM(DXL_ID[2]);
+  startupCurrent(DXL_ID[2]);
   delay(100);
-  startupPosition(DXL_ID[3]);
-  delay(100);
+  startupCurrent(DXL_ID[3]);
+  //delay(100);
   //startupPosition(DXL_ID[4]);
   //delay(100);
   //startupPosition(DXL_ID[5]);
 
   //Set start torques
-  //dxl.writeControlTableItem(GOAL_PWM, DXL_ID[1], 0);
-  dxl.writeControlTableItem(GOAL_PWM, DXL_ID[2], 0);
-  //dxl.writeControlTableItem(GOAL_PWM, DXL_ID[3], 0);
+  dxl.writeControlTableItem(GOAL_CURRENT, DXL_ID[1], 0);
+  dxl.writeControlTableItem(GOAL_CURRENT, DXL_ID[2], 0);
+  dxl.writeControlTableItem(GOAL_CURRENT, DXL_ID[3], 0);
 
   //Orient arm
-  dxl.setGoalPosition(DXL_ID[1], 190, UNIT_DEGREE);
   //dxl.setGoalPosition(DXL_ID[2], 180, UNIT_DEGREE);
-  dxl.setGoalPosition(DXL_ID[3], 180, UNIT_DEGREE);
+  //dxl.setGoalPosition(DXL_ID[3], 180, UNIT_DEGREE);
   starttime = millis();
 }
 
 void loop() {
-   float Thetaref = 0;                                                              
-   float dThetaref = 0;                                                             
-   float ddThetaref= 0;  
-  control(DXL_ID[2], Thetaref,  dThetaref, ddThetaref);
   //Simulate time for trajectory planning
+  double t=(millis()-starttime)/1000; //just to simulate time
+
+  if(t<tf){
+    Serial.println("dav3!!!!!");
+    //calculate the first theta
+    theta[0]=(cubicPolyPos(t,theta0(0,0),thetaf(0,0),max_vel,tf))*PI/180;
+    dtheta[0]=(cubicPolyVel(t,theta0(0,0),thetaf(0,0),max_vel,tf))*PI/180;
+    ddtheta[0]=(cubicPolyAcc(t,theta0(0,0),thetaf(0,0),max_vel,tf))*PI/180;
+  Serial.println("dav4!!!!!");
+    //second theta
+    theta[1]=(cubicPolyPos(t,theta0(0,1),thetaf(0,1),max_vel,tf))*PI/180;
+    dtheta[1]=(cubicPolyVel(t,theta0(0,1),thetaf(0,1),max_vel,tf))*PI/180;
+    ddtheta[1]=(cubicPolyAcc(t,theta0(0,1),thetaf(0,1),max_vel,tf))*PI/180;
+
+    //third theta
+    theta[2]=(cubicPolyPos(t,theta0(0,2),thetaf(0,2),max_vel,tf))*PI/180;
+    dtheta[2]=(cubicPolyVel(t,theta0(0,2),thetaf(0,2),max_vel,tf))*PI/180;
+    ddtheta[2]=(cubicPolyAcc(t,theta0(0,2),thetaf(0,2),max_vel,tf))*PI/180;
+  }
   
   //calculate torques
   //                        id      theta  dtheta   ddtheta
- 
+  double tau1=computeTorque(1.0,    theta, dtheta,  ddtheta);
+  double tau2=computeTorque(2.0,    theta, dtheta,  ddtheta);
+  double tau3=computeTorque(3.0,    theta, dtheta,  ddtheta);
+  Serial.print("tau1: ");
+  Serial.print(tau1);
+  Serial.print(" tau2: ");
+  Serial.print(tau2);
+  Serial.print(" tau3: ");
+  Serial.println(tau3);
   //Control through torque
   //                id      torque
-  //setMotorTorque(DXL_ID[1], tau1);
- // delay(10);
-  //setMotorTorque(DXL_ID[2], tau2);
- // delay(10);
-  //setMotorTorque(DXL_ID[3], tau3);
+  setMotorTorque(DXL_ID[1], tau1);
+  delay(10);
+  setMotorTorque(DXL_ID[2], tau2);
+  delay(10);
+  setMotorTorque(DXL_ID[3], tau3);
   //delay(1000);
 }
