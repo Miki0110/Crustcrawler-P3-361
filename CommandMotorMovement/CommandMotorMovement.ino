@@ -4,6 +4,8 @@
 #include <BasicLinearAlgebra.h>
 #include <math.h>
 #include <Wire.h>
+#include "CRC8.h"
+#include "CRC.h"
 
 SoftwareSerial soft_serial(7, 8); // DYNAMIXELShield UART RX/TX
 #define DEBUG_SERIAL soft_serial

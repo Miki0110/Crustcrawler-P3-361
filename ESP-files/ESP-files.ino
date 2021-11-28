@@ -1,8 +1,11 @@
 #include <SoftwareSerial.h>
 #include <BasicLinearAlgebra.h>
 #include <math.h>
+#include "CRC8.h"
+#include "CRC.h"
 
 SoftwareSerial soft_serial(32, 14); // RX/TX
+CRC8 crc;
 
 //Bytes to send
 byte startByte = 0xDF;
@@ -31,11 +34,20 @@ boolean readInput(int timeOut) { //insert call function to the other arduino
     if (Serial.read() == startRByte) {
       Serial.readBytes(recieverByte, 31);
 
-      byte checksum = 0;
-      for (int i = 3; i <= 32; i++) {
-        checksum += recieverByte[i];
+      crc.reset();
+      crc.setPolynome(0x07);
+      crc.add(startRByte);
+      for (int i = 0; i < 30; i++)
+      {
+        crc.add(recieverByte[i]);
       }
-      if (checksum == 0xFF) {
+      Serial.print("CRC calced: ");
+      Serial.println(crc.getCRC(), HEX);
+
+      Serial.print("Last byte: ");
+      Serial.println(recieverByte[30], HEX);
+      
+      if (crc.getCRC() == recieverByte[30]) { //should check the last bit
         for (int i = 0; i < 6; i = i + 2) {
           rawThetaref[i / 2] = (recieverByte[i] << 8) + recieverByte[i + 1];
           rawdThetaref[i / 2] = (recieverByte[i + 6] << 8) + recieverByte[i + 7];
@@ -182,7 +194,7 @@ BLA::Matrix<1, 3> PWMcalc(float Thetaref[3], float dThetaref[3], float ddThetare
     //setPWM(DXL_ID[i+1], Qi);
   }
 
-  return Q;                                                                                                         
+  return Q;
 }
 
 ////                                                                                                                      ////
@@ -209,16 +221,25 @@ void loop() {
   if (readInput(500) == true) {
 
     BLA::Matrix<1, 3> torque = PWMcalc(Thetaref,  dThetaref, ddThetaref);
-    int pwmValue1 = torque(0, 0);
-    int pwmValue2 = torque(0, 1);
-    int pwmValue3 = torque(0, 2);
-
-    soft_serial.write(startByte);
-    soft_serial.write(highByte(pwmValue1));
-    soft_serial.write(lowByte(pwmValue1));
-    soft_serial.write(highByte(pwmValue2));
-    soft_serial.write(lowByte(pwmValue2));
-    soft_serial.write(highByte(pwmValue3));
-    soft_serial.write(lowByte(pwmValue3));
+    byte returnValue[8];
+    int pwmValue[3];
+    for(int i=0; i<3; i++){
+      pwmValue[i] = torque(0, i);
+      }
+    
+  returnValue[0]=startByte;
+  for(int i=0; i<3; i++){
+    returnValue[i*2+1]=highByte(pwmValue[i]);
+    returnValue[i*2+2]=lowByte(pwmValue[i]);
+    }
+  crc.reset();
+  crc.setPolynome(0x07);
+  for (int i = 0; i < 7; i++)
+  {
+    crc.add(returnValue[i]);
   }
+    returnValue[7]=crc.getCRC();
+  }
+  
+  soft_serial.write(returnValue);
 }
