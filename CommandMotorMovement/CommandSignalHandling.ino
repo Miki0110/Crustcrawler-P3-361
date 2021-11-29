@@ -22,6 +22,8 @@ void receivedInputsFromSerial() {
       currentAxis ++;
     }
     dataArray[0] = 0;
+    
+    LCDPrint();
   }
 
   //Axis +

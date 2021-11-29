@@ -4,6 +4,7 @@
 #include <math.h>
 BLA::Matrix<3, 3> TrajectoryGeneration(double newx, double newy, double newz); //DO NOT REMOVE!! IS NEEDED TO USE THE FUNCTION TrajectoryGeneration
 //LCD
+#include <Wire.h>
 #include <LiquidCrystal_I2C.h>
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 //LCD uses SDA (Serial data) and SCL (Serial Clock) pins! (Uno = A4,A5)(Mega = pin 20, pin 21)
@@ -89,16 +90,20 @@ void setup() {
   GoToStartPos();
 
   lastCalcTime = millis();
+  
+    LCDPrint();
 }
 
 void loop() {
   receivedInputsFromSerial();
 
   if (millis() >= lastCalcTime + calculationInterval) {
-    GoTo(desiredXPos, desiredYPos, desiredZPos);
-    BLA::Matrix<3, 3> Final = TrajectoryGeneration(desiredXPos, desiredYPos, desiredZPos);
+    //GoTo(desiredXPos, desiredYPos, desiredZPos);
+//    BLA::Matrix<3, 3> Final = TrajectoryGeneration(desiredXPos, desiredYPos, desiredZPos);
     //Record calculation time
+    LCDPrint();
     lastCalcTime = millis();
+    
   }
 
   /*
@@ -132,5 +137,5 @@ void loop() {
     GoTo2D(160,i);
     delay(10);
     }*/
-    LCDPrint();
+ 
 }
