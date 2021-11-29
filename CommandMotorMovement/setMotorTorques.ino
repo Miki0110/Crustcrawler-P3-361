@@ -25,7 +25,7 @@ boolean setMotorTorque(uint8_t id, float torque) {
   }
 }
 
-void setPWM(uint8_t id, float torque){ //PWM control function
+void setPWM(uint8_t id, int torque){ //PWM control function
   float c1;
   float c2;
   float velocity = getvelocity(id);

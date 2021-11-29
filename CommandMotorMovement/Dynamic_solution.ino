@@ -1,128 +1,90 @@
 /*/////////////////////////////////////////////////////////////////////////////////////////////////
-                    Holy shit guys don't put delays in this
-/////////////////////////////////////////////////////////////////////////////////////////////////*/
+                    Holy shit guys don't put delays in this(or anything for that matter)
+  /////////////////////////////////////////////////////////////////////////////////////////////////*/
 
+bool callPWM(int Thetaref[3], int dThetaref[3], int ddThetaref[3]) {
 
-
-
-BLA::Matrix<3,3> computeH(float theta[3]){
-//Function for calculating the mass matrix
-
-//defining thetas
-float theta1=(theta[0]-190)*PI/180, theta2=(theta[1]-180)*PI/180, theta3=(theta[2]-180)*PI/180;
-
-//defing the mass matrix
-float H11=0.00166*sin(2.0*theta3 + 2.0*theta2 - 1.0*theta1) - 0.0014*cos(theta3 + 2.0*theta1) - 0.00115*cos(theta3 + 2.0*theta2) - 0.00574*sin(- 2.0*theta2 + theta1) + 0.00574*sin(2.0*theta2 + theta1) + 0.0014*cos(theta3 + 2.0*theta2 - 2.0*theta1) + 0.0014*cos(theta3 + 2.0*theta2 + 2.0*theta1) + 0.00471*sin(theta3 + 2.0*theta2 - 1.0*theta1) + 0.00166*sin(2.0*theta3 + 2.0*theta2 + theta1) - 0.00442*cos(2.0*theta1) - 0.0014*cos(2.0*theta2) + 0.00471*sin(theta3 + 2.0*theta2 + theta1) + 0.0124*cos(theta3) + 0.00171*cos(- 2.0*theta2 + 2.0*theta1) + 0.00171*cos(2.0*theta2 + 2.0*theta1) - 0.0014*cos(- 1.0*theta3 + 2.0*theta1) + 0.0198;
-float H12=0.00733*sin(- 1.0*theta3 + theta1) + 0.00733*sin(theta3 + theta1) + 0.0231*sin(theta1);
-float H13=0.00366*sin(- 1.0*theta3 + theta1) + 0.00366*sin(theta3 + theta1) + 0.00521*sin(theta1);
-float H21=0.00733*sin(- 1.0*theta3 + theta1) + 0.00733*sin(theta3 + theta1) + 0.0231*sin(theta1);
-float H22=0.0191*cos(theta3) + 0.0302;
-float H23=0.00957*cos(theta3) + 0.0068;
-float H31=0.00366*sin(- 1.0*theta3 + theta1) + 0.00366*sin(theta3 + theta1) + 0.00521*sin(theta1);
-float H32=0.00957*cos(theta3) + 0.0068;
-float H33=0.0068;
-return {H11,H12,H13,
-        H21,H22,H23,
-        H31,H32,H33};
-}
-
-
-BLA::Matrix<1,3> computeC(float theta[3], float dtheta[3]){
-//Function for calculating the Coriolis effect
-
-  
-//defining thetas
-float theta1=(theta[0]-190)*PI/180, theta2=(theta[1]-180)*PI/180, theta3=(theta[2]-180)*PI/180;
-//velocity
-float dtheta1=dtheta[0]*PI/180, dtheta2=dtheta[1]*PI/180,dtheta3=dtheta[2]*PI/180;
-
-//defining the coriolis effect vector
-float C1=0.00442*pow(dtheta1,2)*sin(2.0*theta1) - 0.0124*dtheta1*dtheta3*sin(theta3) - 0.00342*pow(dtheta1,2)*cos(2.0*theta2)*sin(2.0*theta1) + 0.00281*pow(dtheta1,2)*sin(2.0*theta1)*cos(theta3) - 0.00574*pow(dtheta1,2)*sin(2.0*theta2)*sin(theta1) + 0.00279*dtheta1*dtheta2*sin(2.0*theta2) - 0.00733*pow(dtheta3,2)*sin(theta1)*sin(theta3) - 0.00166*pow(dtheta1,2)*cos(2.0*theta2)*sin(2.0*theta3)*sin(theta1) - 0.00166*pow(dtheta1,2)*cos(2.0*theta3)*sin(2.0*theta2)*sin(theta1) + 0.00281*pow(dtheta1,2)*sin(2.0*theta1)*sin(2.0*theta2)*sin(theta3) - 0.00684*dtheta1*dtheta2*cos(2.0*theta1)*sin(2.0*theta2) - 0.00471*pow(dtheta1,2)*cos(2.0*theta2)*sin(theta1)*sin(theta3) - 0.00471*pow(dtheta1,2)*sin(2.0*theta2)*cos(theta3)*sin(theta1) + 0.023*dtheta1*dtheta2*cos(2.0*theta2)*cos(theta1) + 0.00229*dtheta1*dtheta2*cos(2.0*theta2)*sin(theta3) + 0.00229*dtheta1*dtheta2*sin(2.0*theta2)*cos(theta3) + 0.00281*dtheta1*dtheta3*cos(2.0*theta1)*sin(theta3) + 0.00115*dtheta1*dtheta3*cos(2.0*theta2)*sin(theta3) + 0.00115*dtheta1*dtheta3*sin(2.0*theta2)*cos(theta3) - 0.0147*dtheta2*dtheta3*sin(theta1)*sin(theta3) - 0.00281*pow(dtheta1,2)*cos(2.0*theta2)*sin(2.0*theta1)*cos(theta3) - 0.00662*dtheta1*dtheta2*sin(2.0*theta2)*sin(2.0*theta3)*cos(theta1) - 0.00662*dtheta1*dtheta3*sin(2.0*theta2)*sin(2.0*theta3)*cos(theta1) + 0.0188*dtheta1*dtheta2*cos(2.0*theta2)*cos(theta1)*cos(theta3) + 0.00942*dtheta1*dtheta3*cos(2.0*theta2)*cos(theta1)*cos(theta3) - 0.0188*dtheta1*dtheta2*sin(2.0*theta2)*cos(theta1)*sin(theta3) - 0.00942*dtheta1*dtheta3*sin(2.0*theta2)*cos(theta1)*sin(theta3) - 0.00197*dtheta1*dtheta2*cos(2.0*theta1)*cos(2.0*theta2)*sin(2.0*theta3) - 0.00197*dtheta1*dtheta2*cos(2.0*theta1)*cos(2.0*theta3)*sin(2.0*theta2) - 0.00197*dtheta1*dtheta3*cos(2.0*theta1)*cos(2.0*theta2)*sin(2.0*theta3) - 0.00197*dtheta1*dtheta3*cos(2.0*theta1)*cos(2.0*theta3)*sin(2.0*theta2) + 0.00662*dtheta1*dtheta2*cos(2.0*theta2)*cos(2.0*theta3)*cos(theta1) + 0.00662*dtheta1*dtheta3*cos(2.0*theta2)*cos(2.0*theta3)*cos(theta1) - 0.00561*dtheta1*dtheta2*cos(2.0*theta1)*cos(2.0*theta2)*sin(theta3) - 0.00561*dtheta1*dtheta2*cos(2.0*theta1)*sin(2.0*theta2)*cos(theta3) - 0.00281*dtheta1*dtheta3*cos(2.0*theta1)*cos(2.0*theta2)*sin(theta3) - 0.00281*dtheta1*dtheta3*cos(2.0*theta1)*sin(2.0*theta2)*cos(theta3);
-float C2=0.0231*pow(dtheta1,2)*cos(theta1) - 0.0014*pow(dtheta1,2)*sin(2.0*theta2) - 0.00957*pow(dtheta3,2)*sin(theta3) - 0.0191*dtheta2*dtheta3*sin(theta3) + 0.00342*pow(dtheta1,2)*cos(2.0*theta1)*sin(2.0*theta2) - 0.0115*pow(dtheta1,2)*cos(2.0*theta2)*cos(theta1) - 0.00115*pow(dtheta1,2)*cos(2.0*theta2)*sin(theta3) - 0.00115*pow(dtheta1,2)*sin(2.0*theta2)*cos(theta3) + 0.0147*pow(dtheta1,2)*cos(theta1)*cos(theta3) + 0.00331*pow(dtheta1,2)*sin(2.0*theta2)*sin(2.0*theta3)*cos(theta1) - 0.00942*pow(dtheta1,2)*cos(2.0*theta2)*cos(theta1)*cos(theta3) + 0.00942*pow(dtheta1,2)*sin(2.0*theta2)*cos(theta1)*sin(theta3) - 0.00331*pow(dtheta1,2)*cos(2.0*theta2)*cos(2.0*theta3)*cos(theta1) - 0.0147*dtheta1*dtheta3*sin(theta1)*sin(theta3) + 0.00281*pow(dtheta1,2)*cos(2.0*theta1)*cos(2.0*theta2)*sin(theta3) + 0.00281*pow(dtheta1,2)*cos(2.0*theta1)*sin(2.0*theta2)*cos(theta3);
-float C3=0.00619*pow(dtheta1,2)*sin(theta3) + 0.00957*pow(dtheta2,2)*sin(theta3) + 0.00521*pow(dtheta1,2)*cos(theta1) - 0.0014*pow(dtheta1,2)*cos(2.0*theta1)*sin(theta3) + 0.00733*pow(dtheta1,2)*cos(theta1)*cos(theta3) + 0.00331*pow(dtheta1,2)*sin(2.0*theta2)*sin(2.0*theta3)*cos(theta1) - 0.00471*pow(dtheta1,2)*cos(2.0*theta2)*cos(theta1)*cos(theta3) + 0.00471*pow(dtheta1,2)*sin(2.0*theta2)*cos(theta1)*sin(theta3) - 0.00331*pow(dtheta1,2)*cos(2.0*theta2)*cos(2.0*theta3)*cos(theta1) + 0.0147*dtheta1*dtheta2*sin(theta1)*sin(theta3) + 0.0014*pow(dtheta1,2)*cos(2.0*theta1)*cos(2.0*theta2)*sin(theta3) + 0.0014*pow(dtheta1,2)*cos(2.0*theta1)*sin(2.0*theta2)*cos(theta3);
-
-return {C1,
-        C2,
-        C3};
-}
-
-BLA::Matrix<1,3> computeG(float theta[3]){
-  //Function for calculating the Gravity effect
-
-  
-  //defining thetas
-float theta1=(theta[0]-190)*PI/180, theta2=(theta[1]-180)*PI/180, theta3=(theta[2]-180)*PI/180;
-  //calcs
-float G1 = 0.0014*cos(theta1) + 0.832*sin(theta1)*sin(theta2) + 0.327*cos(theta2)*sin(theta1)*sin(theta3) + 0.327*cos(theta3)*sin(theta1)*sin(theta2);
-float G2 = 0.327*cos(theta1)*sin(theta2)*sin(theta3) - 0.832*cos(theta1)*cos(theta2) - 0.275*cos(theta2)*sin(theta3) - 0.275*cos(theta3)*sin(theta2) - 0.698*sin(theta2) - 0.327*cos(theta1)*cos(theta2)*cos(theta3);
-float G3 = 0.327*cos(theta1)*sin(theta2)*sin(theta3) - 0.275*cos(theta3)*sin(theta2) - 0.275*cos(theta2)*sin(theta3) - 0.327*cos(theta1)*cos(theta2)*cos(theta3);
-
-return {G1,
-        G2,
-        G3};
-}
-
-
-
-float errorFunc(float measured, float desired){ //error function
-  return desired - measured;
-}
-
-float getangle(const uint8_t id){
-  return dxl.getPresentPosition(id, UNIT_DEGREE);
+//////////////////////////////////////////////////////////////////////////////////////////////
+////                            write all the data and send it                          //////
+  byte startByte = 0x5A; //send byte
+  byte startRByte = 0xDF; //reciver byte
+  byte positionMessage[32];
+                   int currTheta[3], currDThteta[3];
+  //Read current positions
+  for (int i = 0; i < 3; i++) {
+    currTheta[i] = dxl.getPresentPosition(id, UNIT_RAW);
+    currDTheta[i] = dxl.getPresentVelocity(id, UNIT_RAW);
   }
 
-float getvelocity(const uint8_t id){
-  return dxl.getPresentVelocity(id, UNIT_RPM)/360*60;
+  //convert to bytes and write
+  positionMessage[0]=startByte;
+  for (int i = 0; i < 3; i++) {
+    positionMessage[i*2+1]=highByte(Thetaref[i]);
+    positionMessage[i*2+2]=lowByte(Thetaref[i]);
   }
-
-void updateRef(){ //Function for updating the references (should be set up with trajectory later)
+  for (int i = 0; i < 3; i++) {
+    positionMessage[i*2+6]=highByte(dThetaref[i]);
+    positionMessage[i*2+7]=lowByte(dThetaref[i]);
   }
-
-
-
-float errH(float H1, float H2, float H3, float ddtheta[3]){
-  //acceleration
-  float ddtheta1=ddtheta[0]*PI/180,ddtheta2=ddtheta[1]*PI/180,ddtheta3=ddtheta[2]*PI/180;
-
-  return H1*ddtheta1+H2*ddtheta2+H3*ddtheta3;
+  for (int i = 0; i < 3; i++) {
+    positionMessage[i*2+12]=highByte(ddThetaref[i]);
+    positionMessage[i*2+13]=lowByte(ddThetaref[i]);
   }
+  for (int i = 0; i < 3; i++) {
+    positionMessage[i*2+18]=highByte(currTheta[i]);
+    positionMessage[i*2+19]=lowByte(currTheta[i]);
+  }
+  for (int i = 0; i < 3; i++) {
+    positionMessage[i*2+24]=highByte(currDTheta[i]);
+    positionMessage[i*2+25]=lowByte(currDTheta[i]);
+  }
+  //add the CRC-check
+  crc.reset();
+  crc.setPolynome(0x07);
+  for (int i = 0; i < 31; i++)
+  {
+    crc.add(positionMessage[i]);
+  }
+    positionMessage[31]=crc.getCRC();
+    soft_serial.write(positionMessage);
+////                                                                                    //////
+//////////////////////////////////////////////////////////////////////////////////////////////
 
-void control(float Thetaref[3], float dThetaref[3], float ddThetaref[3]) {
-  
-  //due to the difference between the used 0 values and the motors values an offset is input
-  Thetaref[0]=Thetaref[0]+191.6, Thetaref[1]=Thetaref[1]+180, Thetaref[2]=Thetaref[2]+180;
-  
-  //initializing variables
-  float curTheta[3], curDTheta[3], errTheta[3], errDTheta[3], errDDTheta[3];
+  //Wait and read answer
+  byte recieverByte[8];
+  long currentMillis = millis();
 
-  //float kp[3] = {16, 25, 36}; //tested kp values
-  //float kd[3] = {8,  10, 12}; //tested kd values
+  int PWMvalue[3];
 
-  float kp[3] = {144, 400, 625};
-  float kd[3] = {24, 40, 50};
-  
-  //Finding the angles and velocities
-  for(int i=0; i<3;i++){
-    curTheta[i]=getangle(DXL_ID[i+1]);
-    curDTheta[i]=getvelocity(DXL_ID[i+1]);
-  
-  errTheta[i] = errorFunc(curTheta[i], Thetaref[i]);
-  errDTheta[i] = errorFunc(curDTheta[i], dThetaref[i]);
-  errDDTheta[i] = ddThetaref[i] + (kp[i] * errTheta[i]) + (kd[i] * errDTheta[i]);
+  while (Serial.read() != startRByte) {
+    if (currentMillis + 200 <= millis()) {
+      return 0;
     }
+  }
+  Serial.readBytes(recieverByte, 7);
   
-  //computing the dynamics
-  BLA::Matrix<3,3> H = computeH(curTheta);
-  BLA::Matrix<1,3> C = computeC(curTheta,curDTheta);
-  BLA::Matrix<1,3> G = computeG(curTheta);
+      crc.reset();
+      crc.setPolynome(0x07);
+      crc.add(startRByte);
+      for (int i = 0; i < 6; i++)
+      {
+        crc.add(recieverByte[i]);
+      }
+      Serial.print("CRC calced: ");
+      Serial.println(crc.getCRC(), HEX);
 
- for(int i =0; i<3;i++){
-  //finding the H with control system
-  float Hi = errH(H(i,0), H(i,1), H(i,2), errDDTheta); //H(currTheta)*(ddThetaref + kp*E + kd*dE)
-
-  float Qi = Hi+C(0,i)+G(0,i);
-  setPWM(DXL_ID[i+1], Qi);
+      Serial.print("Last byte: ");
+      Serial.println(recieverByte[6], HEX);
+ if (crc.getCRC() == recieverByte[6]) {     
+  for (int i = 0; i < 7; i = i + 2) {
+    PWMvalue[i / 2] = (recieverByte[i] << 8) + recieverByte[i + 1];
+    PWMvalue[i / 2] = (recieverByte[i + 6] << 8) + recieverByte[i + 7];
+  }
+  for (int i = 0; i < 3; i++) {
+    setPWM(DXL_ID[i + 1], PWMvalue[i]);
+  }
+  
+  return 1;
  }
-
+}
 }
