@@ -123,6 +123,7 @@ void loop() {
     //Act according to the recieved input command
     actOnReceivedInputs(interpretedCommand);
     interpretedCommand = 0; //Reset command
+    sEMGInterpreterTime = millis();
   }
   
   if (millis() >= lastCalcTime + calculationInterval) {
