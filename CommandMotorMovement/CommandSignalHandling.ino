@@ -24,30 +24,30 @@ void actOnReceivedInputs(byte commandData) { //Set to 0 if debugging with serial
       //Serial.println(currentAxis);
       break;
     case 2: //Axis +
-      if (currentAxis == 1) {
+      if (currentAxis == 1 && desiredXPos < HiLimitXPos) {
         desiredXPos += movementStep; //Increment X axis 1 movement step
         //Serial.print("Axis 1 value: ");
         //Serial.println(desiredXPos);
-      } else if (currentAxis == 2) {
+      } else if (currentAxis == 2 && desiredYPos < HiLimitYPos) {
         desiredYPos += movementStep; //Increment Y axis 1 movement step
         //Serial.print("Axis 2 value: ");
         //Serial.println(desiredYPos);
-      } else {
+      } else if (desiredZPos < HiLimitZPos) {
         desiredZPos += movementStep; //Increment Z axis 1 movement step
         //Serial.print("Axis 3 value: ");
         //Serial.println(desiredZPos);
       }
       break;
     case 3: //Axis -
-      if (currentAxis == 1) {
+      if (currentAxis == 1 && desiredXPos > LoLimitXPos) {
         desiredXPos -= movementStep; //Decrement X axis 1 movement step
         //Serial.print("Axis 1 value: ");
         //Serial.println(desiredXPos);
-      } else if (currentAxis == 2) {
+      } else if (currentAxis == 2 && desiredYPos > LoLimitYPos) {
         desiredYPos -= movementStep; //Decrement Y axis 1 movement step
         //Serial.print("Axis 2 value: ");
         //Serial.println(desiredYPos);
-      } else {
+      } else if (desiredZPos > LoLimitZPos){
         desiredZPos -= movementStep; //Decrement Z axis 1 movement step
         //Serial.print("Axis 3 value: ");
         //Serial.println(desiredZPos);

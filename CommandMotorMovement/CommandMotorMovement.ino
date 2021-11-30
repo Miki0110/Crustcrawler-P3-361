@@ -41,12 +41,20 @@ const int sEMGch2Threshold = 120; //Frontalis 75% = 120
 const int timeForHold = 100; //unit is sEMGInterpreterSampleTime in ms
 
 //Desired cartesian positions alter these to pick a starting position (units are mm)
-double desiredXPos = 140;
-double desiredYPos = 140;
-double desiredZPos = 70;
+double desiredXPos = 140.00;
+double desiredYPos = 140.00;
+double desiredZPos = 70.00;
+
+//Limits to cartesian positions
+double HiLimitXPos =  350.00;
+double LoLimitXPos =   -5.00;
+double HiLimitYPos =  300.00 + 280.00;
+double LoLimitYPos = -300.00;
+double HiLimitZPos =  700.00;
+double LoLimitZPos =    0.00;
 
 //How much to increment the value of an axis each time a command is received
-double movementStep = 0.5; //Steps are in mm
+double movementStep = 0.50; //Steps are in mm
 
 //----Timings----
 const int calculationInterval = 100; //ms between movement calculations
