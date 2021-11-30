@@ -7,14 +7,14 @@
 #include "CRC8.h"
 #include "CRC.h"
 
-SoftwareSerial soft_serial(7, 8); // DYNAMIXELShield UART RX/TX
-#define DEBUG_SERIAL soft_serial
+SoftwareSerial soft_serial(12, 13); // DYNAMIXELShield UART RX/TX
 
 //Motor IDs
 const uint8_t DXL_ID[6] = {0, 1, 2, 3, 4, 5};
 
 const float DXL_PROTOCOL_VERSION = 2.0;
 DynamixelShield dxl(Serial3);
+CRC8 crc;
 
 //PWM-Limit value
 float PWMlimit = 855.0;
@@ -39,8 +39,12 @@ void setup() {
   //Begins serial for debug and testing
   Serial.begin(57600);
   while (!Serial); //Wait for serial port to be available
+  Serial2.begin(57600);
+
+  soft_serial.begin(57600);
+  
   //Initialise motor control modes
-  startupPWM(DXL_ID[1]);
+ startupPWM(DXL_ID[1]);
   startupPWM(DXL_ID[2]);
   startupPWM(DXL_ID[3]);
   //startupPosition(DXL_ID[4]);
@@ -59,11 +63,12 @@ void setup() {
 }
 
 void loop() {
-  //all angles must be in rawdata!!!
-  //Angles = 0.088 deg || Velocity = 0.114 rpm
-  int Thetaref[3] = {0, 0, 0} / 0.088;
-  int dThetaref[3] = {0, 0, 0} / 0.114;
-  int ddThetaref[3] = {0, 0, 0} / 0.144;
-
+  //all angles must be in degrees
+  float Thetaref[3] = {0, 0, 0};
+  float dThetaref[3] = {0, 0, 0};
+  float ddThetaref[3] = {0, 0, 0};
+if(millis() - starttime >= 2){
   callPWM(Thetaref,  dThetaref, ddThetaref);
+  starttime = starttime+2; //delay is to avoid potential bit overrides
+}
 }

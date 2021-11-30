@@ -16,12 +16,12 @@ BLA::Matrix<1, 3> Q;
 //Bytes to recieve
 byte startRByte = 0x5A;
 
-float rawThetaref[3];
-float rawdThetaref[3];
-float rawddThetaref[3];
+int16_t rawThetaref[3];
+int16_t rawdThetaref[3];
+int16_t rawddThetaref[3];
 
-float rawcurTheta[3];
-float rawcurDTheta[3];
+int16_t rawcurTheta[3];
+int16_t rawcurDTheta[3];
 
 
 
@@ -43,11 +43,17 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  int pwmValue[3];
+  int16_t pwmValue[3];
   if (millis() - startTime >= 1) {
     if (readInput(100) == true) {
       float Thetaref[3], dThetaref[3], ddThetaref[3];
       float curTheta[3], curDTheta[3];
+      for(int i = 0; i < 3; i++){
+        Serial.println("raw Theta values:");
+        Serial.println(rawcurTheta[i]);
+        Serial.println(rawcurDTheta[i]);
+      }
+
       
       for (int i = 0; i < 3; i++) {
         Thetaref[i] = rawThetaref[i] * 0.088;
@@ -57,11 +63,17 @@ void loop() {
         curTheta[i] = rawcurTheta[i] * 0.088;
         curDTheta[i] = rawcurDTheta[i] * 0.114 * 360 / 60;
       }
+      Serial.print("Velocity: ");
+      Serial.println(curDTheta[1]);
 
       torqueCalc(Thetaref, dThetaref, ddThetaref, curTheta, curDTheta);
+      Serial.println("PWM: ");
       for (int i = 0; i < 3; i++) {
-        pwmValue[i] = PWMcalc(i, Q(0, i), curDTheta);
+       Serial.println(Q(0,i));
+        pwmValue[i] = PWMcalc(i, Q(0, i), curDTheta[i]);
+        Serial.println(pwmValue[i]);
       }
+      
       writeOutput(pwmValue);
     }
     startTime = startTime + 1;

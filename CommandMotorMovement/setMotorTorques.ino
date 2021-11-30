@@ -25,39 +25,7 @@ boolean setMotorTorque(uint8_t id, float torque) {
   }
 }
 
-void setPWM(uint8_t id, int torque){ //PWM control function
-  float c1;
-  float c2;
-  float velocity = getvelocity(id);
-  
- switch(id){ //there are different c values for each motor, plus the values change depending on the direction
-  case 2:                     // For the MX-106 motor
-    if(velocity > 0){
-    c1=138.81;
-    c2=220.69;
-  }else if(velocity = 0){
-    c1=(138.81+40.4)/2;
-    c2=220.69;    
-    }else{
-    c1=40.4;
-    c2=220.69;
-      }
-  break;
-  default:                  // For the MX-64 motor
-    if(velocity > 0){
-    c1=253.75;
-    c2=173.97;
-  }else if(velocity = 0){
-    c1=(253.75+80.9)/2;
-    c2=173.9;    
-    }else{
-    c1=80.9;
-    c2=173.97;
-      }
-  break;
- }
- 
- float PWM=torque*c1+velocity*c2; //PWM=tau*c1+omega*c2
+void setPWM(uint8_t id, int PWM){ //PWM control function
  
   if(PWM > PWMlimit){ //A check so we don't set too high values
     PWM=PWMlimit;

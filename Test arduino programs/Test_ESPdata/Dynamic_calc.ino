@@ -1,12 +1,11 @@
 /*/////////////////////////////////////////////////////////////////////////////////////////////////
                     Holy shit guys don't put delays in this
 /////////////////////////////////////////////////////////////////////////////////////////////////*/
-int PWMcalc(int id, float torque, float curDTheta[3]){
+int16_t PWMcalc(int id, float torque, float velocity){
   float c1;
   float c2;
-  float velocity = curDTheta[id];
   
- switch(id){ //there are different c values for each motor, plus the values change depending on the direction
+ switch(id+1){ //there are different c values for each motor, plus the values change depending on the direction
   case 2:                     // For the MX-106 motor
     if(velocity > 0){
     c1=138.81;
@@ -88,9 +87,9 @@ float G1 = 0.0014*cos(theta1) + 0.832*sin(theta1)*sin(theta2) + 0.327*cos(theta2
 float G2 = 0.327*cos(theta1)*sin(theta2)*sin(theta3) - 0.832*cos(theta1)*cos(theta2) - 0.275*cos(theta2)*sin(theta3) - 0.275*cos(theta3)*sin(theta2) - 0.698*sin(theta2) - 0.327*cos(theta1)*cos(theta2)*cos(theta3);
 float G3 = 0.327*cos(theta1)*sin(theta2)*sin(theta3) - 0.275*cos(theta3)*sin(theta2) - 0.275*cos(theta2)*sin(theta3) - 0.327*cos(theta1)*cos(theta2)*cos(theta3);
 
-return {G1,
-        G2,
-        G3};
+return {-G1,
+        -G2,
+        -G3};
 }
 
 
@@ -118,11 +117,11 @@ void torqueCalc(float Thetaref[3], float dThetaref[3], float ddThetaref[3], floa
   float errTheta[3], errDTheta[3], errDDTheta[3];
 
  
-  //float kp[3] = {16, 25, 36}; //tested kp values
-  //float kd[3] = {8,  10, 12}; //tested kd values
+  float kp[3] = {16, 25, 36}; //tested kp values
+  float kd[3] = {8,  10, 12}; //tested kd values
 
-  float kp[3] = {144, 400, 625};
-  float kd[3] = {24, 40, 50};
+  //float kp[3] = {144, 400, 625};
+  //float kd[3] = {24, 40, 50};
 
   //Finding the angles and velocities
   for (int i = 0; i < 3; i++) {
@@ -141,7 +140,7 @@ void torqueCalc(float Thetaref[3], float dThetaref[3], float ddThetaref[3], floa
     //finding the H with control system
     float Hi = errH(H(i, 0), H(i, 1), H(i, 2), errDDTheta); //H(currTheta)*(ddThetaref + kp*E + kd*dE)
 
-    Q(0, i) = Hi + C(0, i) + G(0, i);
+    Q(0, i) = (Hi + C(0, i) + G(0, i));
     //setPWM(DXL_ID[i+1], Qi);
   }
 
