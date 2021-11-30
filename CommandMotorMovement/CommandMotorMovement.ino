@@ -10,6 +10,8 @@
 RunningAverage sEMGch1(25);
 RunningAverage sEMGch2(25);
 
+BLA::Matrix<3, 3> TrajectoryGeneration(double newx, double newy, double newz); //DO NOT REMOVE!! IS NEEDED TO USE THE FUNCTION TrajectoryGeneration
+
 /*
   MOTOR MAX/MIN Values (UNIT_RAW)
   BLA::Matrix<2,5> MotorMaxMin = {1800, 2500, //Motor1
