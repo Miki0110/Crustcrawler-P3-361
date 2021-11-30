@@ -119,9 +119,10 @@ void setup() {
 
   //Prepare calculator timer for use
   lastCalcTime = millis();
+  GoToStartPos();
 }
 
-void loop() {
+void loop() {/*
   Serial.println("Starts motorCalling");
   lastCalcTime = millis();
   for (int antal = 1; antal <= 1000; antal++) {

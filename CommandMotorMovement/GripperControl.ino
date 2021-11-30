@@ -20,3 +20,7 @@ void positionGripper(boolean pos) {
   }
   gripperPosition = pos;
 }
+
+void updateGripper(){
+  positionGripper(gripperPosition);
+  }

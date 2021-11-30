@@ -41,4 +41,5 @@ void GoTo(double xCoordinate, double yCoordinate, double zCoordinate) { //GoTo f
   //while (dxl.getPresentPosition(DXL_ID[2], UNIT_DEGREE) > ((MoveablePosvinkel(0, 1)) + AngleDiff) || dxl.getPresentPosition(DXL_ID[2], UNIT_DEGREE) < ((MoveablePosvinkel(0, 1)) - AngleDiff)) {Serial.println("Moving Theta2");}; //As long as not near pos, move the robot
   //while (dxl.getPresentPosition(DXL_ID[3], UNIT_DEGREE) > ((MoveablePosvinkel(0, 2)) + AngleDiff) || dxl.getPresentPosition(DXL_ID[3], UNIT_DEGREE) < ((MoveablePosvinkel(0, 2)) - AngleDiff)) {Serial.println("Moving Theta3");}; //As long as not near pos, move the robot
 LeanedAngle = (190-dxl.getPresentPosition(DXL_ID[1],UNIT_DEGREE))/4; //Used to give the Wiggle/Swap for the endEffector
+updateGripper(); //Makes the  Wiggle/Swap of the end effector
 };
