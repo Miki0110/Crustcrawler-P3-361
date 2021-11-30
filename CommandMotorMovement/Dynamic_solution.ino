@@ -69,11 +69,11 @@ float errorFunc(float measured, float desired){ //error function
 }
 
 float getangle(const uint8_t id){
-  return dxl.getPresentPosition(id, UNIT_DEGREE);
+  return 0;//dxl.getPresentPosition(id, UNIT_DEGREE);
   }
 
 float getvelocity(const uint8_t id){
-  return dxl.getPresentVelocity(id, UNIT_RPM)/360*60;
+  return 0;//dxl.getPresentVelocity(id, UNIT_RPM)/360*60;
   }
 
 void updateRef(){ //Function for updating the references (should be set up with trajectory later)
@@ -99,8 +99,8 @@ void control(float Thetaref[3], float dThetaref[3], float ddThetaref[3]) {
   //float kp[3] = {16, 25, 36}; //tested kp values
   //float kd[3] = {8,  10, 12}; //tested kd values
 
-  float kp[3] = {144, 400, 625};
-  float kd[3] = {24, 40, 50};
+  float kp[3] = {144, 400, 900};
+  float kd[3] = {24, 40, 60};
   
   //Finding the angles and velocities
   for(int i=0; i<3;i++){

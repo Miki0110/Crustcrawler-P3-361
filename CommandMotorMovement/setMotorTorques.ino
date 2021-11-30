@@ -65,8 +65,8 @@ void setPWM(uint8_t id, float torque){ //PWM control function
       PWM=-PWMlimit;
       }
       
-  Serial.print("Current PWM: ");
-  Serial.println(PWM);
+  //Serial.print("Current PWM: ");
+  //Serial.println(PWM);
   
   dxl.writeControlTableItem(GOAL_PWM, id, PWM); //send values to the motor
 }
