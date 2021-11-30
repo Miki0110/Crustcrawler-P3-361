@@ -26,7 +26,7 @@ SoftwareSerial soft_serial(7, 8); // DYNAMIXELShield UART RX/TX
 const uint8_t DXL_ID[6] = {0, 1, 2, 3, 4, 5};
 
 const float DXL_PROTOCOL_VERSION = 2.0;
-DynamixelShield dxl;
+DynamixelShield dxl(Serial3);
 
 //Namespace for motor control table entries
 using namespace ControlTableItem;
@@ -62,6 +62,7 @@ void setup() {
   dxl.setPortProtocolVersion(DXL_PROTOCOL_VERSION);
 
   //Begins serial for debug and testing
+  Serial.begin(57600);
   Serial1.begin(57600);
   while (!Serial1); //Wait for serial port to be available
   /*
