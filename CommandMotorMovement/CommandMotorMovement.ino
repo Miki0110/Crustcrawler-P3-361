@@ -3,7 +3,7 @@
 #include <BasicLinearAlgebra.h>
 #include <math.h>
 
-//Running average library by Rob Tillaart
+//Running average library by Rob Tillaart (Version 0.4.1)
 #include <RunningAverage.h>
 
 //Define rolling averages and sample amounts (keep sample amounts low (<50))
@@ -81,7 +81,7 @@ void setup() {
   //Begins serial port for sEMG XBee connection
   Serial1.begin(115200);
   while (!Serial1); //Wait for serial port to be available
-  
+
   //Initialise motor control modes
   startupPosition(DXL_ID[1]);  //Base
   startupPosition(DXL_ID[2]);  //"Shoulder"
@@ -114,25 +114,36 @@ void setup() {
 }
 
 void loop() {
-  //Fetch data from sEMG
-  fetchDataFromsEMG(100);
+  Serial.println("Starts motorCalling");
+  lastCalcTime = millis();
+  for (int antal = 1; antal <= 1000; antal++) {
+  for (int i = 1; i <= 3; i++) {
+    dxl.getPresentPosition(DXL_ID[i], UNIT_DEGREE);
+  };
+  };
+  Serial.print("Took ");
+  Serial.print(millis()-lastCalcTime);
+  Serial.println(" ms");
+  /*
+    //Fetch data from sEMG
+    fetchDataFromsEMG(100);
 
-  //Run sEMG signal interpreiter
-  if (millis() >= sEMGInterpreterTime + sEMGInterpreterSampleTime) {
-    sEMGInterpreter();
+    //Run sEMG signal interpreiter
+    if (millis() >= sEMGInterpreterTime + sEMGInterpreterSampleTime) {
+      sEMGInterpreter();
 
-    //Act according to the recieved input command
-    actOnReceivedInputs(interpretedCommand);
-    interpretedCommand = 0; //Reset command
-    sEMGInterpreterTime += sEMGInterpreterSampleTime;
-  }
-  
-  if (millis() >= lastCalcTime + calculationInterval) {
-    GoTo(desiredXPos, desiredYPos, desiredZPos);
+      //Act according to the recieved input command
+      actOnReceivedInputs(interpretedCommand);
+      interpretedCommand = 0; //Reset command
+      sEMGInterpreterTime += sEMGInterpreterSampleTime;
+    }
 
-    //Record calculation time
-    lastCalcTime += calculationInterval;
-  }
+    if (millis() >= lastCalcTime + calculationInterval) {
+      GoTo(desiredXPos, desiredYPos, desiredZPos);
+
+      //Record calculation time
+      lastCalcTime += calculationInterval;
+    }*/
 
   /*
     //Control through torque

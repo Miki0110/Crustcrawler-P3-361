@@ -59,10 +59,15 @@ BLA::Matrix<4, 4> T3E = {1, 0, 0, L2,
 
 
 BLA::Matrix<4, 4> TRB0 = TRB * TB0;
-BLA::Matrix<4, 4> TB0_inv = TRB0; //making a matrix for inverse
-bool is_nonsingular = Invert(TB0_inv); //taking the inverse
+//BLA::Matrix<4, 4> TB0_inv = TRB0; //making a matrix for inverse
+//bool is_nonsingular = Invert(TB0_inv); //taking the inverse
 
 
+BLA::Matrix<4, 4> TB0_inv = {0.6428, 0, -0.7660, 274.7309,
+                             0, 1, 0, -143.70,
+                             0.766, 0, 0.6438, -128.5423,
+                             0, 0, 0, 1
+                            };
 
 //Function to find the current position from angles
 BLA::Matrix<4, 4> GetCurrentPos() { //________________________________________ //________________________________________
@@ -94,8 +99,13 @@ BLA::Matrix<1, 3> setCartesianPosition(double X, double Y, double Z) { //_______
   theta1 = atan2(T0E(1, 3), T0E(0, 3));
 
 
-  BLA::Matrix<4, 4> T01_inv = CalcT01(theta1); //making a matrix for inverse
-  bool is_nonsingular = Invert(T01_inv); //taking the inverse
+  //BLA::Matrix<4, 4> T01_inv = CalcT01(theta1); //making a matrix for inverse
+  //bool is_nonsingular = Invert(T01_inv); //taking the inverse
+  BLA::Matrix<4, 4> T01_inv = {((cos(theta1)) / (cos(theta1)*cos(theta1) + sin(theta1)*sin(theta1))), ((sin(theta1)) / (cos(theta1)*cos(theta1) + sin(theta1)*sin(theta1))), 0, 0,
+                               -1 * ((sin(theta1)) / (cos(theta1)*cos(theta1) + sin(theta1)*sin(theta1))), ((cos(theta1)) / (cos(theta1)*cos(theta1) + sin(theta1)*sin(theta1))), 0, 0,
+                               0, 0, 1, 0,
+                               0, 0, 0, 1
+                              };
 
   //Serial.print("theta1: ");
   //Serial.println(theta1);

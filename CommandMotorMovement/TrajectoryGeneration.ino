@@ -52,19 +52,6 @@ BLA::Matrix<3, 3> TrajectoryGeneration(double newx, double newy, double newz) {
   double tf = sqrt(pow((OldPosAngels[0] - NewPosAngels(0, 0)), 2) + pow((OldPosAngels[1] - NewPosAngels(0, 1)), 2) + pow((OldPosAngels[2] - NewPosAngels(0, 2)), 2)) / (max_vel);
 
   BLA::Matrix<3, 3> GeneratedTrajectory = {}; //The return matrix
-  Serial.println();
-  Serial.println("The GeneratedTrajectory for Pos is :");
-  Serial.println("Pos    Vel    Acc");
-  for (int i = 1; i <= 3; i++) {
-    BLA::Matrix<1, 3> Calculated = cubicPolyAll(10, OldPosAngels[i - 1], NewPosAngels(0, i - 1), max_vel, tf);
-    GeneratedTrajectory(i - 1, 0) = Calculated(0, 0); //Taking the Pos
-    GeneratedTrajectory(i - 1, 1) = Calculated(0, 1); //Taking the Vel
-    GeneratedTrajectory(i - 1, 2) = Calculated(0, 2); //Taking the Acc
-    for (int j = 1; j <= 3; j++) {
-      Serial.print(GeneratedTrajectory(i, j - 1));
-      Serial.print("   ");
-    }
-    Serial.println();
-  }
+  
   return GeneratedTrajectory;
 } //End of TrajectoryGeneration (Function)
