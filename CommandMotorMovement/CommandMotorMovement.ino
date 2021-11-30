@@ -32,8 +32,8 @@ DynamixelShield dxl(Serial3);
 using namespace ControlTableItem;
 
 //Threshholds for signals from sEMG channels to be counted as active
-const int sEMGch1Threshold = 535; //Orbiclaris oculi 75% = 135
-const int sEMGch2Threshold = 520; //Frontalis 75% = 120
+const int sEMGch1Threshold = 120; //Orbiclaris oculi 75% = 135
+const int sEMGch2Threshold = 120; //Frontalis 75% = 120
 
 //Time threshold for an sEMG channel signal to be counted as a held signal
 const int timeForHold = 100; //unit is sEMGInterpreterSampleTime in ms
@@ -44,7 +44,7 @@ double desiredYPos = 140;
 double desiredZPos = 70;
 
 //How much to increment the value of an axis each time a command is received
-double movementStep = 0.1; //Steps are in mm
+double movementStep = 0.5; //Steps are in mm
 
 //----Timings----
 const int calculationInterval = 100; //ms between movement calculations
@@ -118,19 +118,18 @@ void loop() {
   //Run sEMG signal interpreiter
   if (millis() >= sEMGInterpreterTime + sEMGInterpreterSampleTime) {
     sEMGInterpreter();
-    sEMGInterpreterTime = millis();
 
     //Act according to the recieved input command
     actOnReceivedInputs(interpretedCommand);
     interpretedCommand = 0; //Reset command
-    sEMGInterpreterTime = millis();
+    sEMGInterpreterTime += sEMGInterpreterSampleTime;
   }
   
   if (millis() >= lastCalcTime + calculationInterval) {
     GoTo(desiredXPos, desiredYPos, desiredZPos);
 
     //Record calculation time
-    lastCalcTime = millis();
+    lastCalcTime += calculationInterval;
   }
 
   /*

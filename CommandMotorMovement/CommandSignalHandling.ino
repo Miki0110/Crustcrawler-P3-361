@@ -7,9 +7,9 @@ byte commandStartByte = 0x7A;
 void actOnReceivedInputs(byte commandData) { //Set to 0 if debugging with serial
 
   //Read data from serial for debug
-  if (Serial1.read() == commandStartByte) {
-    commandData = Serial1.read();
-  }
+  //if (Serial1.read() == commandStartByte) {
+  //  commandData = Serial1.read();
+  //}
 
   switch (commandData) { //1 = Cycle axis, 2 = Axis +, 3 = Axis -, 4 = Gripper toggle
     case 1: //Cycle axis
@@ -19,43 +19,43 @@ void actOnReceivedInputs(byte commandData) { //Set to 0 if debugging with serial
       else {
         currentAxis ++;
       }
-      Serial.println("Axis cycled");
-      Serial.print("New axis: ");
-      Serial.println(currentAxis);
+      //Serial.println("Axis cycled");
+      //Serial.print("New axis: ");
+      //Serial.println(currentAxis);
       break;
     case 2: //Axis +
       if (currentAxis == 1) {
         desiredXPos += movementStep; //Increment X axis 1 movement step
-        Serial.print("Axis 1 value: ");
-        Serial.println(desiredXPos);
+        //Serial.print("Axis 1 value: ");
+        //Serial.println(desiredXPos);
       } else if (currentAxis == 2) {
         desiredYPos += movementStep; //Increment Y axis 1 movement step
-        Serial.print("Axis 2 value: ");
-        Serial.println(desiredYPos);
+        //Serial.print("Axis 2 value: ");
+        //Serial.println(desiredYPos);
       } else {
         desiredZPos += movementStep; //Increment Z axis 1 movement step
-        Serial.print("Axis 3 value: ");
-        Serial.println(desiredZPos);
+        //Serial.print("Axis 3 value: ");
+        //Serial.println(desiredZPos);
       }
       break;
     case 3: //Axis -
       if (currentAxis == 1) {
         desiredXPos -= movementStep; //Decrement X axis 1 movement step
-        Serial.print("Axis 1 value: ");
-        Serial.println(desiredXPos);
+        //Serial.print("Axis 1 value: ");
+        //Serial.println(desiredXPos);
       } else if (currentAxis == 2) {
         desiredYPos -= movementStep; //Decrement Y axis 1 movement step
-        Serial.print("Axis 2 value: ");
-        Serial.println(desiredYPos);
+        //Serial.print("Axis 2 value: ");
+        //Serial.println(desiredYPos);
       } else {
         desiredZPos -= movementStep; //Decrement Z axis 1 movement step
-        Serial.print("Axis 3 value: ");
-        Serial.println(desiredZPos);
+        //Serial.print("Axis 3 value: ");
+        //Serial.println(desiredZPos);
       }
       break;
     case 4: //Gripper toggle
       toggleGripper();
-      Serial.println("Gripper Toggled");
+      //Serial.println("Gripper Toggled");
       break;
     default:
       break;
