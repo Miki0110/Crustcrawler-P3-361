@@ -11,7 +11,7 @@ double movementStep = 0.1; //How much to increment the value of an axis each tim
 
 //Bytes to receive in message
 byte startByte = 0x7A;
-byte dataArray[4] = {0, 0, 0, 0}; //Cycle axis, Axis +, Axis -, Gripper toggle
+byte commandData = 0; //1 = Cycle axis, 2 = Axis +, 3 = Axis -, 4 = Gripper toggle
 
 void setup() {
   //Start serial port for displaying recieved info
@@ -30,11 +30,11 @@ void loop() {
 void receivedInputs() {
   //Read data from serial
   if (soft_serial.read() == startByte) {
-    soft_serial.readBytes(dataArray, 4);
+    commandData = soft_serial.read();
   }
 
   //Cycle axis
-  if (dataArray[0] == 1) {
+  if (commandData == 1) {
     if (currentAxis == 3) {
       currentAxis = 1;
     }
@@ -44,11 +44,11 @@ void receivedInputs() {
     Serial.println("Axis cycled");
     Serial.print("New axis: ");
     Serial.println(currentAxis);
-    dataArray[0] = 0;
+    commandData = 0;
   }
 
   //Axis +
-  if (dataArray[1] == 1) {
+  if (commandData == 2) {
     Serial.println("Axis +");
     if (currentAxis == 1) {
       desiredXPos += movementStep; //Increment X axis 1 movement step
@@ -63,11 +63,11 @@ void receivedInputs() {
       Serial.print("Axis 3 value: ");
       Serial.println(desiredZPos);
     }
-    dataArray[1] = 0;
+    commandData = 0;
   }
   
   //Axis -
-  if (dataArray[2] == 1) {
+  if (commandData == 3) {
     Serial.println("Axis -");
     if (currentAxis == 1) {
       desiredXPos -= movementStep; //Decrement X axis 1 movement step
@@ -82,11 +82,11 @@ void receivedInputs() {
       Serial.print("Axis 3 value: ");
       Serial.println(desiredZPos);
     }
-    dataArray[2] = 0;
+    commandData = 0;
   }
 
   //Gripper toggle
-  if (dataArray[3] == 1) {
+  if (commandData == 4) {
     if (gripperState == 0) {
       gripperState = 1;
     }
@@ -94,6 +94,6 @@ void receivedInputs() {
       gripperState = 0;
     }
     Serial.println("Gripper Toggled");
-    dataArray[3] = 0;
+    commandData = 0;
   }
 }

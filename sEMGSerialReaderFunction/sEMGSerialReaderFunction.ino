@@ -59,7 +59,10 @@ void loop()
     sEMGInterpreter();
     sEMGInterpreterTime = millis();
   }
-  
+  Serial.print(sEMGch1.getAverage());
+  Serial.print(" ");
+  Serial.println(sEMGch2.getAverage());
+
   //Debug
   /*
     if (millis() >= debugMillis + 500) {
