@@ -19,7 +19,7 @@ bool callPWM(float Thetaref[3], float dThetaref[3], float ddThetaref[3]) {
 //////////////////////////////////////////////////////////////////////////////////////////////
 ////                            write all the data and send it                          //////
   byte startByte = 0x5A; //send byte
-  byte startRByte = 0xDF; //reciver byte
+  byte startRByte = 0x41; //reciver byte
   byte positionMessage[32];
   int rawThetaref[3], rawdThetaref[3], rawddThetaref[3];
   int currTheta[3], currDTheta[3];
@@ -32,11 +32,11 @@ bool callPWM(float Thetaref[3], float dThetaref[3], float ddThetaref[3]) {
     rawdThetaref[i]=dThetaref[i]/360*60/ 0.114;
     rawddThetaref[i]=ddThetaref[i]/360*60/ 0.114;
 
-    Serial.print("curr Theta ");
+   /* Serial.print("curr Theta ");
     Serial.print(i);
     Serial.print(": ");
     Serial.println(currTheta[i]);
-    Serial.println(currDTheta[i]);
+    Serial.println(currDTheta[i]);*/
   }
  
 
@@ -97,14 +97,14 @@ bool callPWM(float Thetaref[3], float dThetaref[3], float ddThetaref[3]) {
       crc.reset();
       crc.setPolynome(0x07);
       crc.add(startRByte);
-      Serial.println("Byte recived");
+      //Serial.println("Byte recived");
       for (int i = 0; i < 6; i++)
       {  
         crc.add(recieverByte[i]);
-        Serial.print(recieverByte[i], HEX);
+        //Serial.print(recieverByte[i], HEX);
       }
       
-      Serial.println("");
+      //Serial.println("");
       /*Serial.print("CRC calced: ");
       Serial.println(crc.getCRC(), HEX);
 
@@ -121,7 +121,7 @@ bool callPWM(float Thetaref[3], float dThetaref[3], float ddThetaref[3]) {
   }
 
 for(int i =0; i < 3; i++){
-  //setPWM(i, PWMvalue[i]);
+  setPWM(i+1, PWMvalue[i]);
   }
       /*Serial.print("PWM: ");
       Serial.println(PWMvalue[0]);
@@ -131,6 +131,9 @@ for(int i =0; i < 3; i++){
       Serial.println(PWMvalue[2]);*/
   
   return 1;
- }
+ }else{
+  counter++;;
+  return 0;
+  }
 }
 }

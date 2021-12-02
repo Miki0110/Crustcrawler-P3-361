@@ -16,6 +16,8 @@ const float DXL_PROTOCOL_VERSION = 2.0;
 DynamixelShield dxl(Serial3);
 CRC8 crc;
 
+int counter = 0;
+
 //PWM-Limit value
 float PWMlimit = 855.0;
 
@@ -32,19 +34,21 @@ double ddtheta[3];
 void setup() {
   Wire.begin();
   // Set Port baudrate to 57600bps. This has to match with DYNAMIXEL baudrate.
-  dxl.begin(57600);
+  dxl.begin(1000000);
   // Set Port Protocol Version. This has to match with DYNAMIXEL protocol version.
   dxl.setPortProtocolVersion(DXL_PROTOCOL_VERSION);
 
   //Begins serial for debug and testing
-  Serial.begin(57600);
+  Serial.begin(1000000);
   while (!Serial); //Wait for serial port to be available
   Serial2.begin(57600);
-
+  while(!Serial2);
+  
   soft_serial.begin(57600);
+  while(!soft_serial);
   
   //Initialise motor control modes
- startupPWM(DXL_ID[1]);
+  startupPWM(DXL_ID[1]);
   startupPWM(DXL_ID[2]);
   startupPWM(DXL_ID[3]);
   //startupPosition(DXL_ID[4]);
@@ -55,10 +59,7 @@ void setup() {
   dxl.writeControlTableItem(GOAL_PWM, DXL_ID[2], 0);
   dxl.writeControlTableItem(GOAL_PWM, DXL_ID[3], 0);
 
-  //Orient arm
-  //dxl.setGoalPosition(DXL_ID[1], 190, UNIT_DEGREE);
-  //dxl.setGoalPosition(DXL_ID[2], 180, UNIT_DEGREE);
-  //dxl.setGoalPosition(DXL_ID[3], 180, UNIT_DEGREE);
+  pinMode(9, OUTPUT); //Debug pin
   starttime = millis();
 }
 
@@ -67,8 +68,21 @@ void loop() {
   float Thetaref[3] = {0, 0, 0};
   float dThetaref[3] = {0, 0, 0};
   float ddThetaref[3] = {0, 0, 0};
-if(millis() - starttime >= 2){
+  unsigned long start = millis();
+   counter = 0;
+  for(int i = 0; i < 100;){
+if(millis() - starttime >= 16){
+  pinMode(8, HIGH);
   callPWM(Thetaref,  dThetaref, ddThetaref);
-  starttime = starttime+2; //delay is to avoid potential bit overrides
+  starttime = starttime+16; //delay is to avoid potential bit overrides
+  pinMode(8, LOW);
+  i++;
 }
+}
+unsigned long slut = millis();
+Serial.println("Time to finish one calc");
+Serial.println((slut - start)/100);
+Serial.println("times failed");
+Serial.println(counter);
+
 }
