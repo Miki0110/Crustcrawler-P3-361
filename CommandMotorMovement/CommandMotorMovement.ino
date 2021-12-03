@@ -71,10 +71,10 @@ void loop() {
   unsigned long start = millis();
    counter = 0;
   for(int i = 0; i < 100;){
-if(millis() - starttime >= 16){
+if(millis() - starttime >= 19){
   pinMode(8, HIGH);
   callPWM(Thetaref,  dThetaref, ddThetaref);
-  starttime = starttime+16; //delay is to avoid potential bit overrides
+  starttime = starttime+19; //delay is to avoid potential bit overrides
   pinMode(8, LOW);
   i++;
 }

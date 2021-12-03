@@ -46,7 +46,7 @@ void loop() {
   // put your main code here, to run repeatedly:
   int16_t pwmValue[3];
   if (millis() - startTime >= 1) {
-    if (readInput(10) == true) {
+    if (readInput(5) == true) {
       float Thetaref[3], dThetaref[3], ddThetaref[3];
       float curTheta[3], curDTheta[3];
       for(int i = 0; i < 3; i++){
