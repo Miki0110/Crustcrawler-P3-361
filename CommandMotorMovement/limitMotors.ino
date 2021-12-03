@@ -25,11 +25,6 @@ boolean setCurrentLimit(uint32_t currentLimit, uint8_t id) {
   dxl.torqueOn(id);
 }
 
-
-
-
-
-
 //MOTOR MAX/MIN Values (UNIT_DEGREE)
 int MotorMinAngleDEGREE[] = {158,//Motor1
                              65, //Motor2

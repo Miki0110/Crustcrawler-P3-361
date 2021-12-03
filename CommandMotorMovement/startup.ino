@@ -33,7 +33,6 @@ boolean startupCurrentPosition(uint8_t id) {
   dxl.torqueOn(id);
 }
 
-
 void GoToStartPos() {
   const int Startpos[] = {190, 180, 270}; //Startpos for the motors (DEGREE)
 
@@ -41,8 +40,6 @@ void GoToStartPos() {
   dxl.setGoalPosition(DXL_ID[2], Startpos[1], UNIT_DEGREE);
   dxl.setGoalPosition(DXL_ID[3], Startpos[2], UNIT_DEGREE);
   //GoTo(Startpos);
-
   positionGripper(1);
-
   delay(1000);
 }

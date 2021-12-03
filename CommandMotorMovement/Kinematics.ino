@@ -61,12 +61,10 @@ BLA::Matrix<4, 4> T3E = {1, 0, 0, L2,
 BLA::Matrix<4, 4> TRB0 = TRB * TB0;
 //BLA::Matrix<4, 4> TB0_inv = TRB0; //making a matrix for inverse
 //bool is_nonsingular = Invert(TB0_inv); //taking the inverse
-
-
-BLA::Matrix<4, 4> TB0_inv = {0.6428, 0, -0.7660, 274.7309,
-                             0, 1, 0, -143.70,
-                             0.766, 0, 0.6438, -128.5423,
-                             0, 0, 0, 1
+BLA::Matrix<4, 4> TB0_inv = {0.6428,0, -0.7660,  274.7309,
+                             0,     1,  0,        -143.70,
+                             0.766, 0,  0.6438, -128.5423,
+                             0,     0,  0,               1
                             };
 
 //Function to find the current position from angles
@@ -79,14 +77,12 @@ BLA::Matrix<4, 4> GetCurrentPos() { //________________________________________ /
                           //CalcT23(dxl.getPresentPosition(DXL_ID[3], UNIT_DEGREE)) *
                           CalcT23(100) *
                           T3E;
-
   return TBE;
-
 };
 
 
 //Function to find neccesary angles to reach desired position
-BLA::Matrix<1, 3> setCartesianPosition(double X, double Y, double Z) { //________________________________________
+BLA::Matrix<1, 3> setCartesianPosition(double X, double Y, double Z) { //________________________________________//________________________________________
   BLA::Matrix<4, 4> Td = {1, 0, 0, X,
                           0, 1, 0, Y,
                           0, 0, 1, Z,
@@ -107,13 +103,7 @@ BLA::Matrix<1, 3> setCartesianPosition(double X, double Y, double Z) { //_______
                                0, 0, 0, 1
                               };
 
-  //Serial.print("theta1: ");
-  //Serial.println(theta1);
-
   BLA::Matrix<4, 4> T1E = T01_inv * T0E;
-
-  //Serial.print("T01: ");
-  //  Serial << CalcT01();
 
   //Length between joint 1 and end effector grip point
   double L1E = sqrt(pow(T1E(0, 3), 2) + pow(T1E(2, 3), 2));
@@ -124,31 +114,12 @@ BLA::Matrix<1, 3> setCartesianPosition(double X, double Y, double Z) { //_______
 
   //Angle of joint 3
   theta3 = PI - phi3;
-
   //Angle of joint 2
   theta2 = (PI / 2) - (phi1 + phi2);
-
-
 
   theta1 = (theta1 * (180 / PI)) + (BasicValue1 );
   theta2 = (theta2 * (180 / PI)) + (BasicValue2 );
   theta3 = (theta3 * (180 / PI)) + (BasicValue3 );
-  //Serial.println();
-  //Serial.print("theta1: ");
-  //Serial.println(theta1);
-  //Serial.print("theta2: ");
-  //Serial.println(theta2);
-  //Serial.print("theta3: ");
-  //Serial.println(theta3);
-  //Serial.print("phi1:  ");
-  //Serial.println(phi1);
-  //Serial.print("phi2:  ");
-  //Serial.println(phi2);
-  //Serial.print("phi3:  ");
-  //Serial.println(phi3);
-  //Serial.print("L1E:  ");
-  //Serial.println(L1E);
-
   BLA::Matrix<1, 3> returnvec = {theta1, theta2, theta3};
   return returnvec;
 }

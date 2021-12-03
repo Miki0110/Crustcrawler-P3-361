@@ -11,9 +11,9 @@ BLA::Matrix<1, 3> cubicPolyAll(double t, double theta0, double thetaf, double ma
   BLA::Matrix<1, 3> ReturnAll = {a0 + a1 * t + a2 * t * t + a3 * t * t * t, //Pos
                                  a1 + 2 * a2 * t + 3 * a3 * t * t, //Vel
                                  2 * a2 + 6 * a3 * t //Acc
-                                }; //Pos, Vel, Acc
-  return ReturnAll;
-}
+                                }; 
+  return ReturnAll;//Pos, Vel, Acc
+}//End of cubicPolyAll()
 
 double cubicPolyPos(double t, double theta0, double thetaf, double max_vel, double tf) { //function for the cubic polynomial (Position)
   double a0 = theta0;
@@ -22,7 +22,7 @@ double cubicPolyPos(double t, double theta0, double thetaf, double max_vel, doub
   double a3 = -(2 / (tf * tf * tf)) * (thetaf - theta0);
 
   return a0 + a1 * t + a2 * t * t + a3 * t * t * t;
-}
+}//End of cubicPolyPos()
 
 double cubicPolyVel(double t, double theta0, double thetaf, double max_vel, double tf) { //function for the cubic polynomial (Velocity)
   double a0 = theta0;
@@ -31,7 +31,7 @@ double cubicPolyVel(double t, double theta0, double thetaf, double max_vel, doub
   double a3 = -(2 / (tf * tf * tf)) * (thetaf - theta0);
 
   return a1 + 2 * a2 * t + 3 * a3 * t * t;
-}
+}//End of cubicPolyVel()
 
 double cubicPolyAcc(double t, double theta0, double thetaf, double max_vel, double tf) { //function for the cubic polynomial (Acceleration)
   double a0 = theta0;
@@ -40,7 +40,7 @@ double cubicPolyAcc(double t, double theta0, double thetaf, double max_vel, doub
   double a3 = -(2 / (tf * tf * tf)) * (thetaf - theta0);
 
   return 2 * a2 + 6 * a3 * t;
-}
+}//End of cubicPolyAcc)(
 
 BLA::Matrix<3, 3> TrajectoryGeneration(double newx, double newy, double newz) {
   //Initialicing variables and numbers
@@ -52,6 +52,6 @@ BLA::Matrix<3, 3> TrajectoryGeneration(double newx, double newy, double newz) {
   double tf = sqrt(pow((OldPosAngels[0] - NewPosAngels(0, 0)), 2) + pow((OldPosAngels[1] - NewPosAngels(0, 1)), 2) + pow((OldPosAngels[2] - NewPosAngels(0, 2)), 2)) / (max_vel);
 
   BLA::Matrix<3, 3> GeneratedTrajectory = {}; //The return matrix
-  
+
   return GeneratedTrajectory;
 } //End of TrajectoryGeneration (Function)

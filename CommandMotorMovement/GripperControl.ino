@@ -7,8 +7,8 @@ void toggleGripper() {
 }
 
 void positionGripper(boolean pos) {
-  const int gripperOpen = 170; //Degree
-  const int gripperClosed = 178;//Degree
+  const int gripperOpen = 170;   //Degree
+  const int gripperClosed = 178; //Degree
   
   if (pos == 0) { //Closed
     dxl.setGoalPosition(DXL_ID[4], gripperClosed- LeanedAngle, UNIT_DEGREE);

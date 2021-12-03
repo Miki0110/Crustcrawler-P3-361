@@ -12,15 +12,6 @@ RunningAverage sEMGch2(25);
 
 BLA::Matrix<3, 3> TrajectoryGeneration(double newx, double newy, double newz); //DO NOT REMOVE!! IS NEEDED TO USE THE FUNCTION TrajectoryGeneration
 
-/*
-  MOTOR MAX/MIN Values (UNIT_RAW)
-  BLA::Matrix<2,5> MotorMaxMin = {1800, 2500, //Motor1
-                                750, 3320,//Motor2
-                                740, 3320,//Motor3
-                                750, 2450,//Motor4
-                                700, 2450};//Motor5
-*/
-
 SoftwareSerial soft_serial(7, 8); // DYNAMIXELShield UART RX/TX
 #define DEBUG_SERIAL soft_serial
 
@@ -84,6 +75,7 @@ void setup() {
   // Set Port Protocol Version. This has to match with DYNAMIXEL protocol version.
   dxl.setPortProtocolVersion(DXL_PROTOCOL_VERSION);
 
+  //Begins the Serial port for the USB for PC
   Serial.begin(57600);
 
   //Begins serial port for sEMG XBee connection
