@@ -25,7 +25,7 @@ boolean setMotorTorque(uint8_t id, float torque) {
   }
 }
 
-void setPWM(uint8_t id, int PWM){ //PWM control function
+void setPWM(uint8_t id, int16_t PWM){ //PWM control function
  
   if(PWM > PWMlimit){ //A check so we don't set too high values
     PWM=PWMlimit;

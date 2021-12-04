@@ -47,23 +47,26 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
   int16_t pwmValue[3];
+
+  
   if (millis() - startTime >= 1) {
     if (readInput(5) == true) {
       float Thetaref[3], dThetaref[3], ddThetaref[3];
       float curTheta[3], curDTheta[3];
       for(int i = 0; i < 3; i++){
       }
-
-      
       for (int i = 0; i < 3; i++) {
-        Thetaref[i] = rawThetaref[i] * 0.088;
-        dThetaref[i] = rawdThetaref[i] * 0.114 *6 ;
-        ddThetaref[i] = rawddThetaref[i] * 0.114 * 6;
-
         curTheta[i] = rawcurTheta[i] * 0.088;
         curDTheta[i] = rawcurDTheta[i] * 0.114 * 6;
       }
 
+        // check to see if the Tf needs to update
+  if(curTheta != oldTheta){
+    tf = sqrt(pow((curTheta - NewPosAngels(0, 0)), 2) + pow((OldPosAngels[1] - NewPosAngels(0, 1)), 2) + pow((OldPosAngels[2] - NewPosAngels(0, 2)), 2)) / (max_vel);
+    }
+
+
+      
       torqueCalc(Thetaref, dThetaref, ddThetaref, curTheta, curDTheta);
       for (int i = 0; i < 3; i++) {
         pwmValue[i] = PWMcalc(i+1, Q(0, i), curDTheta[i]);

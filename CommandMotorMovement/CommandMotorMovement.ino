@@ -20,6 +20,7 @@ int counter = 0;
 
 //PWM-Limit value
 float PWMlimit = 855.0;
+int16_t PWMvalue[3];
 
 //Namespace for motor control table entries
 using namespace ControlTableItem;
@@ -71,11 +72,9 @@ void loop() {
   unsigned long start = millis();
    counter = 0;
   for(int i = 0; i < 100;){
-if(millis() - starttime >= 19){
-  pinMode(8, HIGH);
+if(millis() - starttime >= 20){
   callPWM(Thetaref,  dThetaref, ddThetaref);
-  starttime = starttime+19; //delay is to avoid potential bit overrides
-  pinMode(8, LOW);
+  starttime = starttime+20; //delay is to synchronise the entire system
   i++;
 }
 }
