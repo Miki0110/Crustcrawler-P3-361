@@ -1,6 +1,6 @@
 const double Lrx = -124.70;//X coordinate reference to joint 1 motor (base)
 const double Lry = 143.70;//Y coordinate reference to joint 1 motor (base)
-const double Lrz = 254-10; //Z coordinate reference to joint 1 motor (base)(The -10 is the testboard)
+const double Lrz = 254; //Z coordinate reference to joint 1 motor (base)
 const double Lra = 50;//Base tilt angle compared to reference (in deg)
 
 const double Lb =  60.80; //Base link (motor 2)
@@ -12,9 +12,9 @@ const double BasicValue2 = 180; //In degree values
 const double BasicValue3 = 180; //In degree values
 
 
-double theta1;
-double theta2;
-double theta3;
+float theta1;
+float theta2;
+float theta3;
 
 //4x4 Homogenous transformation matricies from crustcrawler
 BLA::Matrix<4, 4> TRB = {
@@ -80,7 +80,7 @@ BLA::Matrix<4, 4> GetCurrentPos(double curTheta[3]) { //________________________
 
 
 //Function to find neccesary angles to reach desired position
-BLA::Matrix<1, 3> setCartesianPosition(double X, double Y, double Z) { //________________________________________//________________________________________
+void setCartesianPosition(int X, int Y, int Z) { //________________________________________//________________________________________
   BLA::Matrix<4, 4> Td = {1, 0, 0, X,
                           0, 1, 0, Y,
                           0, 0, 1, Z,
@@ -115,9 +115,9 @@ BLA::Matrix<1, 3> setCartesianPosition(double X, double Y, double Z) { //_______
   //Angle of joint 2
   theta2 = (PI / 2) - (phi1 + phi2);
 
-  theta1 = (theta1 * (180 / PI)) + (BasicValue1 );
-  theta2 = (theta2 * (180 / PI)) + (BasicValue2 );
-  theta3 = (theta3 * (180 / PI)) + (BasicValue3 );
-  BLA::Matrix<1, 3> returnvec = {theta1, theta2, theta3};
-  return returnvec;
+  Theta_d[0] = (theta1 * (180 / PI)) + (BasicValue1 );
+  Theta_d[1] = (theta2 * (180 / PI)) + (BasicValue2 );
+  Theta_d[2] = (theta3 * (180 / PI)) + (BasicValue3 );
+ // Theta_d = {theta1, theta2, theta3};
+
 }
