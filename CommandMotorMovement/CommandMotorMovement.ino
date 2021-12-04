@@ -14,13 +14,13 @@ const uint8_t DXL_ID[6] = {0, 1, 2, 3, 4, 5};
 
 const float DXL_PROTOCOL_VERSION = 2.0;
 DynamixelShield dxl(Serial3);
-CRC8 crc;
+CRC8 crc; //for crc checks
 
-int counter = 0;
+int counter = 0; //Debug counter (delete later)
 
 //PWM-Limit value
-float PWMlimit = 855.0;
-int16_t PWMvalue[3];
+float PWMlimit = 855.0; //A limit to stop the Control system from applying too high PWM values
+
 
 //Namespace for motor control table entries
 using namespace ControlTableItem;
@@ -65,15 +65,13 @@ void setup() {
 }
 
 void loop() {
-  //all angles must be in degrees
-  float Thetaref[3] = {0, 0, 0};
-  float dThetaref[3] = {0, 0, 0};
-  float ddThetaref[3] = {0, 0, 0};
+
+  int d_pos[3] = {10, 10, 10};
   unsigned long start = millis();
    counter = 0;
   for(int i = 0; i < 100;){
 if(millis() - starttime >= 20){
-  callPWM(Thetaref,  dThetaref, ddThetaref);
+  callPWM(d_pos);
   starttime = starttime+20; //delay is to synchronise the entire system
   i++;
 }
