@@ -77,9 +77,9 @@ if(millis() - starttime >= 20){
 }
 }
 unsigned long slut = millis();
-Serial.println("Time to finish one calc");
+/*Serial.println("Time to finish one calc");
 Serial.println((slut - start)/100);
 Serial.println("times failed");
-Serial.println(counter);
+Serial.println(counter);*/
 
 }

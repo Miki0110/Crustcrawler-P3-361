@@ -16,15 +16,14 @@ boolean readInput(int timeOut) {
       crc.setPolynome(0x07);
       crc.add(startRByte1);
       crc.add(startRByte2);
-
-      for (int i = 0; i < 30; i++)
+      for (int i = 0; i < 18; i++)
       {
         crc.add(recieverByte[i]);
       }
       ///////////////////////////////////
       
 
-      if (crc.getCRC() == recieverByte[30]) { //compare CRC calculated to the reciever byte
+      if (crc.getCRC() == recieverByte[18]) { //compare CRC calculated to the reciever byte
         //If successfull save the byte data into variables
         
         for (int i = 0; i < 6; i = i + 2) {
