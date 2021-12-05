@@ -62,10 +62,7 @@ bool callPWM(int CartPos_d[3]) { //Desired coordinate should be in mm
     crc.add(positionMessage[i]);
   }
   positionMessage[20] = crc.getCRC();
-  Serial.println("Package send");
   for (int i = 0; i < 21; i++) {
-    Serial.print(positionMessage[i], HEX);
-    Serial.print(" ");
     soft_serial.write(positionMessage[i]); //Write everything to the ESP
   }
   
@@ -107,15 +104,15 @@ bool callPWM(int CartPos_d[3]) { //Desired coordinate should be in mm
         }
 
         for (int i = 0; i < 3; i++) { //Tell the motors to act accordingly
-          //setPWM(i + 1, PWMvalue[i]);
+          setPWM(i + 1, PWMvalue[i]);
         }
 
-        Serial.print("PWM: ");
+        /*Serial.print("PWM: ");
           Serial.println(PWMvalue[0]);
           Serial.print("PWM: ");
           Serial.println(PWMvalue[1]);
           Serial.print("PWM: ");
-          Serial.println(PWMvalue[2]);
+          Serial.println(PWMvalue[2]);*/
 
         return 1;
       } else {

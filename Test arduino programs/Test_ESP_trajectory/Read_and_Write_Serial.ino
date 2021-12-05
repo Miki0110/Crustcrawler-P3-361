@@ -1,9 +1,9 @@
 boolean readInput(int timeOut) {
   byte recieverByte[21];
-  long currentMillis = millis();
+  long currentMillis = millis() + timeOut;
 
   while (true) {
-    if (currentMillis + timeOut <= millis()) { //small timeout incase no information is given
+    if (currentMillis <= millis()) { //small timeout incase no information is given
       return 0; //failed communication
       Serial.println("Failed");
     }
@@ -34,18 +34,18 @@ boolean readInput(int timeOut) {
             Pos_d[i / 2] = (recieverByte[i] << 8) + recieverByte[i + 1]; //If the bit is not signed just write it down
           }
 
-          if (bitRead(recieverByte[i + 5], 0) == 1) { //Incase there's a signed bit indicating a negative value
-            rawcurTheta[i / 2] = (recieverByte[i + 5] << 8) + recieverByte[i + 6];
+          if (bitRead(recieverByte[i + 6], 0) == 1) { //Incase there's a signed bit indicating a negative value
+            rawcurTheta[i / 2] = (recieverByte[i + 6] << 8) + recieverByte[i + 7];
             bitWrite(rawcurTheta[i / 2], 17, 0); //Rewritting the byte so it understands it's a signed number and not 32768
           } else {
-            rawcurTheta[i / 2] = (recieverByte[i + 5] << 8) + recieverByte[i + 6]; //If the bit is not signed just write it down
+            rawcurTheta[i / 2] = (recieverByte[i + 6] << 8) + recieverByte[i + 7]; //If the bit is not signed just write it down
           }
 
-          if (bitRead(recieverByte[i + 11], 0) == 1) { //Incase there's a signed bit indicating a negative value
-            rawcurDTheta[i / 2] = (recieverByte[i + 11] << 8) + recieverByte[i + 12];
+          if (bitRead(recieverByte[i + 12], 0) == 1) { //Incase there's a signed bit indicating a negative value
+            rawcurDTheta[i / 2] = (recieverByte[i + 12] << 8) + recieverByte[i + 13];
             bitWrite(rawcurDTheta[i / 2], 17, 0); //Rewritting the byte so it understands it's a signed number and not 32768
           } else {
-            rawcurDTheta[i / 2] = (recieverByte[i + 11] << 8) + recieverByte[i + 12]; //If the bit is not signed just write it down
+            rawcurDTheta[i / 2] = (recieverByte[i + 12] << 8) + recieverByte[i + 13]; //If the bit is not signed just write it down
           }
 
         }

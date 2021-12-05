@@ -111,7 +111,7 @@ void torqueCalc(float Thetaref[3], float dThetaref[3], float ddThetaref[3], floa
 //BLA::Matrix<1, 3> torqueCalc() {
 
   //due to the difference between the used 0 values and the motors values an offset is input
-  Thetaref[0] = Thetaref[0] + 191.6, Thetaref[1] = Thetaref[1] + 180, Thetaref[2] = Thetaref[2] + 180;
+  //Thetaref[0] = Thetaref[0] + 191.6, Thetaref[1] = Thetaref[1] + 180, Thetaref[2] = Thetaref[2] + 180;
 
   //initializing variables
   float errTheta[3], errDTheta[3], errDDTheta[3];
@@ -144,7 +144,7 @@ void torqueCalc(float Thetaref[3], float dThetaref[3], float ddThetaref[3], floa
 
   for (int i = 0; i < 3; i++) {
     //finding the H with control system
-    float Hi = errH(H(i, 0), H(i, 1), H(i, 2), errDDTheta); //H(currTheta)*(ddThetaref + kp*E + kd*dE)
+    float Hi = errH(H(0, i), H(1, i), H(2, i), errDDTheta); //H(currTheta)*(ddThetaref + kp*E + kd*dE)
 
     Q(0, i) = (Hi + C(0, i) + G(0, i));
     //setPWM(DXL_ID[i+1], Qi);

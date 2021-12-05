@@ -66,7 +66,7 @@ void setup() {
 
 void loop() {
 
-  int d_pos[3] = {10, 10, 10};
+  int d_pos[3] = {240, 240, 150};
   unsigned long start = millis();
    counter = 0;
   for(int i = 0; i < 100;){
@@ -77,9 +77,9 @@ if(millis() - starttime >= 20){
 }
 }
 unsigned long slut = millis();
-/*Serial.println("Time to finish one calc");
+Serial.println("Time to finish one calc");
 Serial.println((slut - start)/100);
 Serial.println("times failed");
-Serial.println(counter);*/
+Serial.println(counter);
 
 }
