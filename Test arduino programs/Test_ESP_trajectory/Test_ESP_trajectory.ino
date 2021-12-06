@@ -69,7 +69,7 @@ void loop() {
   int16_t pwmValue[3];
   float speed_mod = 0.03;
   float max_vel = (0.114 * 1023) * 6 * speed_mod;
-  Serial.println("");
+  Serial.print("\t");
   if (readInput(5) == true) {
     float Thetaref[3], dThetaref[3], ddThetaref[3];
     float curTheta[3], curDTheta[3];

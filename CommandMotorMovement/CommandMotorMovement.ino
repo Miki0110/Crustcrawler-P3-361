@@ -27,10 +27,13 @@ using namespace ControlTableItem;
 
 //const int millisBetweenDataSend = 10;
 //unsigned long currentDataSendMillis = 0;
-double starttime;
+unsigned long starttime;
+unsigned long starttime2;
 double theta[3];
 double dtheta[3];
 double ddtheta[3];
+
+int d_pos[3] = {0, 0, 15};
 
 void setup() {
   Wire.begin();
@@ -62,24 +65,51 @@ void setup() {
 
   pinMode(9, OUTPUT); //Debug pin
   starttime = millis();
+  starttime2 = millis();
 }
 
 void loop() {
+d_pos[2] = 10;
+  /*if(millis() < starttime2){
+    
+    }else if(millis() < starttime2+150){
+    d_pos[1] = 100;
+    }else if(millis() < starttime2+300){
+    d_pos[1] = 200;
+    }else if(millis() < starttime2+350){
+    d_pos[1] = 240;
+    }else if(millis() < starttime2+500){
+    d_pos[0] = 100;
+    }else if(millis() < starttime2+650){
+    d_pos[0] = 200;
+    }else if(millis() < starttime2+700){
+    d_pos[0] = 240;
+    }else if(millis() < starttime2+850){
+    d_pos[1] = 200;
+    }else if(millis() < starttime2+1000){
+    d_pos[1] = 100;
+    }else if(millis() < starttime2+1050){
+    d_pos[1] = 0;
+    }else if(millis() < starttime2+1200){
+    d_pos[0] = 200;
+    }else if(millis() < starttime2+1350){
+    d_pos[0] = 100;
+    }else if(millis() < starttime2+1400){
+    d_pos[0] = 0;
+    }else {
+    starttime2=millis();
+    }*/
 
-  int d_pos[3] = {240, 240, 150};
+  
   unsigned long start = millis();
    counter = 0;
-  for(int i = 0; i < 100;){
+  //for(int i = 0; i < 100;){
 if(millis() - starttime >= 20){
   callPWM(d_pos);
   starttime = starttime+20; //delay is to synchronise the entire system
-  i++;
-}
+
+//}
 }
 unsigned long slut = millis();
-Serial.println("Time to finish one calc");
-Serial.println((slut - start)/100);
-Serial.println("times failed");
-Serial.println(counter);
 
 }

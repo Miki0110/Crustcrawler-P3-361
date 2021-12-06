@@ -94,7 +94,7 @@ return {G1,
 
 
 
-float errorFunc(float measured, float desired){ //error function
+float errorFunc(float desired,float measured){ //error function
   return desired - measured;
 }
 
@@ -116,14 +116,14 @@ void torqueCalc(float Thetaref[3], float dThetaref[3], float ddThetaref[3], floa
   //initializing variables
   float errTheta[3], errDTheta[3], errDDTheta[3];
 
-  float kp[3] = {64, 196, 784};
-  float kd[3] = {16, 28, 56};
+  float kp[3] = {100, 100, 100};
+  float kd[3] = {20, 20, 20};
 
   //Finding the angles and velocities
   for (int i = 0; i < 3; i++) {
 
-    errTheta[i] = errorFunc(curTheta[i], Thetaref[i]);
-    errDTheta[i] = errorFunc(curDTheta[i], dThetaref[i]);
+    errTheta[i] = errorFunc(Thetaref[i],curTheta[i]);
+    errDTheta[i] = errorFunc(dThetaref[i],curDTheta[i]);
     errDDTheta[i] = ddThetaref[i] + (kp[i] * errTheta[i]) + (kd[i] * errDTheta[i]);
   }
   Serial.print("Error Theta 1: ");
