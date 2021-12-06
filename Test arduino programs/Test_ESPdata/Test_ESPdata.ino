@@ -63,7 +63,21 @@ void loop() {
         curTheta[i] = rawcurTheta[i] * 0.088;
         curDTheta[i] = rawcurDTheta[i] * 0.114 * 6;
       }
+        Serial.print(rawcurTheta[0]);
+        Serial.print(" Theta1:\t");
+        Serial.print(rawcurDTheta[0]);
+        Serial.print(" dTheta1:\t");
+        
+        Serial.print(rawcurTheta[1]);
+        Serial.print(" Theta2:\t");
+        Serial.print(rawcurDTheta[1]);
+        Serial.print(" dTheta2:\t");
 
+        Serial.print(rawcurTheta[3]);
+        Serial.print(" Theta3:\t");
+        Serial.print(rawcurDTheta[3]);
+        Serial.println(" dTheta3:\t");
+      
       torqueCalc(Thetaref, dThetaref, ddThetaref, curTheta, curDTheta);
       for (int i = 0; i < 3; i++) {
         pwmValue[i] = PWMcalc(i+1, Q(0, i), curDTheta[i]);

@@ -1,5 +1,6 @@
 boolean readInput(int timeOut) { //insert call function to the other arduino
   byte recieverByte[33];
+  signed char recieverChar[33];
   long currentMillis = millis();
 
   //int rawThetaref[3], rawdThetaref[3], rawddThetaref[3], rawcurTheta[3], rawcurDTheta[3];
@@ -21,6 +22,7 @@ boolean readInput(int timeOut) { //insert call function to the other arduino
 //      Serial.print(startRByte, HEX);
       for (int i = 0; i < 30; i++)
       {
+        recieverChar[i] = recieverByte[i];
 //        Serial.print(recieverByte[i], HEX);
         crc.add(recieverByte[i]);
       }
@@ -29,43 +31,13 @@ boolean readInput(int timeOut) { //insert call function to the other arduino
 
       if (crc.getCRC() == recieverByte[30]) { //should check the last bit
         for (int i = 0; i < 6; i = i + 2) {
-          if (bitRead(recieverByte[i], 0) == 1) {
-            bitWrite(recieverByte[i], 0, 0);
-            rawThetaref[i / 2] = -(recieverByte[i] << 8) + recieverByte[i + 1];
-          } else {
-            rawThetaref[i / 2] = (recieverByte[i] << 8) + recieverByte[i + 1];
+            rawThetaref[i / 2] = (recieverChar[i] << 8) + recieverByte[i + 1];
+            rawdThetaref[i / 2] = (recieverChar[i + 5] << 8) + recieverByte[i + 6];
+            rawddThetaref[i / 2] = (recieverChar[i + 11] << 8) + recieverByte[i + 12];
+  
+            rawcurTheta[i / 2] = (recieverChar[i + 17] << 8) + recieverByte[i + 18];
+            rawcurDTheta[i / 2] = (recieverChar[i + 23] << 8) + recieverByte[i + 24];
           }
-
-          if (bitRead(recieverByte[i + 5], 0) == 1) {
-            bitWrite(recieverByte[i + 5], 0, 0);
-            rawdThetaref[i / 2] = -(recieverByte[i + 5] << 8) + recieverByte[i + 6];
-          } else {
-            rawdThetaref[i / 2] = (recieverByte[i + 5] << 8) + recieverByte[i + 6];
-          }
-
-          if (bitRead(recieverByte[i + 11], 0) == 1) {
-            bitWrite(recieverByte[i + 11], 0, 0);
-            rawThetaref[i / 2] = -(recieverByte[i + 11] << 8) + recieverByte[i + 12];
-          } else {
-            rawThetaref[i / 2] = (recieverByte[i + 11] << 8) + recieverByte[i + 12];
-          }
-
-          if (bitRead(recieverByte[i + 17], 7) == 1) {
-            //bitWrite(recieverByte[i + 17], 7, 0);
-            rawcurTheta[i / 2] = (recieverByte[i + 17] << 8) + recieverByte[i + 18];
-            bitWrite(rawcurTheta[i / 2], 17, 0);
-          } else {
-            rawcurTheta[i / 2] = (recieverByte[i + 17] << 8) + recieverByte[i + 18];
-          }
-
-          if (bitRead(recieverByte[i + 23], 7) == 1) {
-            rawcurDTheta[i / 2] = (recieverByte[i + 23] << 8) + recieverByte[i + 24];
-            bitWrite(rawcurTheta[i / 2], 17, 0);
-          } else {
-            rawcurDTheta[i / 2] = (recieverByte[i + 23] << 8) + recieverByte[i + 24];
-          }
-
-        }
         return 1;
       } else return 0;
       }else return 0;
