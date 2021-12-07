@@ -1,14 +1,14 @@
 //Link lengths (in mm)
 const double Lrx = -124.70;//X coordinate reference to joint 1 motor (base)
 const double Lry = 143.70;//Y coordinate reference to joint 1 motor (base)
-const double Lrz = 254-10; //Z coordinate reference to joint 1 motor (base)(The -10 is the testboard)
+const double Lrz = 254; //Z coordinate reference to joint 1 motor (base)
 const double Lra = 50;//Base tilt angle compared to reference (in deg)
 
 const double Lb =  60.80; //Base link (motor 2)
 const double L1 = 219.80; //Link 1
 const double L2 = 147.30 + 126; //Link 2 + gripper distance
 //const double Lg = 145.14; //From gripper joints to grip point
-const double BasicValue1 = 191.6; //In degree values
+const double BasicValue1 = 180; //In degree values
 const double BasicValue2 = 180; //In degree values
 const double BasicValue3 = 180; //In degree values
 
@@ -74,8 +74,7 @@ BLA::Matrix<4, 4> GetCurrentPos() { //________________________________________ /
                           TB0 *
                           CalcT01(dxl.getPresentPosition(DXL_ID[1], UNIT_DEGREE)) *
                           CalcT12(dxl.getPresentPosition(DXL_ID[2], UNIT_DEGREE)) *
-                          //CalcT23(dxl.getPresentPosition(DXL_ID[3], UNIT_DEGREE)) *
-                          CalcT23(100) *
+                          CalcT23(dxl.getPresentPosition(DXL_ID[3], UNIT_DEGREE)) *
                           T3E;
   return TBE;
 };

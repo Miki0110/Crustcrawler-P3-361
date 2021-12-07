@@ -34,7 +34,7 @@ boolean startupCurrentPosition(uint8_t id) {
 }
 
 void GoToStartPos() {
-  const int Startpos[] = {190, 180, 270}; //Startpos for the motors (DEGREE)
+  const int Startpos[] = {180, 180, 270}; //Startpos for the motors (DEGREE)
 
   dxl.setGoalPosition(DXL_ID[1], Startpos[0], UNIT_DEGREE);
   dxl.setGoalPosition(DXL_ID[2], Startpos[1], UNIT_DEGREE);

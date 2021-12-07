@@ -13,7 +13,7 @@ void Move(int xChange, int yChange, int zChange) {//____________________________
 
 
 void GoTo(double xCoordinate, double yCoordinate, double zCoordinate) { //GoTo for 3 axis(Z included)//________________________________________//________________________________________
-  MoveablePos = {xCoordinate, yCoordinate, zCoordinate};
+  MoveablePos = {xCoordinate, yCoordinate, zCoordinate+10};
   //BLA::Matrix<1, 3> MoveablePos = CheckMovementCoordinate(xCoordinate, yCoordinate, zCoordinate); //Checks if the Coordinate positions are reachable
   //CheckMovementAngleDEGREE
 
@@ -30,6 +30,6 @@ void GoTo(double xCoordinate, double yCoordinate, double zCoordinate) { //GoTo f
   //while (dxl.getPresentPosition(DXL_ID[1], UNIT_DEGREE) > ((MoveablePosvinkel(0, 0)) + AngleDiff) || dxl.getPresentPosition(DXL_ID[1], UNIT_DEGREE) < ((MoveablePosvinkel(0, 0)) - AngleDiff)) {Serial.println("Moving Theta1");}; //As long as not near pos, move the robot
   //while (dxl.getPresentPosition(DXL_ID[2], UNIT_DEGREE) > ((MoveablePosvinkel(0, 1)) + AngleDiff) || dxl.getPresentPosition(DXL_ID[2], UNIT_DEGREE) < ((MoveablePosvinkel(0, 1)) - AngleDiff)) {Serial.println("Moving Theta2");}; //As long as not near pos, move the robot
   //while (dxl.getPresentPosition(DXL_ID[3], UNIT_DEGREE) > ((MoveablePosvinkel(0, 2)) + AngleDiff) || dxl.getPresentPosition(DXL_ID[3], UNIT_DEGREE) < ((MoveablePosvinkel(0, 2)) - AngleDiff)) {Serial.println("Moving Theta3");}; //As long as not near pos, move the robot
-  LeanedAngle = (190 - dxl.getPresentPosition(DXL_ID[1], UNIT_DEGREE)) / 4; //Used to give the Wiggle/Swap for the endEffector
+  //LeanedAngle = (190 - dxl.getPresentPosition(DXL_ID[1], UNIT_DEGREE)) / 8; //Used to give the Wiggle/Swap for the endEffector
   updateGripper(); //Makes the  Wiggle/Swap of the end effector
 };//End of GoTo()
