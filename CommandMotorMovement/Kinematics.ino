@@ -8,7 +8,7 @@ const double Lb =  60.80; //Base link (motor 2)
 const double L1 = 219.80; //Link 1
 const double L2 = 147.30 + 126; //Link 2 + gripper distance
 //const double Lg = 145.14; //From gripper joints to grip point
-const double BasicValue1 = 191.6; //In degree values
+const double BasicValue1 = 180; //In degree values
 const double BasicValue2 = 180; //In degree values
 const double BasicValue3 = 180; //In degree values
 
