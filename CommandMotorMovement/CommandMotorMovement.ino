@@ -71,12 +71,12 @@ float getMotorVelocity(uint8_t id) {
 
 void setup() {
   // Set Port baudrate to 57600bps. This has to match with DYNAMIXEL baudrate.
-  dxl.begin(57600);
+  dxl.begin(1000000);
   // Set Port Protocol Version. This has to match with DYNAMIXEL protocol version.
   dxl.setPortProtocolVersion(DXL_PROTOCOL_VERSION);
 
   //Begins the Serial port for the USB for PC
-  Serial.begin(57600);
+  Serial.begin(1000000);
 
   //Begins serial port for sEMG XBee connection
   Serial1.begin(115200);
