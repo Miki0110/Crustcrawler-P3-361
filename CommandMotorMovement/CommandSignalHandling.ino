@@ -1,5 +1,3 @@
-byte currentAxis = 1; //1 = X, 2 = Y, 3 = Z
-
 //Bytes to receive in message
 byte commandStartByte = 0x7A;
 
@@ -19,6 +17,7 @@ void actOnReceivedInputs(byte commandData) { //Set to 0 if debugging with serial
       else {
         currentAxis ++;
       }
+      axisIndicator(currentAxis);
       //Serial.println("Axis cycled");
       //Serial.print("New axis: ");
       //Serial.println(currentAxis);
@@ -58,6 +57,29 @@ void actOnReceivedInputs(byte commandData) { //Set to 0 if debugging with serial
       //Serial.println("Gripper Toggled");
       break;
     default:
+      break;
+  }
+}
+
+void axisIndicator(byte currentAxis) {
+  switch (currentAxis) {
+    case 1:
+      digitalWrite(pinG, HIGH);
+      digitalWrite(pinB, HIGH);
+      digitalWrite(pinR, LOW);
+      break;
+    case 2:
+      digitalWrite(pinR, HIGH);
+      digitalWrite(pinB, HIGH);
+      digitalWrite(pinG, LOW);
+      break;
+    case 3:
+      digitalWrite(pinR, HIGH);
+      digitalWrite(pinG, HIGH);
+      digitalWrite(pinB, LOW);
+      break;
+    default:
+      //invalid axis (how????)
       break;
   }
 }
