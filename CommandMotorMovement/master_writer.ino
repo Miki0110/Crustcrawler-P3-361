@@ -36,21 +36,6 @@ bool callPWM(float Thetaref[3], float dThetaref[3], float ddThetaref[3]) {
     rawdThetaref[i] = dThetaref[i] / 360 * 60 / 0.114;
     rawddThetaref[i] = ddThetaref[i] / 360 * 60 / 0.114;
   }
-        
-        Serial.print(currTheta[0]);
-        Serial.print(" Theta1:\t");
-        Serial.print(currDTheta[0]);
-        Serial.print(" dTheta1:\t");
-        
-        Serial.print(currTheta[1]);
-        Serial.print(" Theta2:\t");
-        Serial.print(currDTheta[1]);
-        Serial.print(" dTheta2:\t");
-
-        Serial.print(currTheta[3]);
-        Serial.print(" Theta3:\t");
-        Serial.print(currDTheta[3]);
-        Serial.println(" dTheta3:\t");
 
   //convert to bytes and write
   positionMessage[0] = startByte1;
@@ -83,13 +68,10 @@ bool callPWM(float Thetaref[3], float dThetaref[3], float ddThetaref[3]) {
     crc.add(positionMessage[i]);
   }
   positionMessage[32] = crc.getCRC();
-  // Serial.println("sending: ");
-  //Serial.println(" ");
   for (int i = 0; i < 33; i++) {
-    //Serial.print(positionMessage[i], HEX);
     soft_serial.write(positionMessage[i]);
   }
-  // Serial.println("");
+
   ////                                                                                    //////
   //////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -99,11 +81,6 @@ bool callPWM(float Thetaref[3], float dThetaref[3], float ddThetaref[3]) {
   long currentMillis = millis();
 
 
-  /* while (Serial.read() != startRByte){
-     if (currentMillis + 200 <= millis()) {
-       return 0;
-     }
-    }*/
   if (Serial2.read() == startRByte1) {
     if (Serial2.read() == startRByte2) {
       Serial2.readBytes(recieverByte, 7);
@@ -117,31 +94,19 @@ bool callPWM(float Thetaref[3], float dThetaref[3], float ddThetaref[3]) {
       {
         recieverChar[i] = recieverByte[i];
         crc.add(recieverByte[i]);
-        //Serial.print(recieverByte[i], HEX);
       }
 
-      //Serial.println("");
-      /*Serial.print("CRC calced: ");
-        Serial.println(crc.getCRC(), HEX);
-
-        Serial.print("Last byte: ");
-        Serial.println(recieverByte[6], HEX);*/
       if (crc.getCRC() == recieverByte[6]) {
         for (int i = 0; i < 6; i = i + 2) {
             PWMvalue[i / 2] = (recieverChar[i] << 8) + recieverByte[i + 1];
           }
 
         for (int i = 0; i < 3; i++) {
-         setPWM(i + 1, PWMvalue[i]);
+         setPWM(DXL_ID[i+1], PWMvalue[i]);
         }
-
-        //Serial.print("PWM: ");
-        //  Serial.println(PWMvalue[0]);
-       //   Serial.print("PWM: ");
-        //  Serial.println(PWMvalue[1]);
-        //  Serial.print("PWM: ");
-        //  Serial.println(PWMvalue[2]);
-
+        PRINT_VALUE(" PWM1:\t",PWMvalue[0]);
+        PRINT_VALUE(" PWM2:\t",PWMvalue[1]);
+        PRINT_VALUE(" PWM3:\t",PWMvalue[2]);
         return 1;
       } else {
         counter++;;

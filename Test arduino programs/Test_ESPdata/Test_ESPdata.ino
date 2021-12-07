@@ -4,6 +4,23 @@
 #include "CRC8.h"
 #include "CRC.h"
 
+// Debugging switches and macros
+#define DEBUG 1 // Switch debug output on and off by 1 or 0
+
+#if DEBUG
+#define PRINT(s)   { Serial.print(F(s)); }
+#define PRINT_VALUE(s,v)  { Serial.print(F(s)); Serial.print(v); }
+#define PRINT_DEC(s,v) { Serial.print(F(s)); Serial.print(v, DEC); }
+#define PRINT_HEX(s,v) { Serial.print(F(s)); Serial.print(v, HEX); }
+#else
+#define PRINTS(s)
+#define PRINT_VALUE(s,v)
+#define PRINT_DEC(s,v)
+#define PRINT_HEX(s,v)
+#endif
+
+
+
 SoftwareSerial soft_serial(32, 14); // RX/TX
 CRC8 crc;
 
@@ -28,10 +45,12 @@ int16_t rawcurDTheta[3];
 
 
 void setup() {
-  // put your setup code here, to run once:
-  Serial.begin(57600);
-  while (!Serial); //Wait for serial port to be available
-
+  
+ #if DEBUG
+ Serial.begin(57600);
+ while (!Serial); //Wait for serial port to be available
+#endif
+ 
   Serial1.begin(57600); //This is the port that is reading from the arduino
   while (!Serial1); //Wait for serial port to be available
 
@@ -40,7 +59,7 @@ void setup() {
   while(!soft_serial);
 
 
-  Serial.println("start");
+  PRINT("start");
   startTime = millis();
 }
 
@@ -63,26 +82,23 @@ void loop() {
         curTheta[i] = rawcurTheta[i] * 0.088;
         curDTheta[i] = rawcurDTheta[i] * 0.114 * 6;
       }
-        Serial.print(rawcurTheta[0]);
-        Serial.print(" Theta1:\t");
-        Serial.print(rawcurDTheta[0]);
-        Serial.print(" dTheta1:\t");
-        
-        Serial.print(rawcurTheta[1]);
-        Serial.print(" Theta2:\t");
-        Serial.print(rawcurDTheta[1]);
-        Serial.print(" dTheta2:\t");
+      
+        PRINT_VALUE("\n Theta1:\t",rawcurTheta[0]);
+        PRINT_VALUE(" dTheta1:\t",rawcurDTheta[0]);
+        PRINT_VALUE(" Theta2:\t",rawcurTheta[1]);
+        PRINT_VALUE(" dTheta2:\t",rawcurDTheta[1]);
+        PRINT_VALUE(" Theta3:\t",rawcurTheta[2]);
+        PRINT_VALUE(" dTheta3:\t",rawcurDTheta[2]);
 
-        Serial.print(rawcurTheta[3]);
-        Serial.print(" Theta3:\t");
-        Serial.print(rawcurDTheta[3]);
-        Serial.println(" dTheta3:\t");
       
       torqueCalc(Thetaref, dThetaref, ddThetaref, curTheta, curDTheta);
       for (int i = 0; i < 3; i++) {
         pwmValue[i] = PWMcalc(i+1, Q(0, i), curDTheta[i]);
       }
-      
+        PRINT_VALUE(" PWM1:\t",pwmValue[0]);
+        PRINT_VALUE(" PWM2:\t",pwmValue[1]);
+        PRINT_VALUE(" PWM3:\t",pwmValue[2]);
+        
       writeOutput(pwmValue);
     }
     startTime = startTime + 1;

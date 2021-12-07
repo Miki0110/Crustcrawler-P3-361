@@ -7,6 +7,34 @@
 #include "CRC8.h"
 #include "CRC.h"
 
+// Debugging switches and macros
+#define DEBUG_TIME 0 // Switch debug of cycle time on and off by 1 or 0
+
+#define DEBUG 1 // Switch debug output on and off by 1 or 0
+
+#if DEBUG
+#define PRINT(s)   { Serial.print(F(s)); }
+#define PRINT_VALUE(s,v)  { Serial.print(F(s)); Serial.print(v); }
+#define PRINT_DEC(s,v) { Serial.print(F(s)); Serial.print(v, DEC); }
+#define PRINT_HEX(s,v) { Serial.print(F(s)); Serial.print(v, HEX); }
+#else
+#define PRINTS(s)
+#define PRINT_VALUE(s,v)
+#define PRINT_DEC(s,v)
+#define PRINT_HEX(s,v)
+#endif
+#if DEBUG_TIME
+#define t_PRINTS(s) PRINTS(s)
+#define t_PRINT_VALUE(s,v) PRINT_VALUE(s,v)
+#define t_PRINT_DEC(s,v) PRINT_DEC(s,v)
+#define t_PRINT_HEX(s,v) PRINT_HEX(s,v)
+#else
+#define t_PRINTS(s)
+#define t_PRINT_VALUE(s,v)
+#define t_PRINT_DEC(s,v)
+#define t_PRINT_HEX(s,v)
+#endif
+
 SoftwareSerial soft_serial(12, 13); // DYNAMIXELShield UART RX/TX
 
 //Motor IDs
@@ -40,8 +68,10 @@ void setup() {
   dxl.setPortProtocolVersion(DXL_PROTOCOL_VERSION);
 
   //Begins serial for debug and testing
-  Serial.begin(1000000);
-  while (!Serial); //Wait for serial port to be available
+ #if DEBUG
+ Serial.begin(1000000);
+ while (!Serial); //Wait for serial port to be available
+ #endif
   Serial2.begin(57600);
   while(!Serial2);
   
@@ -79,9 +109,8 @@ if(millis() - starttime >= 20){
 }
 }
 unsigned long slut = millis();
-/*Serial.println("Time to finish one calc");
-Serial.println((slut - start)/100);
-Serial.println("times failed");
-Serial.println(counter);*/
+
+t_PRINT_VALUE("\n Time to finish one calc: ",(slut - start)/100);
+t_PRINT_VALUE("\n Times failed: ", counter);
 
 }

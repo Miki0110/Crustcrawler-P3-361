@@ -3,12 +3,10 @@ boolean readInput(int timeOut) { //insert call function to the other arduino
   signed char recieverChar[33];
   long currentMillis = millis();
 
-  //int rawThetaref[3], rawdThetaref[3], rawddThetaref[3], rawcurTheta[3], rawcurDTheta[3];
-
   while (true) {
     if (currentMillis + timeOut <= millis()) {
       return 0; //failed communication
-      Serial.println("Failed");
+      PRINT("Failed")
     }
     if (Serial1.read() == startRByte1) {
       if (Serial1.read() == startRByte2) {
@@ -18,16 +16,11 @@ boolean readInput(int timeOut) { //insert call function to the other arduino
       crc.setPolynome(0x07);
       crc.add(startRByte1);
       crc.add(startRByte2);
-//      Serial.print("byte recived: ");
-//      Serial.print(startRByte, HEX);
       for (int i = 0; i < 30; i++)
       {
         recieverChar[i] = recieverByte[i];
-//        Serial.print(recieverByte[i], HEX);
         crc.add(recieverByte[i]);
       }
-//      Serial.print(crc.getCRC(), HEX);
-//      Serial.println("");
 
       if (crc.getCRC() == recieverByte[30]) { //should check the last bit
         for (int i = 0; i < 6; i = i + 2) {
@@ -62,8 +55,6 @@ void writeOutput(int16_t outPut[3]) {
   }
   returnValue[8] = crc.getCRC();
   for (int i = 0; i < 9; i++) {
-    //Serial.print(returnValue[i], HEX);
     soft_serial.write(returnValue[i]);
   }
-  //Serial.println("");
 }
