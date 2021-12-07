@@ -114,37 +114,39 @@ void setup() {
   GoToStartPos();
 }
 
-void loop() {/*
-  Serial.println("Starts motorCalling");
-  lastCalcTime = millis();
-  for (int antal = 1; antal <= 1000; antal++) {
-  for (int i = 1; i <= 3; i++) {
-    dxl.getPresentPosition(DXL_ID[i], UNIT_DEGREE);
-  };
-  };
-  Serial.print("Took ");
-  Serial.print(millis()-lastCalcTime);
-  Serial.println(" ms");
+void loop() {
   /*
-    //Fetch data from sEMG
-    fetchDataFromsEMG(100);
+    Serial.println("Starts motorCalling");
+    lastCalcTime = millis();
+    for (int antal = 1; antal <= 1000; antal++) {
+    for (int i = 1; i <= 3; i++) {
+      dxl.getPresentPosition(DXL_ID[i], UNIT_DEGREE);
+    };
+    };
+    Serial.print("Took ");
+    Serial.print(millis() - lastCalcTime);
+    Serial.println(" ms");
+  */
 
-    //Run sEMG signal interpreiter
-    if (millis() >= sEMGInterpreterTime + sEMGInterpreterSampleTime) {
-      sEMGInterpreter();
+  //Fetch data from sEMG
+  fetchDataFromsEMG(100);
 
-      //Act according to the recieved input command
-      actOnReceivedInputs(interpretedCommand);
-      interpretedCommand = 0; //Reset command
-      sEMGInterpreterTime += sEMGInterpreterSampleTime;
-    }
+  //Run sEMG signal interpreiter
+  if (millis() >= sEMGInterpreterTime + sEMGInterpreterSampleTime) {
+    sEMGInterpreter();
 
-    if (millis() >= lastCalcTime + calculationInterval) {
-      GoTo(desiredXPos, desiredYPos, desiredZPos);
+    //Act according to the recieved input command
+    actOnReceivedInputs(interpretedCommand);
+    interpretedCommand = 0; //Reset command
+    sEMGInterpreterTime += sEMGInterpreterSampleTime;
+  }
 
-      //Record calculation time
-      lastCalcTime += calculationInterval;
-    }*/
+  if (millis() >= lastCalcTime + calculationInterval) {
+    GoTo(desiredXPos, desiredYPos, desiredZPos);
+
+    //Record calculation time
+    lastCalcTime += calculationInterval;
+  }
 
   /*
     //Control through torque
