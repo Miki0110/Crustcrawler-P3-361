@@ -70,10 +70,7 @@ void loop() {
     if (readInput(5) == true) {
       float Thetaref[3], dThetaref[3], ddThetaref[3];
       float curTheta[3], curDTheta[3];
-      for(int i = 0; i < 3; i++){
-      }
-
-      
+            
       for (int i = 0; i < 3; i++) {
         Thetaref[i] = rawThetaref[i] * 0.088;
         dThetaref[i] = rawdThetaref[i] * 0.114 *6 ;
@@ -82,25 +79,20 @@ void loop() {
         curTheta[i] = rawcurTheta[i] * 0.088;
         curDTheta[i] = rawcurDTheta[i] * 0.114 * 6;
       }
+        curDTheta[2] = rawcurDTheta[2] * 0.229 * 6;
       
-        PRINT_VALUE("\n Theta1:\t",rawcurTheta[0]);
-        PRINT_VALUE(" dTheta1:\t",rawcurDTheta[0]);
-        PRINT_VALUE(" Theta2:\t",rawcurTheta[1]);
-        PRINT_VALUE(" dTheta2:\t",rawcurDTheta[1]);
-        PRINT_VALUE(" Theta3:\t",rawcurTheta[2]);
-        PRINT_VALUE(" dTheta3:\t",rawcurDTheta[2]);
 
       
       torqueCalc(Thetaref, dThetaref, ddThetaref, curTheta, curDTheta);
       for (int i = 0; i < 3; i++) {
         pwmValue[i] = PWMcalc(i+1, Q(0, i), curDTheta[i]);
       }
-        PRINT_VALUE(" PWM1:\t",pwmValue[0]);
+        /*PRINT_VALUE(" PWM1:\t",pwmValue[0]);
         PRINT_VALUE(" PWM2:\t",pwmValue[1]);
-        PRINT_VALUE(" PWM3:\t",pwmValue[2]);
+        PRINT_VALUE(" PWM3:\t",pwmValue[2]);*/
         
       writeOutput(pwmValue);
     }
     startTime = startTime + 1;
-  }
+}
 }
