@@ -74,8 +74,7 @@ BLA::Matrix<4, 4> GetCurrentPos() { //________________________________________ /
                           TB0 *
                           CalcT01(dxl.getPresentPosition(DXL_ID[1], UNIT_DEGREE)) *
                           CalcT12(dxl.getPresentPosition(DXL_ID[2], UNIT_DEGREE)) *
-                          //CalcT23(dxl.getPresentPosition(DXL_ID[3], UNIT_DEGREE)) *
-                          CalcT23(100) *
+                          CalcT23(dxl.getPresentPosition(DXL_ID[3], UNIT_DEGREE)) *
                           T3E;
   return TBE;
 };
