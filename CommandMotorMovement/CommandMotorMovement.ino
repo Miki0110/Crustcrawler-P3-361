@@ -7,6 +7,30 @@
 #include "CRC8.h"
 #include "CRC.h"
 
+#if DEBUG
+#define PRINT(s)   { Serial.print(F(s)); }
+#define PRINT_VALUE(s,v)  { Serial.print(F(s)); Serial.print(v); }
+#define PRINT_DEC(s,v) { Serial.print(F(s)); Serial.print(v, DEC); }
+#define PRINT_HEX(s,v) { Serial.print(F(s)); Serial.print(v, HEX); }
+#else
+#define PRINTS(s)
+#define PRINT_VALUE(s,v)
+#define PRINT_DEC(s,v)
+#define PRINT_HEX(s,v)
+#endif
+#if DEBUG_TIME
+#define t_PRINTS(s) PRINTS(s)
+#define t_PRINT_VALUE(s,v) { Serial.print(F(s)); Serial.print(v); }
+#define t_PRINT_DEC(s,v) { Serial.print(F(s)); Serial.print(v, DEC); }
+#define t_PRINT_HEX(s,v) { Serial.print(F(s)); Serial.print(v, HEX); }
+#else
+#define t_PRINTS(s)
+#define t_PRINT_VALUE(s,v)
+#define t_PRINT_DEC(s,v)
+#define t_PRINT_HEX(s,v)
+#endif
+
+
 SoftwareSerial soft_serial(12, 13); // DYNAMIXELShield UART RX/TX
 
 //Motor IDs
@@ -19,14 +43,12 @@ CRC8 crc; //for crc checks
 int counter = 0; //Debug counter (delete later)
 
 //PWM-Limit value
-float PWMlimit = 855.0; //A limit to stop the Control system from applying too high PWM values
+float PWMlimit = 500.0; //A limit to stop the Control system from applying too high PWM values
 
 
 //Namespace for motor control table entries
 using namespace ControlTableItem;
 
-//const int millisBetweenDataSend = 10;
-//unsigned long currentDataSendMillis = 0;
 unsigned long starttime;
 unsigned long starttime2;
 double theta[3];
@@ -36,15 +58,16 @@ double ddtheta[3];
 int d_pos[3] = {0, 0, 15};
 
 void setup() {
-  Wire.begin();
   // Set Port baudrate to 57600bps. This has to match with DYNAMIXEL baudrate.
   dxl.begin(1000000);
   // Set Port Protocol Version. This has to match with DYNAMIXEL protocol version.
   dxl.setPortProtocolVersion(DXL_PROTOCOL_VERSION);
 
   //Begins serial for debug and testing
+  #if DEBUG || DEBUG_TIME
   Serial.begin(1000000);
   while (!Serial); //Wait for serial port to be available
+  #endif
   Serial2.begin(57600);
   while(!Serial2);
   
@@ -103,13 +126,16 @@ d_pos[2] = 10;
   
   unsigned long start = millis();
    counter = 0;
-  //for(int i = 0; i < 100;){
+  or(int i = 0; i < 100;){
 if(millis() - starttime >= 20){
   callPWM(d_pos);
   starttime = starttime+20; //delay is to synchronise the entire system
 
-//}
+  }
 }
 unsigned long slut = millis();
+
+t_PRINT_VALUE("\n Time to finish one calc: ",(slut - start)/100);
+t_PRINT_VALUE("\n Times failed: ", counter);
 
 }

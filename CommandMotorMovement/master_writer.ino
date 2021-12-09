@@ -71,6 +71,7 @@ bool callPWM(int CartPos_d[3]) { //Desired coordinate should be in mm
 
   //Wait and read answer
   byte recieverByte[9];
+  signed char recieverChar[9];
   long currentMillis = millis();
   
   int16_t PWMvalue[3];
@@ -94,25 +95,12 @@ bool callPWM(int CartPos_d[3]) { //Desired coordinate should be in mm
       if (crc.getCRC() == recieverByte[6]) { //compare CRC calculated to the reciever byte
         //If successfull save the byte data into PWM value
         for (int i = 0; i < 6; i = i + 2) {
-          
-          if (bitRead(recieverByte[i], 7) == 1) { //Incase there's a signed bit indicating a negative value
-            PWMvalue[i / 2] = (recieverByte[i] << 8) + recieverByte[i + 1];
-            bitWrite(PWMvalue[i / 2], 17, 0); //Rewritting the byte so it understands it's a signed number and not 32768
-          } else {
             PWMvalue[i / 2] = (recieverByte[i] << 8) + recieverByte[i + 1]; //If the bit is not signed just write it down
-          }
         }
 
         for (int i = 0; i < 3; i++) { //Tell the motors to act accordingly
-          setPWM(i + 1, PWMvalue[i]);
+          setPWM(DXL_ID[i+1], PWMvalue[i]);
         }
-
-        /*Serial.print("PWM: ");
-          Serial.println(PWMvalue[0]);
-          Serial.print("PWM: ");
-          Serial.println(PWMvalue[1]);
-          Serial.print("PWM: ");
-          Serial.println(PWMvalue[2]);*/
 
         return 1;
       } else {

@@ -4,6 +4,24 @@
 #include "CRC8.h"
 #include "CRC.h"
 
+
+// Debugging switches and macros
+#define DEBUG 1 // Switch debug output on and off by 1 or 0
+
+#if DEBUG
+#define PRINT(s)   { Serial.print(F(s)); }
+#define PRINT_VALUE(s,v)  { Serial.print(F(s)); Serial.print(v); }
+#define PRINT_DEC(s,v) { Serial.print(F(s)); Serial.print(v, DEC); }
+#define PRINT_HEX(s,v) { Serial.print(F(s)); Serial.print(v, HEX); }
+#else
+#define PRINTS(s)
+#define PRINT_VALUE(s,v)
+#define PRINT_DEC(s,v)
+#define PRINT_HEX(s,v)
+#endif
+
+
+
 SoftwareSerial soft_serial(32, 14); // RX/TX
 CRC8 crc;
 
@@ -49,9 +67,10 @@ int16_t rawcurDTheta[3];
 
 
 void setup() {
-  // put your setup code here, to run once:
+ #if DEBUG
   Serial.begin(57600);
   while (!Serial); //Wait for serial port to be available
+  #endif
 
   Serial1.begin(57600); //This is the port that is reading from the arduino
   while (!Serial1); //Wait for serial port to be available
@@ -60,7 +79,7 @@ void setup() {
   soft_serial.begin(57600);
   while (!soft_serial);
 
-  Serial.println("start");
+  PRINT("start");
   startTime = millis();
 }
 
@@ -69,23 +88,28 @@ void loop() {
   int16_t pwmValue[3];
   float speed_mod = 0.03;
   float max_vel = (0.114 * 1023) * 6 * speed_mod;
-  Serial.print("\t");
+  
+ if (millis() - startTime >= 1) {//for some reason if there's no wait time it won't read input
   if (readInput(5) == true) {
     float Thetaref[3], dThetaref[3], ddThetaref[3];
     float curTheta[3], curDTheta[3];
+    
     //Convert from raw to degrees
     for (int i = 0; i < 3; i++) {
       curTheta[i] = rawcurTheta[i] * 0.088;
       curDTheta[i] = rawcurDTheta[i] * 0.114 * 6;
     }
+    curDTheta[2] = rawcurDTheta[2] * 0.229 * 6; //The third motor has a different constant
+    
     // check to see if the Tf needs to update
     if (arrayCompare(Pos_d, oldPos_d,3,3) == false) {
       //Find the desired angles
       setCartesianPosition(Pos_d[0], Pos_d[1], Pos_d[2]);
-      Serial.println("Desired pos");
-      Serial.println(Theta_d[0]);
-      Serial.println(Theta_d[1]);
-      Serial.println(Theta_d[2]);
+      
+      PRINT("Desired pos");
+      PRINT(Theta_d[0]);
+      PRINT(Theta_d[1]);
+      PRINT(Theta_d[2]);
 
       tf = sqrt(pow((curTheta[0] - Theta_d[0]), 2) + pow((curTheta[1] - Theta_d[1]), 2) + pow((curTheta[1] - Theta_d[0]), 2)) / (max_vel) + millis() / 1000;
       for (int i = 0; i < 3; i++) { //save the original start pos
@@ -110,15 +134,22 @@ void loop() {
         ddThetaref[i] = 0;
       }
     }
-    Serial.println("Theta refs: ");
-    Serial.println(Thetaref[0]);
-    Serial.println(Thetaref[1]);
-    Serial.println(Thetaref[2]);
+    
+    PRINT("\nTheta refs: ");
+    PRINT_VALUE("\n",Thetaref[0]);
+    PRINT_VALUE("\n",Thetaref[1]);
+    PRINT_VALUE("\n",Thetaref[2]);
+    
     torqueCalc(Thetaref, dThetaref, ddThetaref, curTheta, curDTheta);
     for (int i = 0; i < 3; i++) {
       pwmValue[i] = PWMcalc(i + 1, Q(0, i), curDTheta[i]);
     }
+    PRINT_VALUE(" PWM1:\t",pwmValue[0]);
+    PRINT_VALUE(" PWM2:\t",pwmValue[1]);
+    PRINT_VALUE(" PWM3:\t",pwmValue[2]);
 
     writeOutput(pwmValue);
   }
+      startTime = startTime + 1;
+}
 }

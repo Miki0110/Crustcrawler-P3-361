@@ -32,9 +32,6 @@ void setPWM(uint8_t id, int16_t PWM){ //PWM control function
     }else if(PWM < -PWMlimit){
       PWM=-PWMlimit;
       }
-  /*    
-  Serial.print("Current PWM: ");
-  Serial.println(PWM);*/
   
   dxl.writeControlTableItem(GOAL_PWM, id, PWM); //send values to the motor
 }
