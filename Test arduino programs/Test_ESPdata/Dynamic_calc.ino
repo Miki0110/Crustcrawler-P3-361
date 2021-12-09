@@ -111,17 +111,17 @@ void torqueCalc(float Thetaref[3], float dThetaref[3], float ddThetaref[3], floa
 //BLA::Matrix<1, 3> torqueCalc() {
 
   //due to the difference between the used 0 values and the motors values an offset is input
-  Thetaref[0] = Thetaref[0] + 180, Thetaref[1] = Thetaref[1] + 180, Thetaref[2] = Thetaref[2] + 180;
+  //Thetaref[0] = Thetaref[0] + 180, Thetaref[1] = Thetaref[1] + 180, Thetaref[2] = Thetaref[2] + 180;
 
   //initializing variables
   float errTheta[3], errDTheta[3], errDDTheta[3];
 // Theta1|Theta2|theta3
- float kp[3] = { 64,   100,   144};
-  float kd[3] = { 14.4,  18,  21.6};
+  float kp[3] = {196, 400, 900};
+  float kd[3] = {28, 40, 60};
 
   //Finding the angles and velocities
   for (int i = 0; i < 3; i++) {
-    errTheta[i] = errorFunc(curTheta[i], Thetaref[i]);
+    errTheta[i] = errorFunc(curTheta[i]-180, Thetaref[i]);
     errDTheta[i] = errorFunc(curDTheta[i], dThetaref[i]);
     errDDTheta[i] = ddThetaref[i] + (kp[i] * errTheta[i]) + (kd[i] * errDTheta[i]);
   }
@@ -144,6 +144,9 @@ void torqueCalc(float Thetaref[3], float dThetaref[3], float ddThetaref[3], floa
 
     Q(0, i) = (Hi + C(0, i) + G(0, i));
   }
+  PRINT_VALUE(" Q1:\t",Q(0, 0));
+  PRINT_VALUE(" Q2:\t",Q(0, 1));
+  PRINT_VALUE(" Q3:\t",Q(0, 2));
 
  
 }

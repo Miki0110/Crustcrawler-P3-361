@@ -36,9 +36,12 @@ bool callPWM(float Thetaref[3], float dThetaref[3], float ddThetaref[3]) {
     rawdThetaref[i] = dThetaref[i] / 360 * 60 / 0.114;
     rawddThetaref[i] = ddThetaref[i] / 360 * 60 / 0.114;
   }
-        PRINT_VALUE("\n theta1:\t",currDTheta[0]);
-        PRINT_VALUE(" theta2:\t",currDTheta[1]);
-        PRINT_VALUE(" theta3:\t",currDTheta[2]);
+       /* PRINT_VALUE("\n theta1:\t",currTheta[0]);
+        PRINT_VALUE(" theta2:\t",currTheta[1]);
+        PRINT_VALUE(" theta3:\t",currTheta[2]);
+        PRINT_VALUE(" Dtheta1:\t",currDTheta[0]);
+        PRINT_VALUE(" Dtheta2:\t",currDTheta[1]);
+        PRINT_VALUE(" Dtheta3:\t",currDTheta[2]);*/
 
   //convert to bytes and write
   positionMessage[0] = startByte1;
@@ -105,7 +108,7 @@ bool callPWM(float Thetaref[3], float dThetaref[3], float ddThetaref[3]) {
           }
 
         for (int i = 0; i < 3; i++) {
-         //setPWM(DXL_ID[i+1], PWMvalue[i]);
+         setPWM(DXL_ID[i+1], PWMvalue[i]);
         }
         return 1;
       } else {

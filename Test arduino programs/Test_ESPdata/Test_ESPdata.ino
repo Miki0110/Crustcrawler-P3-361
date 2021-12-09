@@ -81,11 +81,14 @@ void loop() {
       }
         curDTheta[2] = rawcurDTheta[2] * 0.229 * 6;
       
+        PRINT_VALUE("\n theta1:\t",rawcurTheta[0]);
+        PRINT_VALUE(" theta2:\t",rawcurTheta[1]);
+        PRINT_VALUE(" theta3:\t",rawcurTheta[2]);
 
       
       torqueCalc(Thetaref, dThetaref, ddThetaref, curTheta, curDTheta);
       for (int i = 0; i < 3; i++) {
-        pwmValue[i] = PWMcalc(i+1, Q(0, i), curDTheta[i]);
+        pwmValue[i] = PWMcalc(i+1, Q(0, i), dThetaref[i]);
       }
         /*PRINT_VALUE(" PWM1:\t",pwmValue[0]);
         PRINT_VALUE(" PWM2:\t",pwmValue[1]);

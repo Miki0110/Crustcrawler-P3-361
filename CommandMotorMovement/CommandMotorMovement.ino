@@ -8,7 +8,7 @@
 #include "CRC.h"
 
 // Debugging switches and macros
-#define DEBUG_TIME 0 // Switch debug of cycle time on and off by 1 or 0
+#define DEBUG_TIME 1 // Switch debug of cycle time on and off by 1 or 0
 
 #define DEBUG 1 // Switch debug output on and off by 1 or 0
 
@@ -96,7 +96,7 @@ void setup() {
 
 void loop() {
   //all angles must be in degrees
-  float Thetaref[3] = {0, 0, 0};
+  float Thetaref[3] = {0, 40, 0};
   float dThetaref[3] = {0, 0, 0};
   float ddThetaref[3] = {0, 0, 0};
   unsigned long start = millis();
