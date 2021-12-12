@@ -125,12 +125,10 @@ void torqueCalc(float Thetaref[3], float dThetaref[3], float ddThetaref[3], floa
     errDDTheta[i] = ddThetaref[i] + (kp[i] * errTheta[i]) + (kd[i] * errDTheta[i]);
   }
 
-       /* PRINT_VALUE("\n Error_Theta1:\t",errTheta[0]);
-        PRINT_VALUE(" Error_dTheta1:\t",errDTheta[0]);
-        PRINT_VALUE(" Error_Theta2:\t",errTheta[1]);
-        PRINT_VALUE(" Error_dTheta2:\t",errDTheta[1]);
-        PRINT_VALUE(" Error_Theta3:\t",errTheta[2]);
-        PRINT_VALUE(" Error_dTheta3:\t",errDTheta[2]);*/
+        PRINT_VALUE("\n Theta1\t",errTheta[0]);
+        PRINT_VALUE(" Theta2\t",errTheta[1]);
+        PRINT_VALUE(" Theta3\t",errTheta[2]);
+
 
   //computing the dynamics
   BLA::Matrix<3, 3> H = computeH(curTheta);
@@ -143,10 +141,6 @@ void torqueCalc(float Thetaref[3], float dThetaref[3], float ddThetaref[3], floa
 
     Q(0, i) = (Hi + C(0, i) + G(0, i));
   }
-  PRINT_VALUE(" Q1:\t",Q(0, 0));
-  PRINT_VALUE(" Q2:\t",Q(0, 1));
-  PRINT_VALUE(" Q3:\t",Q(0, 2));
-
  
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////

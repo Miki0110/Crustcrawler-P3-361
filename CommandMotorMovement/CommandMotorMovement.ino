@@ -7,27 +7,43 @@
 #include "CRC8.h"
 #include "CRC.h"
 
+// Debugging switches and macros
+#define DEBUG 0 // Switch debug output on and off by 1 or 0
+#define DEBUG_TIME 1 // Switch debug of time output on and off by 1 or 0
+#define DEBUG_BYTE 0
+
 #if DEBUG
 #define PRINT(s)   { Serial.print(F(s)); }
 #define PRINT_VALUE(s,v)  { Serial.print(F(s)); Serial.print(v); }
 #define PRINT_DEC(s,v) { Serial.print(F(s)); Serial.print(v, DEC); }
 #define PRINT_HEX(s,v) { Serial.print(F(s)); Serial.print(v, HEX); }
 #else
-#define PRINTS(s)
+#define PRINT(s)
 #define PRINT_VALUE(s,v)
 #define PRINT_DEC(s,v)
 #define PRINT_HEX(s,v)
 #endif
 #if DEBUG_TIME
-#define t_PRINTS(s) PRINTS(s)
+#define t_PRINT(s) { Serial.print(F(s)); }
 #define t_PRINT_VALUE(s,v) { Serial.print(F(s)); Serial.print(v); }
 #define t_PRINT_DEC(s,v) { Serial.print(F(s)); Serial.print(v, DEC); }
 #define t_PRINT_HEX(s,v) { Serial.print(F(s)); Serial.print(v, HEX); }
 #else
-#define t_PRINTS(s)
+#define t_PRINT(s)
 #define t_PRINT_VALUE(s,v)
 #define t_PRINT_DEC(s,v)
 #define t_PRINT_HEX(s,v)
+#endif
+#if DEBUG_BYTE
+#define b_PRINT(s) { Serial.print(F(s)); }
+#define b_PRINT_VALUE(s,v) { Serial.print(F(s)); Serial.print(v); }
+#define b_PRINT_DEC(s,v) { Serial.print(F(s)); Serial.print(v, DEC); }
+#define b_PRINT_HEX(s,v) { Serial.print(F(s)); Serial.print(v, HEX); }
+#else
+#define b_PRINT(s)
+#define b_PRINT_VALUE(s,v)
+#define b_PRINT_DEC(s,v)
+#define b_PRINT_HEX(s,v)
 #endif
 
 
@@ -55,7 +71,7 @@ double theta[3];
 double dtheta[3];
 double ddtheta[3];
 
-int d_pos[3] = {0, 0, 15};
+int d_pos[3] = {0, 0, 0};
 
 void setup() {
   // Set Port baudrate to 57600bps. This has to match with DYNAMIXEL baudrate.
@@ -92,7 +108,7 @@ void setup() {
 }
 
 void loop() {
-d_pos[2] = 10;
+
   /*if(millis() < starttime2){
     
     }else if(millis() < starttime2+150){
@@ -126,11 +142,11 @@ d_pos[2] = 10;
   
   unsigned long start = millis();
    counter = 0;
-  or(int i = 0; i < 100;){
+  for(int i = 0; i < 100;){
 if(millis() - starttime >= 20){
   callPWM(d_pos);
   starttime = starttime+20; //delay is to synchronise the entire system
-
+  i++;
   }
 }
 unsigned long slut = millis();

@@ -62,7 +62,9 @@ bool callPWM(int CartPos_d[3]) { //Desired coordinate should be in mm
     crc.add(positionMessage[i]);
   }
   positionMessage[20] = crc.getCRC();
+  b_PRINT("\n byte sent\n")
   for (int i = 0; i < 21; i++) {
+    b_PRINT_HEX(" ",positionMessage[i]);
     soft_serial.write(positionMessage[i]); //Write everything to the ESP
   }
   
@@ -101,7 +103,9 @@ bool callPWM(int CartPos_d[3]) { //Desired coordinate should be in mm
         for (int i = 0; i < 3; i++) { //Tell the motors to act accordingly
           setPWM(DXL_ID[i+1], PWMvalue[i]);
         }
-
+            /*PRINT_VALUE("\n PWM1:\t",PWMvalue[0]);
+            PRINT_VALUE(" PWM2:\t",PWMvalue[1]);
+            PRINT_VALUE(" PWM3:\t",PWMvalue[2]);*/
         return 1;
       } else {
         counter++; //Debug counter (Delete later)
