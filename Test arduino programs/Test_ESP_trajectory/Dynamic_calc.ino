@@ -38,7 +38,7 @@ BLA::Matrix<3,3> computeH(float theta[3]){
 //Function for calculating the mass matrix
 
 //defining thetas
-float theta1=(theta[0]-180)*PI/180, theta2=(theta[1]-180)*PI/180, theta3=(theta[2]-180)*PI/180;
+float theta1=(theta[0])*PI/180, theta2=(theta[1])*PI/180, theta3=(theta[2])*PI/180;
 
 //defing the mass matrix
 float H11=0.0014*cos(0.0015 + theta3 + 2*theta2 - 2*theta1) - 0.0044*cos(2*theta1) - 5.6000e-06*cos(- 1.5634 + theta2 + theta1) + 0.0014*cos(0.0015 + theta3 + 2*theta2 + 2*theta1) + 0.0016*cos(1.5671 - 2*theta3 - 2*theta2 + theta1) + 0.0016*cos(- 1.5671 + 2*theta3 + 2*theta2 + theta1) + 0.0047*cos(1.5693 - theta3 - 2*theta2 + theta1) - 0.0014*cos(0.0015 + theta3 - 2*theta1) - 0.0014*cos(0.0015 + theta3 + 2*theta1) - 0.0011*cos(0.0015 + theta3 + 2*theta2) + 5.6000e-06*cos(1.5634 - theta2 + theta1) + 0.0057*cos(1.5682 - 2*theta2 + theta1) + 0.0057*cos(- 1.5682 + 2*theta2 + theta1) + 3.3000e-06*cos(0.0074 + theta2 - 2*theta1) - 3.3000e-06*cos(0.0074 + theta2 + 2*theta1) + 0.0124*cos(0.0015 + theta3) + 4.8840e-04*cos(0.0037 + 2*theta3 + 2*theta2 - 2*theta1) + 4.8840e-04*cos(0.0037 + 2*theta3 + 2*theta2 + 2*theta1) + 0.0017*cos(0.0026 + 2*theta2 - 2*theta1) + 0.0017*cos(0.0026 + 2*theta2 + 2*theta1) - 3.9860e-04*cos(0.0037 + 2*theta3 + 2*theta2) + 0.0047*cos(- 1.5693 + theta3 + 2*theta2 + theta1) - 0.0014*cos(0.0026 + 2*theta2) + 0.0198;
@@ -58,10 +58,9 @@ return {H11,H12,H13,
 
 BLA::Matrix<1,3> computeC(float theta[3], float dtheta[3]){
 //Function for calculating the Coriolis effect
-
   
 //defining thetas
-float theta1=(theta[0]-180)*PI/180, theta2=(theta[1]-180)*PI/180, theta3=(theta[2]-180)*PI/180;
+float theta1=(theta[0])*PI/180, theta2=(theta[1])*PI/180, theta3=(theta[2])*PI/180;
 //velocity
 float dtheta1=dtheta[0]*PI/180, dtheta2=dtheta[1]*PI/180,dtheta3=dtheta[2]*PI/180;
 
@@ -80,7 +79,7 @@ BLA::Matrix<1,3> computeG(float theta[3]){
 
   
   //defining thetas
-float theta1=(theta[0]-180)*PI/180, theta2=(theta[1]-180)*PI/180, theta3=(theta[2]-180)*PI/180;
+float theta1=theta[0]*PI/180, theta2=theta[1]*PI/180, theta3=theta[2]*PI/180;
   //calcs
 float G1 = 0.4159*cos(theta2 - theta1 + 0.0011) + 0.1637*cos(theta2 - theta1 + theta3 + 0.0015) + 0.0013*cos(theta1) - 0.4159*cos(theta1 + theta2 + 0.0011) - 0.1637*cos(theta1 + theta2 + theta3 + 0.0015);
 float G2 = -0.6980*cos(theta2 - 1.5697) - 0.4159*cos(theta2 - theta1 + 0.0011) - 0.1637*cos(theta2 - theta1 + theta3 + 0.0015) - 0.4159*cos(theta1 + theta2 + 0.0011) - 0.1637*cos(theta1 + theta2 + theta3 + 0.0015) - 0.2747*cos(theta2 + theta3 - 1.5693);
@@ -107,11 +106,6 @@ float errH(float H1, float H2, float H3, float ddtheta[3]){
 
   
 void torqueCalc(float Thetaref[3], float dThetaref[3], float ddThetaref[3], float curTheta[3], float curDTheta[3]){
-//BLA::Matrix<1, 3> torqueCalc() {
-
-  //due to the difference between the used 0 values and the motors values an offset is input
-  //Thetaref[0] = Thetaref[0] + 180, Thetaref[1] = Thetaref[1] + 180, Thetaref[2] = Thetaref[2] + 180;
-
   //initializing variables
   float errTheta[3], errDTheta[3], errDDTheta[3];
 // Theta1|Theta2|theta3
@@ -120,14 +114,14 @@ void torqueCalc(float Thetaref[3], float dThetaref[3], float ddThetaref[3], floa
 
   //Finding the angles and velocities
   for (int i = 0; i < 3; i++) {
-    errTheta[i] = errorFunc(curTheta[i]-180, Thetaref[i]);
+    errTheta[i] = errorFunc(curTheta[i], Thetaref[i]);
     errDTheta[i] = errorFunc(curDTheta[i], dThetaref[i]);
     errDDTheta[i] = ddThetaref[i] + (kp[i] * errTheta[i]) + (kd[i] * errDTheta[i]);
   }
 
-        PRINT_VALUE("\n Theta1\t",errTheta[0]);
+        /*PRINT_VALUE("\n Theta1\t",errTheta[0]);
         PRINT_VALUE(" Theta2\t",errTheta[1]);
-        PRINT_VALUE(" Theta3\t",errTheta[2]);
+        PRINT_VALUE(" Theta3\t",errTheta[2]);*/
 
 
   //computing the dynamics

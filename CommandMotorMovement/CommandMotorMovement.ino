@@ -6,10 +6,11 @@
 #include <Wire.h>
 #include "CRC8.h"
 #include "CRC.h"
+#include "RunningAverage.h"
 
 // Debugging switches and macros
-#define DEBUG 0 // Switch debug output on and off by 1 or 0
-#define DEBUG_TIME 1 // Switch debug of time output on and off by 1 or 0
+#define DEBUG 1 // Switch debug output on and off by 1 or 0
+#define DEBUG_TIME 0 // Switch debug of time output on and off by 1 or 0
 #define DEBUG_BYTE 0
 
 #if DEBUG
@@ -66,15 +67,17 @@ float PWMlimit = 500.0; //A limit to stop the Control system from applying too h
 using namespace ControlTableItem;
 
 unsigned long starttime;
-unsigned long starttime2;
-double theta[3];
-double dtheta[3];
-double ddtheta[3];
+int16_t nonError[6];
 
-int d_pos[3] = {0, 0, 0};
+//For smoothing out the measured velocity
+RunningAverage velAverage1(20);
+RunningAverage velAverage2(20);
+RunningAverage velAverage3(20);
+
+int d_pos[3] = {0, 0, 10};
 
 void setup() {
-  // Set Port baudrate to 57600bps. This has to match with DYNAMIXEL baudrate.
+  // Set Port baudrate to 1mbps. This has to match with DYNAMIXEL baudrate.
   dxl.begin(1000000);
   // Set Port Protocol Version. This has to match with DYNAMIXEL protocol version.
   dxl.setPortProtocolVersion(DXL_PROTOCOL_VERSION);
@@ -102,43 +105,11 @@ void setup() {
   dxl.writeControlTableItem(GOAL_PWM, DXL_ID[2], 0);
   dxl.writeControlTableItem(GOAL_PWM, DXL_ID[3], 0);
 
-  pinMode(9, OUTPUT); //Debug pin
+  delay(600);//startup delay to minimize errors
   starttime = millis();
-  starttime2 = millis();
 }
 
 void loop() {
-
-  /*if(millis() < starttime2){
-    
-    }else if(millis() < starttime2+150){
-    d_pos[1] = 100;
-    }else if(millis() < starttime2+300){
-    d_pos[1] = 200;
-    }else if(millis() < starttime2+350){
-    d_pos[1] = 240;
-    }else if(millis() < starttime2+500){
-    d_pos[0] = 100;
-    }else if(millis() < starttime2+650){
-    d_pos[0] = 200;
-    }else if(millis() < starttime2+700){
-    d_pos[0] = 240;
-    }else if(millis() < starttime2+850){
-    d_pos[1] = 200;
-    }else if(millis() < starttime2+1000){
-    d_pos[1] = 100;
-    }else if(millis() < starttime2+1050){
-    d_pos[1] = 0;
-    }else if(millis() < starttime2+1200){
-    d_pos[0] = 200;
-    }else if(millis() < starttime2+1350){
-    d_pos[0] = 100;
-    }else if(millis() < starttime2+1400){
-    d_pos[0] = 0;
-    }else {
-    starttime2=millis();
-    }*/
-
   
   unsigned long start = millis();
    counter = 0;
