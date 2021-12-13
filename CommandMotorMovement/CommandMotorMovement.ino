@@ -38,7 +38,7 @@ double desiredZPos = 70.00;
 
 //Current axis tracker og indicator light pins
 byte currentAxis = 1; //1 = X, 2 = Y, 3 = Z
-const byte pinR = 23, pinHI = 25, pinG = 27, pinB = 29; //LED RBG & GND pins
+const byte pinR = 23, pinG = 25, pinB = 27, pinHI = 29; //LED RBG & GND pins
 
 //Limits to cartesian positions
 double HiLimitXPos =  350.00;
