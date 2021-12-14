@@ -14,7 +14,7 @@ void wireWrite(const char d) {
   Wire.endTransmission();    // stop transmitting
 }
 
-bool callPWM(int CartPos_d[3]) { //Desired coordinate should be in mm
+bool callPWMangle(int CartPos_d[3]) { //Desired coordinate should be in mm
   //////////////////////////////////////////////////////////////////////////////////////////////
   ////                            write all the data and send it                          //////
   byte startByte1 = 0x41;

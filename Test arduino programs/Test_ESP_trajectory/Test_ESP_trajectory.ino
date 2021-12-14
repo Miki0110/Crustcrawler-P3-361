@@ -93,7 +93,7 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
   int16_t pwmValue[3];
-  float speed_mod = 0.01;
+  float speed_mod = 0.005;
   float max_vel = (0.114 * 1023) * 0.006 * speed_mod;
 
   if (millis() - startTime >= 1) {//for some reason if there's no wait time it won't read input

@@ -74,7 +74,7 @@ RunningAverage velAverage1(20);
 RunningAverage velAverage2(20);
 RunningAverage velAverage3(20);
 
-int d_pos[3] = {0, 0, 10};
+int d_pos[3] = {280, 280, 40};
 
 void setup() {
   // Set Port baudrate to 1mbps. This has to match with DYNAMIXEL baudrate.
@@ -97,16 +97,20 @@ void setup() {
   startupPWM(DXL_ID[1]);
   startupPWM(DXL_ID[2]);
   startupPWM(DXL_ID[3]);
-  //startupPosition(DXL_ID[4]);
-  //startupPosition(DXL_ID[5]);
+  startupPosition(DXL_ID[4]);
+  startupPosition(DXL_ID[5]);
 
   //Set start PWM
   dxl.writeControlTableItem(GOAL_PWM, DXL_ID[1], 0);
   dxl.writeControlTableItem(GOAL_PWM, DXL_ID[2], 0);
   dxl.writeControlTableItem(GOAL_PWM, DXL_ID[3], 0);
 
-  delay(600);//startup delay to minimize errors
-  starttime = millis();
+  
+  //delay(1500);//startup delay to minimize errors
+
+  dxl.setGoalPosition(DXL_ID[4],180,UNIT_DEGREE);
+  dxl.setGoalPosition(DXL_ID[5],180,UNIT_DEGREE);
+    starttime = millis();
 }
 
 void loop() {
@@ -115,7 +119,7 @@ void loop() {
    counter = 0;
   for(int i = 0; i < 100;){
 if(millis() - starttime >= 20){
-  callPWM(d_pos);
+  callPWMangle(d_pos);
   starttime = starttime+20; //delay is to synchronise the entire system
   i++;
   }

@@ -13,11 +13,6 @@ const float BasicValue1 = 180; //In degree values
 const float BasicValue2 = 180; //In degree values
 const float BasicValue3 = 180; //In degree values
 
-
-float theta1;
-float theta2;
-float theta3;
-
 //4x4 Homogenous transformation matricies from crustcrawler
 BLA::Matrix<4, 4> TRB = {
   cos(Lra*PI / 180), 0, sin(Lra*PI / 180),  Lrx,
@@ -83,6 +78,10 @@ BLA::Matrix<4, 4> GetCurrentPos(float *curTheta) { //___________________________
 
 //Function to find neccesary angles to reach desired position
 BLA::Matrix<1, 3> setCartesianPosition(int16_t X, int16_t Y, int16_t Z) { //________________________________________//________________________________________
+  float theta1;
+  float theta2;
+  float theta3;
+
   BLA::Matrix<4, 4> Td = {1, 0, 0, X,
                           0, 1, 0, Y,
                           0, 0, 1, Z,
@@ -91,7 +90,7 @@ BLA::Matrix<1, 3> setCartesianPosition(int16_t X, int16_t Y, int16_t Z) { //____
 
   BLA::Matrix<4, 4> T0E = TB0_inv * Td;
 
- 
+
   theta1 = atan2(T0E(1, 3), T0E(0, 3));
 
 
