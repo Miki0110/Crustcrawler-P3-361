@@ -36,6 +36,10 @@ double desiredXPos = 140.00;
 double desiredYPos = 140.00;
 double desiredZPos = 70.00;
 
+//Current axis tracker og indicator light pins
+byte currentAxis = 1; //1 = X, 2 = Y, 3 = Z
+const byte pinR = 23, pinG = 25, pinB = 27, pinHI = 29; //LED RBG & GND pins
+
 //Limits to cartesian positions
 double HiLimitXPos =  350.00;
 double LoLimitXPos =   -5.00;
@@ -100,7 +104,14 @@ void setup() {
   setSpeedLimit(0.4, 0.114, DXL_ID[1]);
   setSpeedLimit(0.4, 0.229, DXL_ID[2]);
   setSpeedLimit(0.4, 0.114, DXL_ID[3]);
-  //GoToStartPos();
+
+  //Indicator lights
+  pinMode(pinR, OUTPUT);   //Red pin
+  pinMode(pinG, OUTPUT);   //Green pin
+  pinMode(pinB, OUTPUT);   //Blue pin
+  pinMode(pinHI, OUTPUT); //Ground pin
+  digitalWrite(pinHI, HIGH);
+  axisIndicator(currentAxis);
 
   //Ensure clean slate for all rolling averages
   sEMGch1.clear();
@@ -111,40 +122,41 @@ void setup() {
 
   //Prepare calculator timer for use
   lastCalcTime = millis();
-  GoToStartPos();
 }
 
-void loop() {/*
-  Serial.println("Starts motorCalling");
-  lastCalcTime = millis();
-  for (int antal = 1; antal <= 1000; antal++) {
-  for (int i = 1; i <= 3; i++) {
-    dxl.getPresentPosition(DXL_ID[i], UNIT_DEGREE);
-  };
-  };
-  Serial.print("Took ");
-  Serial.print(millis()-lastCalcTime);
-  Serial.println(" ms");
+void loop() {
   /*
-    //Fetch data from sEMG
-    fetchDataFromsEMG(100);
+    Serial.println("Starts motorCalling");
+    lastCalcTime = millis();
+    for (int antal = 1; antal <= 1000; antal++) {
+    for (int i = 1; i <= 3; i++) {
+      dxl.getPresentPosition(DXL_ID[i], UNIT_DEGREE);
+    };
+    };
+    Serial.print("Took ");
+    Serial.print(millis() - lastCalcTime);
+    Serial.println(" ms");
+  */
 
-    //Run sEMG signal interpreiter
-    if (millis() >= sEMGInterpreterTime + sEMGInterpreterSampleTime) {
-      sEMGInterpreter();
+  //Fetch data from sEMG
+  fetchDataFromsEMG(100);
 
-      //Act according to the recieved input command
-      actOnReceivedInputs(interpretedCommand);
-      interpretedCommand = 0; //Reset command
-      sEMGInterpreterTime += sEMGInterpreterSampleTime;
-    }
+  //Run sEMG signal interpreiter
+  if (millis() >= sEMGInterpreterTime + sEMGInterpreterSampleTime) {
+    sEMGInterpreter();
 
-    if (millis() >= lastCalcTime + calculationInterval) {
-      GoTo(desiredXPos, desiredYPos, desiredZPos);
+    //Act according to the recieved input command
+    actOnReceivedInputs(interpretedCommand);
+    interpretedCommand = 0; //Reset command
+    sEMGInterpreterTime += sEMGInterpreterSampleTime;
+  }
 
-      //Record calculation time
-      lastCalcTime += calculationInterval;
-    }*/
+  if (millis() >= lastCalcTime + calculationInterval) {
+    GoTo(desiredXPos, desiredYPos, desiredZPos);
+
+    //Record calculation time
+    lastCalcTime += calculationInterval;
+  }
 
   /*
     //Control through torque
