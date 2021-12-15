@@ -9,8 +9,8 @@
 #include "RunningAverage.h"
 
 // Debugging switches and macros
-#define DEBUG 1 // Switch debug output on and off by 1 or 0
-#define DEBUG_TIME 0 // Switch debug of time output on and off by 1 or 0
+#define DEBUG 0 // Switch debug output on and off by 1 or 0
+#define DEBUG_TIME 1 // Switch debug of time output on and off by 1 or 0
 #define DEBUG_BYTE 0
 
 #if DEBUG

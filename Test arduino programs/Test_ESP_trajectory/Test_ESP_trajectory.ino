@@ -93,19 +93,21 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
   int16_t pwmValue[3];
-  float speed_mod = 0.005;
+  float speed_mod = 0.01;
   float max_vel = (0.114 * 1023) * 0.006 * speed_mod;
 
   if (millis() - startTime >= 1) {//for some reason if there's no wait time it won't read input
     if (readInput(5) == true) {
+      //Defining variables
       float Thetaref[3], dThetaref[3], ddThetaref[3];
       float curTheta[3], curDTheta[3];
-      //Convert from raw to degrees
+      
+      //Convert from raw to degrees, degrees/s
       for (int i = 0; i < 3; i++) {
-        curTheta[i] = (rawcurTheta[i] * 0.088) - 180;
+        curTheta[i] = (rawcurTheta[i] * 0.088) - 180; //Minus 180 so it fits with the snadard setup from kinematics
         curDTheta[i] = rawcurDTheta[i] * 0.114 * 6;
       }
-      curDTheta[2] = rawcurDTheta[2] * 0.229 * 6; //The third motor has a different constant
+      curDTheta[1] = rawcurDTheta[1] * 0.229 * 6; //The second motor has a different constant
 
       //Find the desired angles
        BLA::Matrix<1, 3> Theta_d = setCartesianPosition(Pos_d[0], Pos_d[1], Pos_d[2]);
@@ -118,16 +120,18 @@ void loop() {
           Posold_d[i] = Pos_d[i];
         }
       }
+
       //Update the Theta_refs
       unsigned long t = millis();
+
       BLA::Matrix<1, 3> Theta_ref;
       
       if (tf >= t) {
         for (int i = 0; i < 3; i++) {
           Theta_ref = cubicPolyAll(t, old_Theta[i], Theta_d(0, i), tf);
           Thetaref[i] = Theta_ref(0, 0);
-          dThetaref[i] = Theta_ref(0, 1) * 1000; //from deg/ms to deg/s
-          ddThetaref[i] = Theta_ref(0, 2) * 1000000; //from deg/ms^2 to deg/s^2
+          dThetaref[i] = Theta_ref(0, 1);
+          ddThetaref[i] = Theta_ref(0, 2);
         }
       } else {
         for (int i = 0; i < 3; i++) {
@@ -136,7 +140,7 @@ void loop() {
           ddThetaref[i] = 0;
         }
       }
-      /*PRINT_VALUE("\n D1\t",Theta_d(0,0));
+     /* PRINT_VALUE("\n D1\t",Theta_d(0,0));
       PRINT_VALUE(" D2\t",Theta_d(0,1));
       PRINT_VALUE(" D3\t",Theta_d(0,2));
       PRINT_VALUE(" Theta1\t",Thetaref[0]);

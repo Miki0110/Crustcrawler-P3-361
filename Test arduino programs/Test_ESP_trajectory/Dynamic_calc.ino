@@ -116,8 +116,8 @@ void torqueCalc(float Thetaref[3], float dThetaref[3], float ddThetaref[3], floa
   //initializing variables
   float errTheta[3], errDTheta[3], errDDTheta[3];
              // Theta1|Theta2|theta3
-  float kp[3] = {256, 625, 1225};
-  float kd[3] = {32, 50, 70};
+  float kp[3] = {169, 625, 1225};
+  float kd[3] = {26, 50, 70};
 
   //Finding the angles and velocities
   for (int i = 0; i < 3; i++) {
