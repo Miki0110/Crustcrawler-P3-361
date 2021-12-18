@@ -34,18 +34,18 @@ const int timeForHold = 100; //unit is sEMGInterpreterSampleTime in ms
 //Desired cartesian positions alter these to pick a starting position (units are mm)
 double desiredXPos = 140.00;
 double desiredYPos = 140.00;
-double desiredZPos = 70.00;
+double desiredZPos = 30.00;
 
 //Current axis tracker og indicator light pins
 byte currentAxis = 1; //1 = X, 2 = Y, 3 = Z
 const byte pinR = 23, pinG = 25, pinB = 27, pinHI = 29; //LED RBG & GND pins
 
 //Limits to cartesian positions
-double HiLimitXPos =  350.00;
-double LoLimitXPos =   -5.00;
-double HiLimitYPos =  300.00 + 280.00;
-double LoLimitYPos = -300.00;
-double HiLimitZPos =  700.00;
+double HiLimitXPos =   70.00 + 280.00;
+double LoLimitXPos =  -70.00;
+double HiLimitYPos =   70.00 + 280.00;
+double LoLimitYPos =  -70.00;
+double HiLimitZPos =   70.00;
 double LoLimitZPos =    0.00;
 
 //How much to increment the value of an axis each time a command is received
