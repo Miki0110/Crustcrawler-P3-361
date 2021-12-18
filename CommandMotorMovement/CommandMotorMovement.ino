@@ -55,9 +55,6 @@ double movementStep = 0.50; //Steps are in mm
 const int calculationInterval = 100; //ms between movement calculations
 unsigned long lastCalcTime;
 
-const int sEMGInterpreterSampleTime = 10; //Time between interpreter mesurements in miliseconds (minimum should be 10)
-unsigned long sEMGInterpreterTime;  //Counter to keep track of milliseconds between the interpreiter sample collection
-
 
 //----Data saving----
 int sEMGFetchedData[5];      //Array for storing newest data fetched from sEMG
@@ -97,10 +94,7 @@ void setup() {
   //dxl.writeControlTableItem(GOAL_CURRENT, DXL_ID[1], 0);
   //dxl.writeControlTableItem(GOAL_CURRENT, DXL_ID[2], 0);
   //dxl.writeControlTableItem(GOAL_CURRENT, DXL_ID[3], 0);
-
-  //Orient arm
-  //  dxl.setGoalPosition(DXL_ID[2], 180, UNIT_DEGREE);
-  //dxl.setGoalPosition(DXL_ID[3], 180, UNIT_DEGREE);
+  
   setSpeedLimit(0.4, 0.114, DXL_ID[1]);
   setSpeedLimit(0.4, 0.229, DXL_ID[2]);
   setSpeedLimit(0.4, 0.114, DXL_ID[3]);
@@ -117,39 +111,17 @@ void setup() {
   sEMGch1.clear();
   sEMGch2.clear();
 
-  //Prepare interpreiter timer for use
-  sEMGInterpreterTime = millis();
-
   //Prepare calculator timer for use
   lastCalcTime = millis();
 }
 
 void loop() {
-  /*
-    Serial.println("Starts motorCalling");
-    lastCalcTime = millis();
-    for (int antal = 1; antal <= 1000; antal++) {
-    for (int i = 1; i <= 3; i++) {
-      dxl.getPresentPosition(DXL_ID[i], UNIT_DEGREE);
-    };
-    };
-    Serial.print("Took ");
-    Serial.print(millis() - lastCalcTime);
-    Serial.println(" ms");
-  */
-
   //Fetch data from sEMG
   fetchDataFromsEMG(100);
-
+  
   //Run sEMG signal interpreiter
-  if (millis() >= sEMGInterpreterTime + sEMGInterpreterSampleTime) {
-    sEMGInterpreter();
-
-    //Act according to the recieved input command
-    actOnReceivedInputs(interpretedCommand);
-    interpretedCommand = 0; //Reset command
-    sEMGInterpreterTime += sEMGInterpreterSampleTime;
-  }
+  sEMGInterpreter();
+  actOnReceivedInputs(interpretedCommand);
 
   if (millis() >= lastCalcTime + calculationInterval) {
     GoTo(desiredXPos, desiredYPos, desiredZPos);
@@ -157,36 +129,4 @@ void loop() {
     //Record calculation time
     lastCalcTime += calculationInterval;
   }
-
-  /*
-    //Control through torque
-    //                id      torque
-    //setMotorTorque(DXL_ID[3], 1.420);
-    //delay(1000);
-    //setMotorTorque(DXL_ID[2], -1.420);
-    //delay(1000);
-
-    //Test of gripper
-    //dxl.setGoalPosition(DXL_ID[1], 2100, UNIT_RAW);
-    //dxl.setGoalPosition(DXL_ID[2], 2600, UNIT_RAW);
-    //dxl.setGoalPosition(DXL_ID[3], 3000, UNIT_RAW);
-      ActivateGripper(); //Function to activation of gripper
-    Gripper(0);
-    Serial.println();
-    for(int i=160; i<=260; i=i+3){
-    GoTo2D(i,130);
-    delay(10);
-    }
-    for(int i=130; i<=265; i=i+3){
-    GoTo2D(260,i);
-    delay(10);
-    }
-    for(int i=260; i>=160; i=i-3){
-    GoTo2D(i,265);
-    delay(10);
-    }
-    for(int i=265; i>=130; i=i-3){
-    GoTo2D(160,i);
-    delay(10);
-    }*/
 }
