@@ -52,7 +52,7 @@ double LoLimitZPos =    0.00;
 double movementStep = 0.50; //Steps are in mm
 
 //----Timings----
-const int calculationInterval = 100; //ms between movement calculations
+const int calculationInterval = 50; //ms between movement calculations
 unsigned long lastCalcTime;
 
 
