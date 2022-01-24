@@ -6,26 +6,17 @@ The sampeled code for Group 361, P3
 
 An in-depth paragraph about your project and overview of use.
 
-## Getting Started
 
 ### Dependencies
 This code recuire:
 * ex. Windows 10
 * Arduino IDE
 * Crustcrawler Robot
-* NOT A MAC
 
-### Installing
-
-* How/where to download your program
-* Any modifications needed to be made to files/folders
 
 ### Executing program
 To Run this code, upload the code to your Arduino, Connect your sEMG sensor, and fire up that CrustCrawler!
 
-## Help
-
-Any advise for common problems or issues is not present. Go figure it out.
 
 ## Authors
 
@@ -57,7 +48,3 @@ alau20@student.aau.dk
 ## License
 
 This project is licensed under the [MIT] License - see the LICENSE.md file for details
-
-## Acknowledgments
-* Karl the man
-* The best ninja ever, Strahinja Dosen
