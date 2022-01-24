@@ -60,18 +60,18 @@ unsigned long lastCalcTime;
 int sEMGFetchedData[5];      //Array for storing newest data fetched from sEMG
 byte interpretedCommand = 0; //Variable for storing the data interpreted command recieved from sEMG
 
-//Returns joint angle as radiants
+//Returns joint angle as radians
 float getMotorPosition(uint8_t id) {
   return (PI / 180) * dxl.getPresentPosition(id, UNIT_DEGREE);
 }
 
-//Returns joint velocity in radiants/s
+//Returns joint velocity in radians/s
 float getMotorVelocity(uint8_t id) {
   return (1 / 60) * 2 * PI * dxl.getPresentVelocity(id, UNIT_RPM);
 }
 
 void setup() {
-  // Set Port baudrate to 57600bps. This has to match with DYNAMIXEL baudrate.
+  // Set Port baudrate to 1000000bps. This has to match with DYNAMIXEL baudrate.
   dxl.begin(1000000);
   // Set Port Protocol Version. This has to match with DYNAMIXEL protocol version.
   dxl.setPortProtocolVersion(DXL_PROTOCOL_VERSION);
