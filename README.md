@@ -4,18 +4,23 @@ The sampeled code for Group 361, P3
 
 ## Description
 
-An in-depth paragraph about your project and overview of use.
+This is a coding project for AAU robotics third semester.
 
 
 ### Dependencies
-This code recuire:
+This code requires:
 * ex. Windows 10
 * Arduino IDE
 * Crustcrawler Robot
 
+Arduino libraries
+* ROBOTIS "DynamixelShield"
+* Tom Stewart "BasicLinearAlgebra"
+* Rob Tillaart "RunningAverage"
+* Rob Tillaart "CRC"
 
 ### Executing program
-To Run this code, upload the code to your Arduino, Connect your sEMG sensor, and fire up that CrustCrawler!
+To Run this code, upload the Arduino_control_Loop to your Arduino MEGA, Connect your sEMG sensor.
 
 
 ## Authors
