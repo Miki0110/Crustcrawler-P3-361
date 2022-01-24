@@ -13,7 +13,7 @@ void Move(int xChange, int yChange, int zChange) {//____________________________
 
 
 void GoTo(double xCoordinate, double yCoordinate, double zCoordinate) { //GoTo for 3 axis(Z included)//________________________________________//________________________________________
-  MoveablePos = {xCoordinate, yCoordinate, zCoordinate+10};
+  MoveablePos = {xCoordinate, yCoordinate, zCoordinate};
   //BLA::Matrix<1, 3> MoveablePos = CheckMovementCoordinate(xCoordinate, yCoordinate, zCoordinate); //Checks if the Coordinate positions are reachable
   //CheckMovementAngleDEGREE
 
