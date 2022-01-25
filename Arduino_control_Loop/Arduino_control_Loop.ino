@@ -2,22 +2,40 @@
 #include <SoftwareSerial.h>
 #include <BasicLinearAlgebra.h>
 #include <math.h>
-
-//Running average library by Rob Tillaart (Version 0.4.1)
+//Running average & CRC library by Rob Tillaart (Version 0.4.1)
 #include <RunningAverage.h>
+#include "CRC8.h"
+#include "CRC.h"
+
+#define TORQUECONTROL 1 //If controlled through torque control set 1
+
+
+// Debugging switches and macros
+#define DEBUG 1 // Switch debug output on and off by 1 or 0
+
+#if DEBUG
+#define PRINT(s)   { Serial.print(F(s)); }
+#define PRINT_VALUE(s,v)  { Serial.print(F(s)); Serial.print(v); }
+#define PRINT_DEC(s,v) { Serial.print(F(s)); Serial.print(v, DEC); }
+#define PRINT_HEX(s,v) { Serial.print(F(s)); Serial.print(v, HEX); }
+#else
+#define PRINT(s)
+#define PRINT_VALUE(s,v)
+#define PRINT_DEC(s,v)
+#define PRINT_HEX(s,v)
+#endif
+
+
 
 //Define rolling averages and sample amounts (keep sample amounts low (<50))
 RunningAverage sEMGch1(25);
 RunningAverage sEMGch2(25);
+CRC8 crc; //for crc checks
 
 BLA::Matrix<3, 3> TrajectoryGeneration(double newx, double newy, double newz); //DO NOT REMOVE!! IS NEEDED TO USE THE FUNCTION TrajectoryGeneration
 
-SoftwareSerial soft_serial(7, 8); // DYNAMIXELShield UART RX/TX
-#define DEBUG_SERIAL soft_serial
-
 //Motor IDs
 const uint8_t DXL_ID[6] = {0, 1, 2, 3, 4, 5};
-
 const float DXL_PROTOCOL_VERSION = 2.0;
 DynamixelShield dxl(Serial3);
 
@@ -73,6 +91,20 @@ float getMotorVelocity(uint8_t id) {
   return (1 / 60) * 2 * PI * dxl.getPresentVelocity(id, UNIT_RPM);
 }
 
+//Torque control related definitions
+#if TORQUECONTROL
+//A limit to stop the Control system from applying too high PWM values
+float PWMlimit = 500.0;
+//For smoothing out the measured velocity
+RunningAverage velAverage1(20);
+RunningAverage velAverage2(20);
+RunningAverage velAverage3(20);
+//For saving data incase of errors
+int16_t nonError[6];
+//ESP connection UART RX/TX
+SoftwareSerial soft_serial(12, 13); // DYNAMIXELShield UART RX/TX
+#endif
+
 void setup() {
   // Set Port baudrate to 1000000bps. This has to match with DYNAMIXEL baudrate.
   dxl.begin(1000000);
@@ -119,6 +151,23 @@ void setup() {
 
   //Prepare interpreiter timer for use
   sEMGInterpreterTime = millis();
+
+  //Startup Torque control
+  #if TORQUECONTROL
+  //--Start serial for communication----
+  Serial2.begin(57600);
+  while(!Serial2);
+  soft_serial.begin(57600);
+  while(!soft_serial);
+  //--Activate PWM-control--
+  startupPWM(DXL_ID[1]);
+  startupPWM(DXL_ID[2]);
+  startupPWM(DXL_ID[3]);
+  //Set start PWM
+  dxl.writeControlTableItem(GOAL_PWM, DXL_ID[1], 0);
+  dxl.writeControlTableItem(GOAL_PWM, DXL_ID[2], 0);
+  dxl.writeControlTableItem(GOAL_PWM, DXL_ID[3], 0);
+  #endif
 }
 
 void loop() {
@@ -128,17 +177,26 @@ void loop() {
   //Run sEMG signal interpreiter
     if (millis() >= sEMGInterpreterTime + sEMGInterpreterSampleTime) {
     sEMGInterpreter();
-
     //Act according to the recieved input command
     actOnReceivedInputs(interpretedCommand);
     interpretedCommand = 0; //Reset command
     sEMGInterpreterTime += sEMGInterpreterSampleTime;
   }
-
+    #if TORQUECONTROL
+    int d_pos[3];
+      d_pos[0]=desiredXPos;
+      d_pos[1]=desiredYPos;
+      d_pos[2]=desiredZPos;
+    if(millis() - lastCalcTime >= 20){
+    callPWMangle(d_pos);
+    lastCalcTime = lastCalcTime+20; //delay is to synchronise the entire system
+  }  
+    #else
   if (millis() >= lastCalcTime + calculationInterval) {
     GoTo(desiredXPos, desiredYPos, desiredZPos);
 
     //Record calculation time
     lastCalcTime += calculationInterval;
   }
+    #endif
 }

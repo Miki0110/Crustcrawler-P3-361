@@ -15,7 +15,6 @@ bool callPWMangle(int CartPos_d[3]) { //Desired coordinate should be in mm
     currTheta[i] = dxl.getPresentPosition(i + 1, UNIT_RAW);
     if (dxl.getLastLibErrCode() != 0) {
       currTheta[i] = nonError[i]; //incase there's an error use the last known value
-      PRINT_VALUE(" Error ", 20);
     } else {
       nonError[i] = currTheta[i];
     }
@@ -23,7 +22,6 @@ bool callPWMangle(int CartPos_d[3]) { //Desired coordinate should be in mm
     rawDTheta[i] = dxl.getPresentVelocity(i + 1, UNIT_RAW);
     if (dxl.getLastLibErrCode() != 0) {
       rawDTheta[i] = nonError[i + 3]; //incase there's an error use the last known value
-      PRINT_VALUE(" Error ", 100);
     } else {
       nonError[i + 3] = rawDTheta[i];
     }
@@ -66,9 +64,7 @@ bool callPWMangle(int CartPos_d[3]) { //Desired coordinate should be in mm
     crc.add(positionMessage[i]);
   }
   positionMessage[20] = crc.getCRC();
-  b_PRINT("\n byte sent\n");
   for (int i = 0; i < 21; i++) {
-    b_PRINT_HEX(" ", positionMessage[i]);
     soft_serial.write(positionMessage[i]); //Write everything to the ESP
   }
 
@@ -81,11 +77,11 @@ bool callPWMangle(int CartPos_d[3]) { //Desired coordinate should be in mm
   long currentMillis = millis();
 
   int16_t PWMvalue[3];
-
+ PRINT("Hello1?\n");
   if (Serial2.read() == startRByte1) { //Check for first start byte
     if (Serial2.read() == startRByte2) { //Check for second start byte
       Serial2.readBytes(recieverByte, 7); //Write the next seven bytes into reciverByte
-
+  PRINT("Hello2?\n");
       /////////CRC-check////////////////
       crc.reset();
       crc.setPolynome(0x07);
@@ -109,7 +105,7 @@ bool callPWMangle(int CartPos_d[3]) { //Desired coordinate should be in mm
         }
         return 1;
       } else {
-        counter++; //Debug counter (Delete later)
+
         return 0;
       }
     }

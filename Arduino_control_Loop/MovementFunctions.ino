@@ -33,3 +33,14 @@ void GoTo(double xCoordinate, double yCoordinate, double zCoordinate) { //GoTo f
   //LeanedAngle = (190 - dxl.getPresentPosition(DXL_ID[1], UNIT_DEGREE)) / 8; //Used to give the Wiggle/Swap for the endEffector
   updateGripper(); //Makes the  Wiggle/Swap of the end effector
 };//End of GoTo()
+
+void setPWM(uint8_t id, int16_t PWM){ //PWM control function
+ 
+  if(PWM > PWMlimit){ //A check so we don't set too high values
+    PWM=PWMlimit;
+    }else if(PWM < -PWMlimit){
+      PWM=-PWMlimit;
+      }
+  
+  dxl.writeControlTableItem(GOAL_PWM, id, PWM); //send values to the motor
+}
