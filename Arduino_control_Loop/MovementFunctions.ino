@@ -34,6 +34,7 @@ void GoTo(double xCoordinate, double yCoordinate, double zCoordinate) { //GoTo f
   updateGripper(); //Makes the  Wiggle/Swap of the end effector
 };//End of GoTo()
 
+#if TORQUECONTROL
 void setPWM(uint8_t id, int16_t PWM){ //PWM control function
  
   if(PWM > PWMlimit){ //A check so we don't set too high values
@@ -44,3 +45,4 @@ void setPWM(uint8_t id, int16_t PWM){ //PWM control function
   
   dxl.writeControlTableItem(GOAL_PWM, id, PWM); //send values to the motor
 }
+#endif

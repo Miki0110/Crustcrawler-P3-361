@@ -43,7 +43,7 @@ DynamixelShield dxl(Serial3);
 using namespace ControlTableItem;
 
 //Threshholds for signals from sEMG channels to be counted as active
-const int sEMGch1Threshold = 100; //Orbiclaris oculi 75% = 135
+const int sEMGch1Threshold = 80; //Orbiclaris oculi 75% = 135
 const int sEMGch2Threshold = 200; //Frontalis 75% = 120
 
 //Time threshold for an sEMG channel signal to be counted as a held signal
@@ -187,9 +187,9 @@ void loop() {
       d_pos[0]=desiredXPos;
       d_pos[1]=desiredYPos;
       d_pos[2]=desiredZPos;
-    if(millis() - lastCalcTime >= 20){
+    if(millis() - lastCalcTime >= 40){
     callPWMangle(d_pos);
-    lastCalcTime = lastCalcTime+20; //delay is to synchronise the entire system
+    lastCalcTime = lastCalcTime+40; //delay is to synchronise the entire system
   }  
     #else
   if (millis() >= lastCalcTime + calculationInterval) {

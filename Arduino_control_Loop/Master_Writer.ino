@@ -1,3 +1,4 @@
+#if TORQUECONTROL
 bool callPWMangle(int CartPos_d[3]) { //Desired coordinate should be in mm
   //////////////////////////////////////////////////////////////////////////////////////////////
   ////                            write all the data and send it                          //////
@@ -111,3 +112,4 @@ bool callPWMangle(int CartPos_d[3]) { //Desired coordinate should be in mm
     }
   }
 }
+#endif
